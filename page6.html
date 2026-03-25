@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SideCar — Placement Coordinator</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* Page 6 — Placement Coordinator / Evaluator layout */
+    .placement-overview {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: var(--space-md);
+      margin-bottom: var(--space-xl);
+    }
+    .placement-stat {
+      background-color: var(--color-bg-surface);
+      border: 1px solid var(--color-border-subtle);
+      border-radius: var(--radius-md);
+      padding: var(--space-md);
+      text-align: center;
+    }
+    .placement-stat__value {
+      font-family: var(--font-data);
+      font-size: 1.75rem;
+      color: var(--color-text-primary);
+    }
+    .placement-stat__label {
+      font-family: var(--font-display);
+      font-size: 0.6875rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--color-text-muted);
+      margin-top: var(--space-xs);
+    }
+
+    .placement-sections {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-lg);
+      margin-bottom: var(--space-xl);
+    }
+
+    .rate-breakdown {
+      margin-bottom: var(--space-md);
+    }
+    .rate-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: var(--space-sm) 0;
+      border-bottom: 1px solid var(--color-border-subtle);
+      font-family: var(--font-data);
+      font-size: 0.8125rem;
+    }
+    .rate-row:last-child { border-bottom: none; }
+    .rate-row__name { color: var(--color-text-primary); }
+    .rate-row__count { color: var(--color-text-muted); }
+    .rate-row__bar {
+      flex: 1;
+      margin: 0 var(--space-md);
+      height: 6px;
+      background-color: var(--color-bg-elevated);
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+    }
+    .rate-row__fill {
+      height: 100%;
+      background-color: var(--color-gold-primary);
+      border-radius: var(--radius-sm);
+    }
+
+    .action-item {
+      padding: var(--space-sm) 0;
+      border-bottom: 1px solid var(--color-border-subtle);
+    }
+    .action-item:last-child { border-bottom: none; }
+    .action-item__header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: var(--space-xs);
+    }
+    .action-item__name {
+      font-family: var(--font-data);
+      font-size: 0.8125rem;
+      color: var(--color-text-primary);
+    }
+    .action-item__detail {
+      font-family: var(--font-body);
+      font-size: 0.75rem;
+      color: var(--color-text-muted);
+      line-height: 1.5;
+    }
+    .action-item__command {
+      font-family: var(--font-data);
+      font-size: 0.75rem;
+      color: var(--color-text-muted);
+    }
+
+    .command-risk-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: var(--space-sm) 0;
+      border-bottom: 1px solid var(--color-border-subtle);
+    }
+    .command-risk-row:last-child { border-bottom: none; }
+    .command-risk-row__name {
+      font-family: var(--font-data);
+      font-size: 0.8125rem;
+      color: var(--color-text-primary);
+      flex: 1;
+    }
+    .command-risk-row__pct {
+      font-family: var(--font-data);
+      font-size: 0.8125rem;
+      min-width: 50px;
+      text-align: right;
+    }
+    .command-risk-row__vacancies {
+      font-family: var(--font-data);
+      font-size: 0.75rem;
+      color: var(--color-text-muted);
+      min-width: 80px;
+      text-align: right;
+    }
+  </style>
+</head>
+<body>
+  <!-- Topbar -->
+  <header class="topbar">
+    <a href="page2.html" class="topbar__brand">SideCar</a>
+    <nav class="nav" aria-label="Main navigation">
+      <a href="page2.html" class="nav__link">Home</a>
+      <a href="page3.html" class="nav__link">Dashboard</a>
+      <a href="page4.html" class="nav__link">Sailor</a>
+      <a href="page5.html" class="nav__link">Manning</a>
+      <a href="page6.html" class="nav__link">Placement</a>
+    </nav>
+  </header>
+
+  <!-- Module: MOD-P6 — Placement Coordinator / Evaluator View -->
+  <main class="page-container">
+
+    <section class="page-header">
+      <h1 class="page-header__title">Placement Coordinator</h1>
+      <p class="page-header__subtitle">Cross-portfolio view — community health, vacancies, and manning risk</p>
+    </section>
+
+    <!-- Top-line stats -->
+    <section class="placement-overview" id="placementOverview" aria-label="Community overview">
+      <div class="placement-stat">
+        <div class="placement-stat__value" id="pcTotalSailors">--</div>
+        <div class="placement-stat__label">Total Sailors</div>
+      </div>
+      <div class="placement-stat">
+        <div class="placement-stat__value" id="pcActionRequired">--</div>
+        <div class="placement-stat__label">Action Required</div>
+      </div>
+      <div class="placement-stat">
+        <div class="placement-stat__value" id="pcManningPct">--</div>
+        <div class="placement-stat__label">Overall Manning</div>
+      </div>
+      <div class="placement-stat">
+        <div class="placement-stat__value" id="pcOpenBillets">--</div>
+        <div class="placement-stat__label">Open Billets</div>
+      </div>
+    </section>
+
+    <!-- Two-column detail -->
+    <section class="placement-sections">
+
+      <!-- Left: Immediate Action Items -->
+      <div class="card">
+        <div class="card__header">Immediate Action — Critical & Expired</div>
+        <div id="actionItems">
+          <!-- Populated by JavaScript -->
+        </div>
+      </div>
+
+      <!-- Right: Command Manning Risk -->
+      <div class="card">
+        <div class="card__header">Command Manning Risk</div>
+        <div id="commandRisk">
+          <!-- Populated by JavaScript -->
+        </div>
+      </div>
+
+    </section>
+
+    <!-- Rate Distribution -->
+    <section class="card" style="margin-bottom:var(--space-xl);">
+      <div class="card__header">Distribution by Rate</div>
+      <div id="rateBreakdown" class="rate-breakdown">
+        <!-- Populated by JavaScript -->
+      </div>
+    </section>
+
+    <!-- Full Sailor Table (all sailors, sorted by urgency) -->
+    <section class="card">
+      <div class="card__header">All Sailors — Community View</div>
+      <table class="data-table" id="communityTable" aria-label="Community sailor roster">
+        <thead>
+          <tr>
+            <th scope="col">PRD</th>
+            <th scope="col">Name</th>
+            <th scope="col">Rate</th>
+            <th scope="col">Grade</th>
+            <th scope="col">Command</th>
+            <th scope="col">PRD Date</th>
+            <th scope="col">Detailer</th>
+          </tr>
+        </thead>
+        <tbody id="communityBody">
+          <!-- Populated by JavaScript -->
+        </tbody>
+      </table>
+    </section>
+
+  </main>
+
+  <script src="app.js"></script>
+  <script>
+    (function() {
+      var totalBillets = 0;
+      var filledBillets = 0;
+
+      // Load all data
+      Promise.all([
+        SideCarAdapter.getSailors(),
+        SideCarAdapter.getCommands()
+      ]).then(function(results) {
+        var sailors = results[0];
+        var commands = results[1];
+
+        // --- Top stats ---
+        document.getElementById('pcTotalSailors').textContent = sailors.length;
+
+        var actionCount = sailors.filter(function(s) {
+          var tier = computePRDTier(s).tier;
+          return tier === 'CRITICAL' || tier === 'EXPIRED';
+        }).length;
+        document.getElementById('pcActionRequired').textContent = actionCount;
+
+        // --- Action items (Critical & Expired sailors) ---
+        var actionSailors = sailors.filter(function(s) {
+          var tier = computePRDTier(s).tier;
+          return tier === 'CRITICAL' || tier === 'EXPIRED';
+        }).sort(function(a, b) {
+          return computePRDTier(a).priority - computePRDTier(b).priority;
+        });
+
+        var actionContainer = document.getElementById('actionItems');
+        if (actionSailors.length === 0) {
+          actionContainer.innerHTML = '<p style="color:var(--color-text-muted);font-size:0.8125rem;padding:var(--space-sm) 0;">No Sailors in Critical or Expired status.</p>';
+        } else {
+          actionSailors.forEach(function(sailor) {
+            var prd = computePRDTier(sailor);
+            var badgeClass = prdBadgeClass(prd.tier);
+            var div = document.createElement('div');
+            div.className = 'action-item';
+            div.innerHTML =
+              '<div class="action-item__header">' +
+                '<span class="action-item__name">' + sailor.lastName + ', ' + sailor.firstName + ' — ' + sailor.rate + ' ' + sailor.payGrade + '</span>' +
+                '<span class="prd-badge prd-badge--' + badgeClass + '">' + prd.tier + '</span>' +
+              '</div>' +
+              '<div class="action-item__detail">PRD: ' + sailor.prd + '</div>' +
+              '<div class="action-item__command">' + sailor.command + '</div>';
+            actionContainer.appendChild(div);
+          });
+        }
+
+        // --- Rate distribution ---
+        var rateCounts = {};
+        sailors.forEach(function(s) {
+          rateCounts[s.rate] = (rateCounts[s.rate] || 0) + 1;
+        });
+        var maxRate = Math.max.apply(null, Object.values(rateCounts));
+        var rateContainer = document.getElementById('rateBreakdown');
+
+        Object.keys(rateCounts).sort().forEach(function(rate) {
+          var count = rateCounts[rate];
+          var pct = Math.round((count / maxRate) * 100);
+          var row = document.createElement('div');
+          row.className = 'rate-row';
+          row.innerHTML =
+            '<span class="rate-row__name">' + rate + '</span>' +
+            '<div class="rate-row__bar"><div class="rate-row__fill" style="width:' + pct + '%"></div></div>' +
+            '<span class="rate-row__count">' + count + '</span>';
+          rateContainer.appendChild(row);
+        });
+
+        // --- Community table ---
+        var sorted = sailors.slice().sort(function(a, b) {
+          return computePRDTier(a).priority - computePRDTier(b).priority;
+        });
+        var tbody = document.getElementById('communityBody');
+        sorted.forEach(function(sailor) {
+          var prd = computePRDTier(sailor);
+          var badgeClass = prdBadgeClass(prd.tier);
+          var tr = document.createElement('tr');
+          tr.innerHTML =
+            '<td><span class="prd-badge prd-badge--' + badgeClass + '">' + prd.tier + '</span></td>' +
+            '<td>' + sailor.lastName + ', ' + sailor.firstName + '</td>' +
+            '<td>' + sailor.rate + '</td>' +
+            '<td>' + sailor.payGrade + '</td>' +
+            '<td>' + sailor.command + '</td>' +
+            '<td>' + sailor.prd + '</td>' +
+            '<td>' + sailor.detailer + '</td>';
+          tbody.appendChild(tr);
+        });
+
+        // --- Command manning risk ---
+        var commandPromises = commands.map(function(cmd) {
+          return SideCarAdapter.getBillets(cmd.id).then(function(billets) {
+            var filled = billets.filter(function(b) { return b.filled; }).length;
+            var vacant = billets.length - filled;
+            var pct = billets.length > 0 ? Math.round((filled / billets.length) * 100) : 0;
+            totalBillets += billets.length;
+            filledBillets += filled;
+            return { name: cmd.name, pct: pct, vacant: vacant, total: billets.length };
+          });
+        });
+
+        Promise.all(commandPromises).then(function(cmdData) {
+          // Sort by lowest manning first
+          cmdData.sort(function(a, b) { return a.pct - b.pct; });
+
+          var riskContainer = document.getElementById('commandRisk');
+          cmdData.forEach(function(cmd) {
+            var pctColor = 'var(--color-prd-green-text)';
+            if (cmd.pct < 70) pctColor = 'var(--color-prd-red-text)';
+            else if (cmd.pct < 90) pctColor = 'var(--color-prd-yellow-text)';
+
+            var row = document.createElement('div');
+            row.className = 'command-risk-row';
+            row.innerHTML =
+              '<span class="command-risk-row__name">' + cmd.name + '</span>' +
+              '<span class="command-risk-row__vacancies">' + cmd.vacant + ' vacant</span>' +
+              '<span class="command-risk-row__pct" style="color:' + pctColor + '">' + cmd.pct + '%</span>';
+            riskContainer.appendChild(row);
+          });
+
+          // Update overall manning
+          var overallPct = totalBillets > 0 ? Math.round((filledBillets / totalBillets) * 100) : 0;
+          document.getElementById('pcManningPct').textContent = overallPct + '%';
+          document.getElementById('pcOpenBillets').textContent = totalBillets - filledBillets;
+        });
+      });
+    })();
+  </script>
+</body>
+</html>

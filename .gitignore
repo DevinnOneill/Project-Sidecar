@@ -1,0 +1,17 @@
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Environment / credentials (C-03, SECURITY.md)
+.env
+.env.*
+credentials.*
+*.key
+*.pem

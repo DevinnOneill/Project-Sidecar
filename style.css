@@ -1,0 +1,416 @@
+/* ============================================================
+   SIDECAR — Covenant Design System
+   Version: 1.0
+   Authority: Gemini.md Section 14, UI-UX.md
+   Constraint: C-11 (no hex outside :root), C-12 (typography),
+               C-13 (dark mode only), C-04 (no nesting, no @layer)
+   ============================================================ */
+
+/* --- DESIGN TOKENS --- */
+:root {
+  /* Backgrounds (darker = deeper) */
+  --color-bg-void:       #07060A;
+  --color-bg-base:       #0C0B0E;
+  --color-bg-surface:    #11101A;
+  --color-bg-elevated:   #17162A;
+  --color-bg-overlay:    #1E1D30;
+
+  /* Gold (signal, not decoration) */
+  --color-gold-primary:  #B88E48;
+  --color-gold-bright:   #E8C97A;
+  --color-gold-dim:      #7A6030;
+  --color-gold-glow:     rgba(184,142,72,0.15);
+
+  /* Text */
+  --color-text-primary:  #F0ECE4;
+  --color-text-secondary:#C4BEB4;
+  --color-text-muted:    #8A8478;
+  --color-text-dim:      #4A4840;
+
+  /* Borders */
+  --color-border-subtle: #1C1B28;
+  --color-border-default:#2E2C48;
+  --color-border-strong: #4A4870;
+  --color-border-gold:   #B88E48;
+
+  /* PRD Tiers (semantic — never repurpose per C-14) */
+  --color-prd-gray:            #5A6070;
+  --color-prd-gray-text:       #A0A8B4;
+  --color-prd-green:           #1A4A2E;
+  --color-prd-green-text:      #5DB880;
+  --color-prd-yellow:          #4A3A08;
+  --color-prd-yellow-text:     #D4A017;
+  --color-prd-red:             #4A0E0A;
+  --color-prd-red-text:        #E05A4A;
+  --color-prd-escalated:       #2A0A2A;
+  --color-prd-escalated-text:  #D080E0;
+  --color-prd-escalated-glow:  rgba(180,60,200,0.2);
+
+  /* Status Dots */
+  --color-dot-gray:      #5A6070;
+  --color-dot-green:     #2D8A4E;
+  --color-dot-yellow:    #D4A017;
+  --color-dot-red:       #C0392B;
+  --color-dot-escalated: #9B30B8;
+
+  /* Typography */
+  --font-display:  'Bebas Neue', Impact, sans-serif;
+  --font-body:     'Libre Baskerville', Georgia, serif;
+  --font-data:     'DM Mono', Consolas, monospace;
+
+  /* Spacing */
+  --space-xs:  4px;
+  --space-sm:  8px;
+  --space-md:  16px;
+  --space-lg:  24px;
+  --space-xl:  32px;
+  --space-2xl: 48px;
+
+  /* Radii */
+  --radius-sm: 2px;
+  --radius-md: 4px;
+
+  /* Topbar */
+  --topbar-height: 56px;
+}
+
+/* --- FONT LOADING (C-05: three-layer fallback) --- */
+@font-face {
+  font-family: 'Bebas Neue';
+  src: url('fonts/BebasNeue.woff2') format('woff2');
+  font-display: swap;
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Libre Baskerville';
+  src: url('fonts/LibreBaskerville-Regular.woff2') format('woff2');
+  font-display: swap;
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Libre Baskerville';
+  src: url('fonts/LibreBaskerville-Bold.woff2') format('woff2');
+  font-display: swap;
+  font-weight: 700;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'DM Mono';
+  src: url('fonts/DMMono-Regular.woff2') format('woff2');
+  font-display: swap;
+  font-weight: 400;
+  font-style: normal;
+}
+
+/* --- RESET & BASE --- */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  font-family: var(--font-body);
+  color: var(--color-text-primary);
+  background-color: var(--color-bg-void);
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+/* --- TYPOGRAPHY --- */
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--color-text-primary);
+}
+
+h1 { font-size: 2.5rem; }
+h2 { font-size: 1.75rem; }
+h3 { font-size: 1.25rem; }
+h4 { font-size: 1rem; }
+
+p {
+  font-family: var(--font-body);
+  color: var(--color-text-secondary);
+  line-height: 1.7;
+}
+
+/* --- TOPBAR --- */
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: var(--topbar-height);
+  padding: 0 var(--space-lg);
+  background-color: var(--color-bg-void);
+  border-bottom: 2px solid var(--color-border-gold);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.topbar__brand {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  color: var(--color-gold-bright);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-decoration: none;
+}
+
+/* --- NAVIGATION --- */
+.nav {
+  display: flex;
+  gap: var(--space-lg);
+  align-items: center;
+}
+
+.nav__link {
+  font-family: var(--font-display);
+  font-size: 0.875rem;
+  color: var(--color-text-muted);
+  text-decoration: none;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding-bottom: var(--space-xs);
+  border-bottom: 2px solid transparent;
+  transition: color 0.2s, border-color 0.2s;
+}
+
+.nav__link:hover {
+  color: var(--color-text-secondary);
+}
+
+.nav__link--active {
+  color: var(--color-gold-bright);
+  border-bottom-color: var(--color-border-gold);
+}
+
+.nav__link:focus-visible {
+  outline: 2px solid var(--color-gold-primary);
+  outline-offset: 2px;
+}
+
+/* --- LAYOUT --- */
+.page-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: var(--space-xl) var(--space-lg);
+}
+
+.page-header {
+  margin-bottom: var(--space-xl);
+}
+
+.page-header__title {
+  margin-bottom: var(--space-sm);
+}
+
+.page-header__subtitle {
+  font-family: var(--font-body);
+  color: var(--color-text-muted);
+  font-size: 0.875rem;
+}
+
+/* --- CARDS / PANELS --- */
+.card {
+  background-color: var(--color-bg-surface);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-md);
+  padding: var(--space-md) var(--space-lg);
+}
+
+.card--elevated {
+  background-color: var(--color-bg-elevated);
+}
+
+.card__header {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--color-gold-primary);
+  margin-bottom: var(--space-md);
+  padding-bottom: var(--space-sm);
+  border-bottom: 1px solid var(--color-border-subtle);
+}
+
+/* --- TABLES --- */
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--font-data);
+  font-size: 0.8125rem;
+}
+
+.data-table thead th {
+  background-color: var(--color-bg-elevated);
+  font-family: var(--font-data);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--color-text-muted);
+  padding: var(--space-sm) var(--space-md);
+  text-align: left;
+  border-bottom: 1px solid var(--color-border-default);
+}
+
+.data-table tbody td {
+  padding: var(--space-sm) var(--space-md);
+  border-bottom: 1px solid var(--color-border-subtle);
+  color: var(--color-text-primary);
+  vertical-align: middle;
+}
+
+.data-table tbody tr:hover {
+  background-color: var(--color-bg-overlay);
+}
+
+/* --- PRD BADGES --- */
+.prd-badge {
+  display: inline-block;
+  font-family: var(--font-data);
+  font-size: 0.6875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: var(--radius-sm) var(--space-sm);
+  border-radius: var(--radius-sm);
+}
+
+.prd-badge--stable {
+  background-color: var(--color-prd-gray);
+  color: var(--color-prd-gray-text);
+}
+
+.prd-badge--watch {
+  background-color: var(--color-prd-green);
+  color: var(--color-prd-green-text);
+}
+
+.prd-badge--urgent {
+  background-color: var(--color-prd-yellow);
+  color: var(--color-prd-yellow-text);
+}
+
+.prd-badge--critical {
+  background-color: var(--color-prd-red);
+  color: var(--color-prd-red-text);
+}
+
+.prd-badge--expired {
+  background-color: var(--color-prd-escalated);
+  color: var(--color-prd-escalated-text);
+}
+
+/* --- STATUS DOTS --- */
+.status-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin-right: var(--space-xs);
+  vertical-align: middle;
+}
+
+.status-dot--gray    { background-color: var(--color-dot-gray); }
+.status-dot--green   { background-color: var(--color-dot-green); }
+.status-dot--yellow  { background-color: var(--color-dot-yellow); }
+.status-dot--red     { background-color: var(--color-dot-red); }
+.status-dot--escalated { background-color: var(--color-dot-escalated); }
+
+/* --- BUTTONS --- */
+.btn {
+  font-family: var(--font-display);
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: var(--space-sm) var(--space-md);
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--radius-md);
+  background-color: var(--color-bg-elevated);
+  color: var(--color-text-primary);
+  cursor: pointer;
+  transition: background-color 0.2s, border-color 0.2s;
+}
+
+.btn:hover {
+  background-color: var(--color-bg-overlay);
+  border-color: var(--color-border-strong);
+}
+
+.btn--gold {
+  border-color: var(--color-border-gold);
+  color: var(--color-gold-bright);
+}
+
+.btn--gold:hover {
+  background-color: var(--color-gold-glow);
+}
+
+.btn:focus-visible {
+  outline: 2px solid var(--color-gold-primary);
+  outline-offset: 2px;
+}
+
+/* --- UTILITY --- */
+.font-data {
+  font-family: var(--font-data);
+}
+
+.font-display {
+  font-family: var(--font-display);
+}
+
+.text-gold {
+  color: var(--color-gold-primary);
+}
+
+.text-muted {
+  color: var(--color-text-muted);
+}
+
+.text-secondary {
+  color: var(--color-text-secondary);
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* --- DATA STALE BANNER (offline behavior scaffold) --- */
+.data-stale-banner {
+  display: none;
+  font-family: var(--font-data);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--color-prd-yellow-text);
+  background-color: var(--color-prd-yellow);
+  padding: var(--space-xs) var(--space-md);
+  text-align: center;
+}
+
+.data-stale-banner--visible {
+  display: block;
+}

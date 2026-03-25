@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SideCar — Landing</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* Page 2 — Landing / Role Selection layout */
+    .landing-hero {
+      text-align: center;
+      padding: var(--space-2xl) var(--space-lg) var(--space-xl);
+    }
+    .landing-hero__title {
+      font-size: 4rem;
+      color: var(--color-gold-bright);
+      margin-bottom: var(--space-xs);
+    }
+    .landing-hero__subtitle {
+      font-family: var(--font-display);
+      font-size: 1.125rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--color-text-muted);
+      margin-bottom: var(--space-sm);
+    }
+    .landing-hero__desc {
+      font-family: var(--font-body);
+      font-size: 0.9375rem;
+      color: var(--color-text-secondary);
+      max-width: 600px;
+      margin: 0 auto;
+      line-height: 1.7;
+    }
+    .role-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--space-lg);
+      max-width: 1000px;
+      margin: 0 auto var(--space-xl);
+      padding: 0 var(--space-lg);
+    }
+    .role-card {
+      background-color: var(--color-bg-surface);
+      border: 1px solid var(--color-border-subtle);
+      border-radius: var(--radius-md);
+      padding: var(--space-xl) var(--space-lg);
+      text-align: center;
+      text-decoration: none;
+      display: block;
+      transition: border-color 0.2s, background-color 0.2s;
+    }
+    .role-card:hover {
+      border-color: var(--color-border-gold);
+      background-color: var(--color-bg-elevated);
+    }
+    .role-card:focus-visible {
+      outline: 2px solid var(--color-gold-primary);
+      outline-offset: 2px;
+    }
+    .role-card__icon {
+      font-family: var(--font-data);
+      font-size: 2rem;
+      color: var(--color-gold-primary);
+      margin-bottom: var(--space-md);
+    }
+    .role-card__title {
+      font-family: var(--font-display);
+      font-size: 1.25rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--color-text-primary);
+      margin-bottom: var(--space-sm);
+    }
+    .role-card__desc {
+      font-family: var(--font-body);
+      font-size: 0.8125rem;
+      color: var(--color-text-muted);
+      line-height: 1.6;
+    }
+    .landing-stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: var(--space-md);
+      max-width: 1000px;
+      margin: 0 auto var(--space-xl);
+      padding: 0 var(--space-lg);
+    }
+    .landing-stat {
+      background-color: var(--color-bg-surface);
+      border: 1px solid var(--color-border-subtle);
+      border-radius: var(--radius-md);
+      padding: var(--space-md);
+      text-align: center;
+    }
+    .landing-stat__value {
+      font-family: var(--font-data);
+      font-size: 1.75rem;
+      color: var(--color-text-primary);
+    }
+    .landing-stat__label {
+      font-family: var(--font-display);
+      font-size: 0.6875rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--color-text-muted);
+      margin-top: var(--space-xs);
+    }
+    .landing-footer {
+      text-align: center;
+      padding: var(--space-lg);
+    }
+    .landing-footer__text {
+      font-family: var(--font-data);
+      font-size: 0.6875rem;
+      color: var(--color-text-dim);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+  </style>
+</head>
+<body>
+  <!-- Topbar -->
+  <header class="topbar">
+    <a href="page2.html" class="topbar__brand">SideCar</a>
+    <nav class="nav" aria-label="Main navigation">
+      <a href="page2.html" class="nav__link">Home</a>
+      <a href="page3.html" class="nav__link">Dashboard</a>
+      <a href="page4.html" class="nav__link">Sailor</a>
+      <a href="page5.html" class="nav__link">Manning</a>
+      <a href="page6.html" class="nav__link">Placement</a>
+    </nav>
+  </header>
+
+  <!-- Module: MOD-P2 — Landing / Role Selection -->
+  <main class="page-container">
+
+    <!-- Hero -->
+    <section class="landing-hero">
+      <h1 class="landing-hero__title">SideCar</h1>
+      <p class="landing-hero__subtitle">Enlisted Personnel Distribution Intelligence</p>
+      <p class="landing-hero__desc">
+        Select your role to enter the platform. Each view is tailored to the operational questions your role needs answered.
+      </p>
+    </section>
+
+    <!-- Role Selection Cards -->
+    <section class="role-grid" aria-label="Role selection">
+      <a href="page3.html" class="role-card" aria-label="Enter as Detailer">
+        <div class="role-card__icon">[D]</div>
+        <div class="role-card__title">Detailer</div>
+        <p class="role-card__desc">Manage your roster. Track PRD urgency, contact history, and billet alignment for every Sailor in your portfolio.</p>
+      </a>
+      <a href="page6.html" class="role-card" aria-label="Enter as Placement Coordinator">
+        <div class="role-card__icon">[P]</div>
+        <div class="role-card__title">Placement Coordinator</div>
+        <p class="role-card__desc">Cross-portfolio visibility. See misalignments, vacancies, and manning risk across your entire community.</p>
+      </a>
+      <a href="page6.html" class="role-card" aria-label="Enter as Rating Evaluator">
+        <div class="role-card__icon">[R]</div>
+        <div class="role-card__title">Rating Evaluator</div>
+        <p class="role-card__desc">Enterprise-scope analysis. Community health, pipeline risk, and distribution balance at the rating level.</p>
+      </a>
+    </section>
+
+    <!-- Summary Stats (populated by adapter) -->
+    <section class="landing-stats" id="landingStats" aria-label="Portfolio summary">
+      <div class="landing-stat">
+        <div class="landing-stat__value" id="statTotalSailors">--</div>
+        <div class="landing-stat__label">Sailors</div>
+      </div>
+      <div class="landing-stat">
+        <div class="landing-stat__value" id="statCritical">--</div>
+        <div class="landing-stat__label">Critical / Expired</div>
+      </div>
+      <div class="landing-stat">
+        <div class="landing-stat__value" id="statCommands">--</div>
+        <div class="landing-stat__label">Commands</div>
+      </div>
+      <div class="landing-stat">
+        <div class="landing-stat__value" id="statVacancies">--</div>
+        <div class="landing-stat__label">Open Billets</div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="landing-footer">
+      <p class="landing-footer__text">Navy Personnel Command · NPC Agentic Lab · Phase 1A · Synthetic Data Only</p>
+    </footer>
+
+  </main>
+
+  <script src="app.js"></script>
+  <script>
+    (function() {
+      // Populate landing stats from adapter
+      SideCarAdapter.getSailors().then(function(sailors) {
+        document.getElementById('statTotalSailors').textContent = sailors.length;
+
+        var criticalCount = sailors.filter(function(s) {
+          var tier = computePRDTier(s).tier;
+          return tier === 'CRITICAL' || tier === 'EXPIRED';
+        }).length;
+        document.getElementById('statCritical').textContent = criticalCount;
+      });
+
+      SideCarAdapter.getCommands().then(function(commands) {
+        document.getElementById('statCommands').textContent = commands.length;
+      });
+
+      // Count open billets
+      var openBillets = 0;
+      SideCarAdapter.getCommands().then(function(commands) {
+        var promises = commands.map(function(cmd) {
+          return SideCarAdapter.getBillets(cmd.id).then(function(billets) {
+            billets.forEach(function(b) {
+              if (!b.filled) openBillets++;
+            });
+          });
+        });
+        Promise.all(promises).then(function() {
+          document.getElementById('statVacancies').textContent = openBillets;
+        });
+      });
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SideCar — Command Manning</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* Page 5 — Command Manning layout */
+    .manning-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-lg);
+      margin-bottom: var(--space-xl);
+    }
+    .manning-card {
+      background-color: var(--color-bg-surface);
+      border: 1px solid var(--color-border-subtle);
+      border-radius: var(--radius-md);
+      padding: var(--space-lg);
+    }
+    .manning-card__header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: var(--space-md);
+      padding-bottom: var(--space-sm);
+      border-bottom: 1px solid var(--color-border-subtle);
+    }
+    .manning-card__name {
+      font-family: var(--font-display);
+      font-size: 1.125rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--color-gold-primary);
+    }
+    .manning-card__type {
+      font-family: var(--font-data);
+      font-size: 0.6875rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      padding: 2px 8px;
+      border-radius: var(--radius-sm);
+      background-color: var(--color-bg-elevated);
+      color: var(--color-text-muted);
+    }
+    .manning-bar {
+      height: 8px;
+      background-color: var(--color-bg-elevated);
+      border-radius: var(--radius-sm);
+      margin-bottom: var(--space-sm);
+      overflow: hidden;
+    }
+    .manning-bar__fill {
+      height: 100%;
+      border-radius: var(--radius-sm);
+      transition: width 0.3s;
+    }
+    .manning-stats {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: var(--space-md);
+    }
+    .manning-stat {
+      text-align: center;
+    }
+    .manning-stat__value {
+      font-family: var(--font-data);
+      font-size: 1.25rem;
+      color: var(--color-text-primary);
+    }
+    .manning-stat__label {
+      font-family: var(--font-display);
+      font-size: 0.625rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--color-text-muted);
+    }
+    .billet-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: var(--space-sm) 0;
+      border-bottom: 1px solid var(--color-border-subtle);
+      font-family: var(--font-data);
+      font-size: 0.8125rem;
+    }
+    .billet-row:last-child {
+      border-bottom: none;
+    }
+    .billet-row__title {
+      color: var(--color-text-primary);
+    }
+    .billet-row__detail {
+      color: var(--color-text-muted);
+    }
+    .billet-filled {
+      color: var(--color-prd-green-text);
+    }
+    .billet-vacant {
+      color: var(--color-prd-red-text);
+    }
+
+    .manning-overview {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--space-md);
+      margin-bottom: var(--space-xl);
+    }
+    .overview-card {
+      background-color: var(--color-bg-surface);
+      border: 1px solid var(--color-border-subtle);
+      border-radius: var(--radius-md);
+      padding: var(--space-md);
+      text-align: center;
+    }
+    .overview-card__value {
+      font-family: var(--font-data);
+      font-size: 1.75rem;
+      color: var(--color-text-primary);
+    }
+    .overview-card__label {
+      font-family: var(--font-display);
+      font-size: 0.6875rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--color-text-muted);
+      margin-top: var(--space-xs);
+    }
+  </style>
+</head>
+<body>
+  <!-- Topbar -->
+  <header class="topbar">
+    <a href="page2.html" class="topbar__brand">SideCar</a>
+    <nav class="nav" aria-label="Main navigation">
+      <a href="page2.html" class="nav__link">Home</a>
+      <a href="page3.html" class="nav__link">Dashboard</a>
+      <a href="page4.html" class="nav__link">Sailor</a>
+      <a href="page5.html" class="nav__link">Manning</a>
+      <a href="page6.html" class="nav__link">Placement</a>
+    </nav>
+  </header>
+
+  <!-- Module: MOD-P5 — Command Manning View -->
+  <main class="page-container">
+
+    <section class="page-header">
+      <h1 class="page-header__title">Command Manning</h1>
+      <p class="page-header__subtitle">Billet fill rates and vacancy tracking by command</p>
+    </section>
+
+    <!-- Overview Stats -->
+    <section class="manning-overview" id="manningOverview" aria-label="Manning overview">
+      <div class="overview-card">
+        <div class="overview-card__value" id="overviewTotal">--</div>
+        <div class="overview-card__label">Total Billets</div>
+      </div>
+      <div class="overview-card">
+        <div class="overview-card__value" id="overviewFilled">--</div>
+        <div class="overview-card__label">Filled</div>
+      </div>
+      <div class="overview-card">
+        <div class="overview-card__value" id="overviewVacant">--</div>
+        <div class="overview-card__label">Vacant</div>
+      </div>
+    </section>
+
+    <!-- Command Cards -->
+    <section class="manning-grid" id="manningGrid" aria-label="Command manning details">
+      <!-- Populated by JavaScript -->
+    </section>
+
+  </main>
+
+  <script src="app.js"></script>
+  <script>
+    (function() {
+      var totalBillets = 0;
+      var filledBillets = 0;
+
+      SideCarAdapter.getCommands().then(function(commands) {
+        var grid = document.getElementById('manningGrid');
+        grid.innerHTML = '';
+
+        var allPromises = commands.map(function(cmd) {
+          return SideCarAdapter.getBillets(cmd.id).then(function(billets) {
+            var filled = billets.filter(function(b) { return b.filled; }).length;
+            var vacant = billets.length - filled;
+            var pct = billets.length > 0 ? Math.round((filled / billets.length) * 100) : 0;
+
+            totalBillets += billets.length;
+            filledBillets += filled;
+
+            // Determine bar color based on fill percentage
+            var barColor = 'var(--color-prd-green-text)';
+            if (pct < 70) barColor = 'var(--color-prd-red-text)';
+            else if (pct < 90) barColor = 'var(--color-prd-yellow-text)';
+
+            var card = document.createElement('div');
+            card.className = 'manning-card';
+
+            var billetsHTML = '';
+            billets.forEach(function(b) {
+              var statusClass = b.filled ? 'billet-filled' : 'billet-vacant';
+              var statusText = b.filled ? 'FILLED' : 'VACANT';
+              billetsHTML +=
+                '<div class="billet-row">' +
+                  '<span class="billet-row__title">' + b.title + '</span>' +
+                  '<span class="billet-row__detail">' + b.rate + ' ' + b.payGrade + '</span>' +
+                  '<span class="' + statusClass + '">' + statusText + '</span>' +
+                '</div>';
+            });
+
+            card.innerHTML =
+              '<div class="manning-card__header">' +
+                '<span class="manning-card__name">' + cmd.name + '</span>' +
+                '<span class="manning-card__type">' + cmd.type + '</span>' +
+              '</div>' +
+              '<div class="manning-stats">' +
+                '<div class="manning-stat"><div class="manning-stat__value">' + pct + '%</div><div class="manning-stat__label">Manned</div></div>' +
+                '<div class="manning-stat"><div class="manning-stat__value">' + filled + '</div><div class="manning-stat__label">Filled</div></div>' +
+                '<div class="manning-stat"><div class="manning-stat__value">' + vacant + '</div><div class="manning-stat__label">Vacant</div></div>' +
+              '</div>' +
+              '<div class="manning-bar"><div class="manning-bar__fill" style="width:' + pct + '%;background-color:' + barColor + '"></div></div>' +
+              billetsHTML;
+
+            grid.appendChild(card);
+          });
+        });
+
+        Promise.all(allPromises).then(function() {
+          document.getElementById('overviewTotal').textContent = totalBillets;
+          document.getElementById('overviewFilled').textContent = filledBillets;
+          document.getElementById('overviewVacant').textContent = totalBillets - filledBillets;
+        });
+      });
+    })();
+  </script>
+</body>
+</html>

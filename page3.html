@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SideCar — Detailer Dashboard</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* Page 3 — Dashboard layout */
+    .dashboard-summary {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: var(--space-md);
+      margin-bottom: var(--space-xl);
+    }
+    .summary-card {
+      background-color: var(--color-bg-surface);
+      border: 1px solid var(--color-border-subtle);
+      border-radius: var(--radius-md);
+      padding: var(--space-md);
+      text-align: center;
+    }
+    .summary-card__value {
+      font-family: var(--font-data);
+      font-size: 2rem;
+      color: var(--color-text-primary);
+    }
+    .summary-card__label {
+      font-family: var(--font-display);
+      font-size: 0.6875rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--color-text-muted);
+      margin-top: var(--space-xs);
+    }
+    .summary-card--expired .summary-card__value { color: var(--color-prd-escalated-text); }
+    .summary-card--critical .summary-card__value { color: var(--color-prd-red-text); }
+    .summary-card--urgent .summary-card__value { color: var(--color-prd-yellow-text); }
+    .summary-card--watch .summary-card__value { color: var(--color-prd-green-text); }
+    .summary-card--stable .summary-card__value { color: var(--color-prd-gray-text); }
+
+    .dashboard-controls {
+      display: flex;
+      gap: var(--space-md);
+      margin-bottom: var(--space-md);
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    .dashboard-controls select {
+      font-family: var(--font-data);
+      font-size: 0.8125rem;
+      background-color: var(--color-bg-elevated);
+      color: var(--color-text-primary);
+      border: 1px solid var(--color-border-default);
+      border-radius: var(--radius-md);
+      padding: var(--space-sm) var(--space-md);
+    }
+    .dashboard-controls select:focus-visible {
+      outline: 2px solid var(--color-gold-primary);
+      outline-offset: 2px;
+    }
+    .dashboard-controls label {
+      font-family: var(--font-display);
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--color-text-muted);
+      margin-right: var(--space-xs);
+    }
+
+    .contact-stale {
+      color: var(--color-prd-red-text);
+    }
+    .contact-recent {
+      color: var(--color-prd-green-text);
+    }
+
+    .sailor-link {
+      color: var(--color-gold-bright);
+      text-decoration: none;
+    }
+    .sailor-link:hover {
+      text-decoration: underline;
+    }
+    .sailor-link:focus-visible {
+      outline: 2px solid var(--color-gold-primary);
+      outline-offset: 2px;
+    }
+  </style>
+</head>
+<body>
+  <!-- Topbar -->
+  <header class="topbar">
+    <a href="page2.html" class="topbar__brand">SideCar</a>
+    <nav class="nav" aria-label="Main navigation">
+      <a href="page2.html" class="nav__link">Home</a>
+      <a href="page3.html" class="nav__link">Dashboard</a>
+      <a href="page4.html" class="nav__link">Sailor</a>
+      <a href="page5.html" class="nav__link">Manning</a>
+      <a href="page6.html" class="nav__link">Placement</a>
+    </nav>
+  </header>
+
+  <!-- Offline behavior scaffold -->
+  <div class="data-stale-banner" id="staleBanner">DATA STALE — Last updated: <span id="staleTimestamp"></span></div>
+
+  <!-- Module: MOD-P3 — Detailer Dashboard -->
+  <main class="page-container">
+
+    <section class="page-header">
+      <h1 class="page-header__title">Detailer Dashboard</h1>
+      <p class="page-header__subtitle">PERS-401 · Roster Overview</p>
+    </section>
+
+    <!-- PRD Tier Summary Cards -->
+    <section class="dashboard-summary" id="prdSummary" aria-label="PRD tier summary">
+      <div class="summary-card summary-card--expired">
+        <div class="summary-card__value" id="countExpired">--</div>
+        <div class="summary-card__label">Expired</div>
+      </div>
+      <div class="summary-card summary-card--critical">
+        <div class="summary-card__value" id="countCritical">--</div>
+        <div class="summary-card__label">Critical</div>
+      </div>
+      <div class="summary-card summary-card--urgent">
+        <div class="summary-card__value" id="countUrgent">--</div>
+        <div class="summary-card__label">Urgent</div>
+      </div>
+      <div class="summary-card summary-card--watch">
+        <div class="summary-card__value" id="countWatch">--</div>
+        <div class="summary-card__label">Watch</div>
+      </div>
+      <div class="summary-card summary-card--stable">
+        <div class="summary-card__value" id="countStable">--</div>
+        <div class="summary-card__label">Stable</div>
+      </div>
+    </section>
+
+    <!-- Filters -->
+    <section class="dashboard-controls">
+      <div>
+        <label for="filterRate">Rate</label>
+        <select id="filterRate">
+          <option value="">All Rates</option>
+          <option value="IT">IT</option>
+          <option value="CTN">CTN</option>
+          <option value="YN">YN</option>
+        </select>
+      </div>
+      <div>
+        <label for="filterPRD">PRD Tier</label>
+        <select id="filterPRD">
+          <option value="">All Tiers</option>
+          <option value="EXPIRED">Expired</option>
+          <option value="CRITICAL">Critical</option>
+          <option value="URGENT">Urgent</option>
+          <option value="WATCH">Watch</option>
+          <option value="STABLE">Stable</option>
+        </select>
+      </div>
+      <div>
+        <label for="filterGrade">Pay Grade</label>
+        <select id="filterGrade">
+          <option value="">All Grades</option>
+          <option value="E4">E-4</option>
+          <option value="E5">E-5</option>
+          <option value="E6">E-6</option>
+          <option value="E7">E-7</option>
+        </select>
+      </div>
+    </section>
+
+    <!-- Sailor Roster Table -->
+    <section class="card">
+      <table class="data-table" id="rosterTable" aria-label="Sailor roster">
+        <thead>
+          <tr>
+            <th scope="col">PRD</th>
+            <th scope="col">Name</th>
+            <th scope="col">Rate</th>
+            <th scope="col">Grade</th>
+            <th scope="col">PRD Date</th>
+            <th scope="col">EAOS</th>
+            <th scope="col">Command</th>
+            <th scope="col">Last Contact</th>
+          </tr>
+        </thead>
+        <tbody id="rosterBody">
+          <!-- Populated by JavaScript -->
+        </tbody>
+      </table>
+    </section>
+
+  </main>
+
+  <script src="app.js"></script>
+  <script>
+    (function() {
+      var allSailors = [];
+
+      function daysSince(dateStr) {
+        var d = parseDate(dateStr);
+        var diff = today().getTime() - d.getTime();
+        return Math.floor(diff / (1000 * 60 * 60 * 24));
+      }
+
+      function renderSummary(sailors) {
+        var counts = { EXPIRED: 0, CRITICAL: 0, URGENT: 0, WATCH: 0, STABLE: 0 };
+        sailors.forEach(function(s) {
+          var tier = computePRDTier(s).tier;
+          if (counts[tier] !== undefined) counts[tier]++;
+        });
+        document.getElementById('countExpired').textContent = counts.EXPIRED;
+        document.getElementById('countCritical').textContent = counts.CRITICAL;
+        document.getElementById('countUrgent').textContent = counts.URGENT;
+        document.getElementById('countWatch').textContent = counts.WATCH;
+        document.getElementById('countStable').textContent = counts.STABLE;
+      }
+
+      function renderTable(sailors) {
+        // Sort by PRD priority (most urgent first)
+        var sorted = sailors.slice().sort(function(a, b) {
+          return computePRDTier(a).priority - computePRDTier(b).priority;
+        });
+
+        var tbody = document.getElementById('rosterBody');
+        tbody.innerHTML = '';
+
+        sorted.forEach(function(sailor) {
+          var prd = computePRDTier(sailor);
+          var badgeClass = prdBadgeClass(prd.tier);
+          var days = daysSince(sailor.lastContact);
+          var contactClass = days > 30 ? 'contact-stale' : 'contact-recent';
+          var contactLabel = days + 'd ago';
+
+          var tr = document.createElement('tr');
+          tr.innerHTML =
+            '<td><span class="prd-badge prd-badge--' + badgeClass + '">' + prd.tier + '</span></td>' +
+            '<td><a href="page4.html?id=' + sailor.id + '" class="sailor-link">' + sailor.lastName + ', ' + sailor.firstName + '</a></td>' +
+            '<td>' + sailor.rate + '</td>' +
+            '<td>' + sailor.payGrade + '</td>' +
+            '<td>' + sailor.prd + '</td>' +
+            '<td>' + sailor.eaos + '</td>' +
+            '<td>' + sailor.command + '</td>' +
+            '<td><span class="' + contactClass + '">' + contactLabel + '</span></td>';
+          tbody.appendChild(tr);
+        });
+      }
+
+      function applyFilters() {
+        var rate = document.getElementById('filterRate').value;
+        var prdTier = document.getElementById('filterPRD').value;
+        var grade = document.getElementById('filterGrade').value;
+
+        var filtered = allSailors.filter(function(s) {
+          if (rate && s.rate !== rate) return false;
+          if (prdTier && computePRDTier(s).tier !== prdTier) return false;
+          if (grade && s.payGrade !== grade) return false;
+          return true;
+        });
+
+        renderTable(filtered);
+      }
+
+      // Initialize
+      SideCarAdapter.getSailors().then(function(sailors) {
+        allSailors = sailors;
+        renderSummary(sailors);
+        renderTable(sailors);
+      });
+
+      // Filter listeners
+      document.getElementById('filterRate').addEventListener('change', applyFilters);
+      document.getElementById('filterPRD').addEventListener('change', applyFilters);
+      document.getElementById('filterGrade').addEventListener('change', applyFilters);
+    })();
+  </script>
+</body>
+</html>
