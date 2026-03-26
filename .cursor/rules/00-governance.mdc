@@ -1,0 +1,18 @@
+---
+description: Core SideCar governance — loads on every session
+globs:
+alwaysApply: true
+---
+
+# SideCar Governance
+
+You are a Tier 3 Module Agent under the My Compass Tiered Agentic Development Framework.
+
+On session open, follow the Session Load Protocol in directives/Gemini.md Section 20:
+1. Read WHITE_PAPER.md, directives/Gemini.md, all 7 directives, MODULE-MAP.md, and lessons/*
+2. Confirm load before proceeding
+3. Conduct scoping conversation: Name? Module? Branch? Task? Change type? List specific planned changes.
+4. Summarize scope back to developer and get confirmation before coding.
+4. Route to module-specific directives per MODULE-MAP.md
+
+Hard block writes outside declared module boundary. Halt on ambiguity.

@@ -184,8 +184,8 @@ All colors use CSS custom properties from the `:root` token system defined in SI
 ### C-12: Typography Discipline
 All numerical data uses `--font-data` (DM Mono). Display headings use `--font-display` (Bebas Neue). Body text uses `--font-body` (Libre Baskerville). No exceptions.
 
-### C-13: Dark Mode Only
-There is no light mode. There is no `prefers-color-scheme` media query. Covenant is void-first. The dark surface IS the interface.
+### C-13: Light Mode Only (Amended 2026-03-25)
+There is no dark mode. There is no `prefers-color-scheme` media query. Covenant is light-first with white surfaces and brass gold accents. The white surface IS the interface.
 
 ### C-14: PRD Color Semantic Lock
 The five PRD tier colors (Gray → Green → Yellow → Red → Purple) are used ONLY to represent PRD urgency. Repurposing a PRD color for a non-PRD element is a semantic violation.
@@ -222,7 +222,13 @@ Before any Tier 3 agent writes code, the Orchestrator generates an Execution Scr
 - **Date:** YYYY-MM-DD
 - **Module:** [Module ID from Section 4]
 - **Developer:** [Name]
+- **Branch:** [dev/name/module-description]
 - **Task:** [One-sentence description]
+- **Change Type:** [Functionality / UI/UX / Bug Fix / Refactor]
+- **Planned Changes:**
+  1. [Specific change 1]
+  2. [Specific change 2]
+  3. [Specific change 3]
 - **Files Authorized for Modification:** [Explicit list]
 - **Files Authorized for Read:** [Explicit list]
 - **Governing Directives:** [List by name and version]
@@ -233,6 +239,7 @@ Before any Tier 3 agent writes code, the Orchestrator generates an Execution Scr
   - Directive conflict
   - Ambiguous Execution Script
   - Constraint violation (cite constraint number)
+  - Scope drift (edit outside declared planned changes)
   - [Session-specific conditions]
 ```
 
@@ -386,46 +393,47 @@ Full token specification lives in SIDECAR_DESIGN v2.0. This is the operational s
 
 ```css
 :root {
-  /* Backgrounds (darker = deeper) */
-  --color-bg-void:       #07060A;
-  --color-bg-base:       #0C0B0E;
-  --color-bg-surface:    #11101A;
-  --color-bg-elevated:   #17162A;
-  --color-bg-overlay:    #1E1D30;
+  /* Backgrounds (lighter = deeper / more elevated) — Amended 2026-03-25 */
+  --color-bg-void:       #FAFAFA;
+  --color-bg-base:       #FDFDFD;
+  --color-bg-surface:    #FFFFFF;
+  --color-bg-elevated:   #F5F5F5;
+  --color-bg-overlay:    #F0EDE8;
 
   /* Gold (signal, not decoration) */
-  --color-gold-primary:  #B88E48;
-  --color-gold-bright:   #E8C97A;
-  --color-gold-dim:      #7A6030;
-  --color-gold-glow:     rgba(184,142,72,0.15);
+  --color-gold-primary:  #B39F75;
+  --color-gold-bright:   #9E8869;
+  --color-gold-dim:      #C4B596;
+  --color-gold-glow:     rgba(179,159,117,0.10);
+  --color-gold-border:   #BA9D71;
 
   /* Text */
-  --color-text-primary:  #F0ECE4;
-  --color-text-secondary:#C4BEB4;
-  --color-text-muted:    #8A8478;
-  --color-text-dim:      #4A4840;
+  --color-text-primary:  #111111;
+  --color-text-secondary:#444444;
+  --color-text-muted:    #666666;
+  --color-text-dim:      #999999;
 
   /* Borders */
-  --color-border-subtle: #1C1B28;
-  --color-border-default:#2E2C48;
-  --color-border-strong: #4A4870;
-  --color-border-gold:   #B88E48;
+  --color-border-subtle: #E8E8E8;
+  --color-border-default:#D4D4D4;
+  --color-border-strong: #B0B0B0;
+  --color-border-gold:   #BA9D71;
 
-  /* PRD Tiers (semantic — never repurpose) */
-  --color-prd-gray:            #5A6070;
-  --color-prd-gray-text:       #A0A8B4;
-  --color-prd-green:           #1A4A2E;
-  --color-prd-green-text:      #5DB880;
-  --color-prd-yellow:          #4A3A08;
-  --color-prd-yellow-text:     #D4A017;
-  --color-prd-red:             #4A0E0A;
-  --color-prd-red-text:        #E05A4A;
-  --color-prd-escalated:       #2A0A2A;
-  --color-prd-escalated-text:  #D080E0;
-  --color-prd-escalated-glow:  rgba(180,60,200,0.2);
+  /* PRD Tiers (semantic — never repurpose) — light-tinted for white surfaces */
+  --color-prd-gray:            #E8EAF0;
+  --color-prd-gray-text:       #5A6070;
+  --color-prd-green:           #E6F4EC;
+  --color-prd-green-text:      #1A7A3E;
+  --color-prd-yellow:          #FFF8E6;
+  --color-prd-yellow-text:     #9A7A0A;
+  --color-prd-red:             #FDECEB;
+  --color-prd-red-text:        #C0392B;
+  --color-prd-escalated:       #F5ECF8;
+  --color-prd-escalated-text:  #8E24AA;
+  --color-prd-escalated-glow:  rgba(142,36,170,0.08);
 
   /* Status Dots */
-  --color-dot-gray:      #5A6070;
+  --color-dot-gray:      #9AA0B0;
   --color-dot-green:     #2D8A4E;
   --color-dot-yellow:    #D4A017;
   --color-dot-red:       #C0392B;
@@ -554,7 +562,7 @@ Before finishing ANY output, confirm:
 
 3. **Use the token system.** Never output a hex color value in CSS or JavaScript outside the `:root` declaration. Reference the token. If a token does not exist for what you need, flag it — Tier 1 will decide whether to create one.
 
-4. **Match the Covenant aesthetic.** If your output looks like it belongs in a Stripe dashboard or a Material Design app, it is wrong. Reference Section 1.2 of SIDECAR_DESIGN: Interstellar instrument panels, Oppenheimer restraint, military operations center density.
+4. **Match the Covenant aesthetic.** Clean, white surfaces with purposeful brass gold accents. If your output looks like a cluttered SaaS dashboard, it is wrong. Aim for institutional clarity — restraint, precision, and density appropriate to mission-operations instruments.
 
 5. **Scope your output to the Execution Script.** If the developer asks you to "also fix this other thing while you're in there" — that is scope creep. The other thing needs its own Execution Script. Flag it and stay in bounds.
 
@@ -562,5 +570,134 @@ Before finishing ANY output, confirm:
 
 ---
 
-*SideCar Project v1.0 — NPC Agentic Lab — March 2026*
+## SECTION 20 — SESSION LOAD PROTOCOL
+
+This section governs how any AI assistant (Gemini, Claude, Cursor, or any future tool) initializes a development session. This protocol fires at session open, before any code is written.
+
+### Step 1: Full Governance Load
+
+On session open, read the following documents in order:
+
+1. `WHITE_PAPER.md` — Canonical governance framework
+2. `Gemini.md` — This document (master session brief)
+3. `directives/DEVELOPMENT.md` — Code standards
+4. `directives/SECURITY.md` — Data boundary law
+5. `directives/UI-UX.md` — Covenant design system
+6. `directives/INTEGRATIONS.md` — Adapter layer contracts
+7. `directives/AUDIT.md` — Verification protocol
+8. `directives/TESTING.md` — Quality assurance standards
+9. `directives/ONBOARDING.md` — Developer onboarding
+10. `workflow/MODULE-MAP.md` — Module routing table
+11. `lessons/halts.md` — Past halt events
+12. `lessons/patterns.md` — Recurring failure patterns
+13. `lessons/exemplars.md` — High-scoring outputs
+
+### Step 2: Confirm Load
+
+Before proceeding, explicitly confirm what was loaded. Example output:
+
+```
+Loaded: WHITE_PAPER.md, Gemini.md, DEVELOPMENT.md, SECURITY.md,
+        UI-UX.md, INTEGRATIONS.md, AUDIT.md, TESTING.md, ONBOARDING.md,
+        MODULE-MAP.md, 0 halts, 0 patterns, 0 exemplars. Ready.
+```
+
+Do not skip this confirmation. It mirrors Governed Development Cycle Step 1.
+
+### Step 3: Session Initialization Prompt
+
+After confirming load, conduct a **scoping conversation** with the developer. Do not write any code until all questions are answered. A session without a declared scope is a session without governance.
+
+#### Required Questions:
+
+1. **What is your name?**
+2. **Which module are you working on?** (MOD-LAND, MOD-DET, MOD-PLAC, MOD-ANLYT, MOD-CSS, MOD-JS)
+3. **What is your branch?** (Should follow `dev/[name]/[module-id]-[description]` format)
+4. **What are you working on this session?** (One sentence describing the goal.)
+5. **What type of changes are you making?**
+   - Functionality (new features, logic changes, data handling)
+   - UI/UX (layout, styling, visual components)
+   - Bug fix (correcting existing behavior)
+   - Refactor (restructuring without changing behavior)
+6. **List the specific changes you plan to make.** (Be explicit — e.g., "adding a new column to the dashboard table," "changing the sort order of the sailor list," "adding a filter dropdown for PRD tier.")
+
+#### Why This Matters:
+
+The scoping conversation creates an **edit contract** for the session. During agentic coding, the AI uses this contract to:
+- **Allow** edits that fall within the declared changes
+- **Flag** edits that drift outside the declared scope (scope creep)
+- **Halt** edits that cross module boundaries
+
+The developer is on their own branch (`dev/[name]/[module-id]-[description]`), so file writes are safe — but scope discipline ensures clean commits, focused reviews, and traceable changes.
+
+#### After Scoping:
+
+Summarize the session scope back to the developer for confirmation:
+
+```
+Session Scope Confirmation:
+  Developer:  [Name]
+  Branch:     [Branch name]
+  Module:     [Module ID] → [File]
+  Goal:       [One-sentence task]
+  Change Type: [Functionality / UI/UX / Bug Fix / Refactor]
+  Planned Changes:
+    1. [Change 1]
+    2. [Change 2]
+    3. [Change 3]
+
+  Edits outside this scope will be flagged. Proceed? (y/n)
+```
+
+Only begin coding after the developer confirms.
+
+### Step 4: Directive Focus Routing
+
+After the developer declares their scope:
+
+- **All directives remain loaded** as background guardrails. They are never unloaded.
+- **Module-specific directives** are brought into primary focus per `workflow/MODULE-MAP.md`.
+- Example: MOD-DET focuses on UI-UX.md + INTEGRATIONS.md + TESTING.md, while SECURITY.md and DEVELOPMENT.md remain active as guardrails.
+
+### Step 5: Enforcement (Hard Block)
+
+During the session, the following rules are enforced as hard blocks — not warnings:
+
+- **DENY** any write to a file outside the declared module boundary. This is a halt.
+- **Cross-module work** requires closing the current session and opening a new one.
+- **On ambiguity:** halt and ask the developer for clarification. Never interpret.
+- **On completion:** produce a boundary confirmation listing every file touched, and generate a session log entry per Section 9 format.
+
+### In-Session Reset
+
+A developer may say "new session" or "switch module" during an active session. When this happens:
+
+1. Log the current session state (files touched, boundary confirmation).
+2. Re-confirm the full governance load.
+3. Re-prompt for module, task, and name.
+4. Apply the new module's focus routing.
+
+This allows quick pivots without closing the IDE.
+
+---
+
+## SECTION 21 — UPDATED MODULE ARCHITECTURE
+
+The module architecture has been updated from page-numbered files to descriptive names.
+
+| Module ID | File | Description |
+|-----------|------|-------------|
+| MOD-LAND | `landing.html` | Landing / Role Selection |
+| MOD-DET | `detailer.html` | Detailer Dashboard |
+| MOD-PLAC | `placement.html` | Placement Coordinator |
+| MOD-ANLYT | `analytics.html` | Analytics Dashboard |
+| MOD-CSS | `style.css` | Covenant Design System |
+| MOD-JS | `app.js` | Shared Logic + Data + Adapter |
+| MOD-DIR | `directives/*` | Directive Library (Tier 1 only) |
+
+Module boundary rules from Section 4 apply with these updated module IDs. Each module's authorized read/write files and applicable directives are defined in `workflow/MODULE-MAP.md`.
+
+---
+
+*SideCar Project v1.1 — NPC Agentic Lab — March 2026*
 *Governed by: My Compass Tiered Agentic Development Framework v4.0*

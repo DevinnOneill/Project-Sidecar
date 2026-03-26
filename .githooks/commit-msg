@@ -1,0 +1,39 @@
+#!/bin/bash
+# =============================================================
+# SideCar — Commit Message Hook
+# Enforces commit message format per DEVELOPMENT.md Section 3.
+# Format: [SC-YYYY-MMDD-NNN] MODULE-ID: Brief description
+# =============================================================
+
+COMMIT_MSG_FILE=$1
+COMMIT_MSG=$(cat "$COMMIT_MSG_FILE")
+
+# Allow merge commits and fixup commits
+if echo "$COMMIT_MSG" | grep -qE '^(Merge|fixup!|squash!)'; then
+  exit 0
+fi
+
+# Validate format: [SC-YYYY-MMDD-NNN] MODULE-ID: description
+if ! echo "$COMMIT_MSG" | grep -qE '^\[SC-[0-9]{4}-[0-9]{4}-[0-9]{3}\] MOD-[A-Z]+:'; then
+  echo ""
+  echo "  ============================================"
+  echo "  HALT: Commit message format violation"
+  echo "  ============================================"
+  echo ""
+  echo "  Required format:"
+  echo "    [SC-YYYY-MMDD-NNN] MODULE-ID: Brief description"
+  echo ""
+  echo "  Examples:"
+  echo "    [SC-2026-0325-001] MOD-DET: Add PRD tier column to dashboard table"
+  echo "    [SC-2026-0325-002] MOD-CSS: Add hover states to role selection cards"
+  echo "    [SC-2026-0325-003] MOD-JS: Add CSV file picker to adapter"
+  echo ""
+  echo "  Valid module IDs: MOD-LAND, MOD-DET, MOD-PLAC, MOD-ANLYT, MOD-CSS, MOD-JS, MOD-DIR"
+  echo ""
+  echo "  Your message was:"
+  echo "    $COMMIT_MSG"
+  echo ""
+  exit 1
+fi
+
+exit 0

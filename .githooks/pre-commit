@@ -1,0 +1,25 @@
+#!/bin/bash
+# =============================================================
+# SideCar — Pre-Commit Hook
+# Enforces module boundaries and constitutional constraints.
+# Activate with: git config core.hooksPath .githooks
+# =============================================================
+
+echo ""
+echo "  SideCar Pre-Commit Check"
+echo "  ========================"
+
+# Run boundary validation
+bash scripts/validate-boundaries.sh
+if [ $? -ne 0 ]; then
+  exit 1
+fi
+
+# Run constraint validation
+bash scripts/validate-constraints.sh
+if [ $? -ne 0 ]; then
+  exit 1
+fi
+
+echo "  All checks passed."
+echo ""

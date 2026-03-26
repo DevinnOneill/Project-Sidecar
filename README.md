@@ -5,6 +5,10 @@ Navy Personnel Command · NPC Agentic Lab · March 2026
 
 ---
 
+## Getting Started
+
+**First time here?** Read [READ_BEFORE_YOU_CODE.md](READ_BEFORE_YOU_CODE.md) — it's the full walkthrough written in plain English for developers of any experience level.
+
 ## Quick Start (< 2 minutes)
 
 **To see the app right now:**
@@ -34,10 +38,10 @@ Every page links to every other page through the top navigation bar. Click aroun
 | Layer | Technology | Why |
 |---|---|---|
 | **Structure** | HTML5 | Semantic markup. No framework. No JSX. Just `.html` files. |
-| **Styling** | CSS3 | Single `style.css` file. CSS custom properties (variables) for the design system. No Sass. No Tailwind. No preprocessor. |
-| **Logic** | Vanilla JavaScript (ES6) | Single `app.js` file. No React. No Vue. No npm. No bundler. No build step. |
-| **Data** | Embedded in `app.js` | All data is synthetic (fake but realistic). No database. No API calls. No `fetch()`. |
-| **Fonts** | Local `.woff2` files | Stored in `fonts/` folder. System fallbacks if missing. |
+| **Styling** | CSS3 | Single `app/style.css` file. CSS custom properties (variables) for the design system. No Sass. No Tailwind. No preprocessor. |
+| **Logic** | Vanilla JavaScript (ES6) | Single `app/app.js` file. No React. No Vue. No npm. No bundler. No build step. |
+| **Data** | Embedded in `app/app.js` | All data is synthetic (fake but realistic). No database. No API calls. No `fetch()`. |
+| **Fonts** | Local `.woff2` files | Stored in `app/fonts/` folder. System fallbacks if missing. |
 | **Version Control** | Git + GitHub | Standard branching workflow. Manual pushes only. |
 
 ### Why so simple?
@@ -113,7 +117,7 @@ The flat-file architecture is **intentionally SharePoint-compatible**:
 
 | Ready Now (Phase 1A) | Phase 1B (adapter swap) | Phase 2 (post-ATO) |
 |---|---|---|
-| Full UI for all 6 pages | Graph API calls inside adapter | Dataverse backend |
+| Full UI for all 4 pages | Graph API calls inside adapter | Dataverse backend |
 | Covenant design system | SPFx web part wrapper | Entra ID / CAC auth |
 | SideCarAdapter interface (Promise-based) | Exchange Online comm log pull | Power Automate triggers |
 | Synthetic data across all 5 PRD tiers | SharePoint hosting | Azure Monitor telemetry |
@@ -129,32 +133,48 @@ The adapter methods already return Promises (even though they don't need to in P
 ```
 Project-Sidecar/
 │
-├── index.html .............. Entry point (redirects to Landing)
-├── page2.html .............. Landing / Role Selection (start here)
-├── page3.html .............. Detailer Dashboard (main work surface)
-├── page4.html .............. Sailor Record View (individual profile)
-├── page5.html .............. Command Manning View (billet health)
-├── page6.html .............. Placement Coordinator / Evaluator View
+├── README.md ................. You are here
+├── READ_BEFORE_YOU_CODE.md ... Plain English walkthrough for new developers
+├── WHITE_PAPER.md ............ My Compass Tiered Agentic Development Framework v4.0
+├── CLAUDE.md ................. Claude Code session loader (auto-read)
+├── .cursorrules .............. Cursor IDE session loader (auto-read)
+├── CHANGELOG.md .............. History of every merge to main
+├── index.html ................ Entry point (redirects to app/)
 │
-├── style.css ............... All visual styling (Covenant Design System)
-├── app.js .................. All logic + synthetic data + adapter layer
+├── app/ ...................... All browser code lives here
+│   ├── landing.html .......... MOD-LAND: Landing / Role Selection
+│   ├── detailer.html ......... MOD-DET: Detailer Dashboard
+│   ├── placement.html ........ MOD-PLAC: Placement Coordinator
+│   ├── analytics.html ........ MOD-ANLYT: Analytics Dashboard
+│   ├── style.css ............. MOD-CSS: Covenant Design System
+│   ├── app.js ................ MOD-JS: Shared logic + data + adapter
+│   └── fonts/ ................ Local font files (woff2)
 │
-├── fonts/ .................. Local font files (Bebas Neue, Libre Baskerville, DM Mono)
+├── directives/ ............... Governance documents
+│   ├── Gemini.md ............. Master Session Brief — READ THIS FIRST
+│   ├── DEVELOPMENT.md ........ Code standards, commit format, branch rules
+│   ├── SECURITY.md ........... Data rules — what you can and cannot put in code
+│   ├── UI-UX.md .............. Design system, colors, typography, components
+│   ├── INTEGRATIONS.md ....... How data flows through the adapter layer
+│   ├── AUDIT.md .............. How your work gets verified
+│   ├── TESTING.md ............ Quality gate — how your work gets scored
+│   └── ONBOARDING.md ......... Your first-day checklist
 │
-├── Gemini.md ............... Master Session Brief — READ THIS FIRST
-├── directives/ ............. Governance documents (8 files)
-│   ├── DEVELOPMENT.md ...... Code standards, commit format, branch rules
-│   ├── SECURITY.md ......... Data rules — what you can and cannot put in code
-│   ├── UI-UX.md ............ Design system, colors, typography, components
-│   ├── INTEGRATIONS.md ..... How data flows through the adapter layer
-│   ├── AUDIT.md ............ How your work gets verified
-│   ├── TESTING.md .......... Quality gate — how your work gets scored
-│   └── ONBOARDING.md ....... Your first-day checklist
+├── workflow/ ................. Module routing and workflow config
+│   └── MODULE-MAP.md ......... Canonical module → file → directive routing
 │
-├── sessions/ ............... Session logs (one per work session, append-only)
-├── lessons/ ................ Lessons learned (halts, exemplars, failure patterns)
-├── CHANGELOG.md ............ History of every merge to main
-└── README.md ............... You are here
+├── scripts/ .................. Automation scripts
+│   ├── session-init.sh ....... Start a development session
+│   ├── session-close.sh ...... Close session + generate log
+│   ├── validate-boundaries.sh  Pre-commit boundary check
+│   └── validate-constraints.sh Pre-commit constraint check
+│
+├── .githooks/ ................ Git hooks (activate: git config core.hooksPath .githooks)
+│   ├── pre-commit ............ Boundary + constraint validation
+│   └── commit-msg ............ Commit message format validation
+│
+├── sessions/ ................. Session logs (one per work session, append-only)
+└── lessons/ .................. Lessons learned (halts, exemplars, failure patterns)
 ```
 
 ---
@@ -162,15 +182,13 @@ Project-Sidecar/
 ## How the Pages Connect
 
 ```
-index.html → page2.html (Landing)
-                  │
-                  ├── page3.html (Detailer Dashboard)
-                  │       │
-                  │       └── page4.html (Sailor Record — click a Sailor row)
-                  │
-                  ├── page5.html (Command Manning)
-                  │
-                  └── page6.html (Placement Coordinator)
+index.html → app/landing.html (Role Selection)
+                    │
+                    ├── app/detailer.html (Detailer Dashboard)
+                    │
+                    ├── app/placement.html (Placement Coordinator)
+                    │
+                    └── app/analytics.html (Analytics Dashboard)
 ```
 
 All pages share the same top navigation bar. You can reach any page from any other page. Open any `.html` file and you're in.
@@ -189,7 +207,7 @@ cd Project-Sidecar
 ```bash
 open index.html
 ```
-Click through all 5 pages. Confirm navigation works. Look at the dark interface — that's the Covenant design system.
+Click through all 4 pages. Confirm navigation works. Look at the dark interface — that's the Covenant design system.
 
 ### Step 3: Open it in your editor
 Open the entire `Project-Sidecar` folder in VS Code (or your editor of choice). Familiarize yourself with the file structure above.
@@ -199,7 +217,7 @@ This is required before you write any code. It takes about 30 minutes.
 
 | Order | File | What you'll learn |
 |:---:|---|---|
-| 1 | `Gemini.md` | Everything — the master document. Module boundaries, constraints, design tokens, PRD computation. |
+| 1 | `directives/Gemini.md` | Everything — the master document. Module boundaries, constraints, design tokens, PRD computation. |
 | 2 | `directives/DEVELOPMENT.md` | How to commit, how to branch, code standards for HTML/CSS/JS. |
 | 3 | `directives/SECURITY.md` | What data you can use (synthetic only). What's prohibited. |
 | 4 | `directives/UI-UX.md` | The Covenant design system — colors, typography, component specs. |
@@ -214,17 +232,17 @@ These are the rules that will trip you up if you don't know them:
 
 | Rule | What it means in practice |
 |---|---|
-| **No `fetch()`** | You cannot load data from a URL. All data lives in `app.js`. |
-| **No hex colors in CSS** | Write `color: var(--color-gold-primary)`, not `color: #B88E48`. The only hex values live in the `:root` block of `style.css`. |
+| **No `fetch()`** | You cannot load data from a URL. All data lives in `app/app.js`. |
+| **No hex colors in CSS** | Write `color: var(--color-gold-primary)`, not `color: #B88E48`. The only hex values live in the `:root` block of `app/style.css`. |
 | **No npm / no frameworks** | No React. No Vue. No Tailwind. No `npm install`. Vanilla HTML/CSS/JS only. |
-| **One module per session** | Working on `page3.html`? You can only edit `page3.html`. Need to change `style.css` too? That's a separate session. |
+| **One module per session** | Working on `app/detailer.html`? You can only edit `app/detailer.html`. Need to change `app/style.css` too? That's a separate session. |
 | **All data through the adapter** | Never hardcode a Sailor name in HTML. Call `SideCarAdapter.getSailors()` in `app.js`. |
 | **Synthetic data only** | No real names, no real DODIDs, no real commands. Use the phonetic alphabet pattern. |
 | **Dark mode only** | There is no light mode. The dark surface IS the interface. |
 
 ### Step 6: Create your branch
 ```bash
-git checkout -b dev/your-name/mod-p3-your-task-description
+git checkout -b dev/your-name/mod-det-your-task-description
 ```
 
 Branch naming: `dev/[your-name]/[module-id]-[brief-description]`
@@ -289,21 +307,21 @@ dev/your-name/your-task  →  qa-staging  →  main
 
 ```bash
 # 1. Create your branch
-git checkout -b dev/yourname/mod-p3-dashboard-table
+git checkout -b dev/yourname/mod-det-dashboard-table
 
 # 2. Do your work (edit files within your module boundary)
 
 # 3. Stage and commit
-git add page3.html
-git commit -m "[SC-2026-0325-001] MOD-P3: Add PRD tier column to dashboard table
+git add app/detailer.html
+git commit -m "[SC-2026-0325-001] MOD-DET: Add PRD tier column to dashboard table
 
-- Modified: page3.html
+- Modified: detailer.html
 - Task: Render PRD tiers with semantic color badges
 - Constraints: C-11, C-12, C-14
 - QA score: C:8 S:9 CR:8 OD:9"
 
 # 4. Push your branch
-git push -u origin dev/yourname/mod-p3-dashboard-table
+git push -u origin dev/yourname/mod-det-dashboard-table
 
 # 5. Open a pull request to qa-staging (not main)
 ```
@@ -374,12 +392,12 @@ git push -u origin dev/yourname/mod-p3-dashboard-table
 | Question | Where to look |
 |---|---|
 | "What can I build?" | Your Execution Script (ask Tier 1 if you don't have one) |
-| "What CSS class do I use?" | `style.css` or `directives/UI-UX.md` |
-| "How do I get data?" | `app.js` — call `SideCarAdapter.getSailors()` etc. |
-| "What colors/fonts?" | `Gemini.md` Section 14 or the cheat sheet above |
-| "What are the rules?" | `Gemini.md` Section 5 — the 14 constitutional constraints |
+| "What CSS class do I use?" | `app/style.css` or `directives/UI-UX.md` |
+| "How do I get data?" | `app/app.js` — call `SideCarAdapter.getSailors()` etc. |
+| "What colors/fonts?" | `directives/Gemini.md` Section 14 or the cheat sheet above |
+| "What are the rules?" | `directives/Gemini.md` Section 5 — the 14 constitutional constraints |
 | "My session halted" | That's normal — read `directives/AUDIT.md` for next steps |
-| "I want to change style.css" | You need a separate Execution Script for MOD-CSS |
+| "I want to change style.css" | You need a separate session for MOD-CSS |
 | "When does M365 plug in?" | Phase 1B — see the integration roadmap above |
 
 ---

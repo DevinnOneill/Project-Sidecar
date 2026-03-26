@@ -6,13 +6,24 @@
 
 ---
 
+## 0. New Here? Start with READ_BEFORE_YOU_CODE.md
+
+If this is your first time touching this project, read `READ_BEFORE_YOU_CODE.md` in the project root **before anything else**. It's written in plain English and walks you through everything — setup, rules, workflow, and glossary. Then come back here for the formal gates below.
+
 ## 1. Before You Write Any Code
 
 No developer begins production work until three gates are cleared:
 
+### Gate 0: Git Hook Setup
+Activate the project's git hooks so boundary and constraint violations are caught at commit time:
+```bash
+git config core.hooksPath .githooks
+```
+This is a one-time setup per clone. If you skip this, the pre-commit and commit-msg hooks won't run.
+
 ### Gate 1: Directive Library Review
 Read every file in this order. Confirm understanding of each.
-1. `Gemini.md` — Master Session Brief
+1. `directives/Gemini.md` — Master Session Brief
 2. `directives/DEVELOPMENT.md` — Development Standards
 3. `directives/SECURITY.md` — Data Boundary Law
 4. `directives/UI-UX.md` — Covenant Design System
@@ -70,8 +81,8 @@ Gemini is the development LLM executing code within Antigravity sessions. Claude
 1. Clone the repo
 2. Read `Gemini.md` cover to cover
 3. Read all 7 directives in order
-4. Open `page1.html` through `page6.html` in Chrome from `file://` path
-5. Open `style.css` and `app.js` — familiarize with token system and adapter pattern
+4. Open `app/landing.html`, `app/detailer.html`, `app/placement.html`, and `app/analytics.html` in Chrome from `file://` path
+5. Open `app/style.css` and `app/app.js` — familiarize with token system and adapter pattern
 6. Receive your first Execution Script from the Orchestrator
 7. Create your branch: `dev/[your-name]/[module-id]-[description]`
 8. Open Antigravity — confirm `Gemini.md` loads automatically
@@ -96,13 +107,13 @@ Gemini is the development LLM executing code within Antigravity sessions. Claude
 
 | Need | Location |
 |---|---|
-| Master governance rules | `Gemini.md` |
+| Master governance rules | `directives/Gemini.md` |
 | All directives | `directives/` folder |
 | Design tokens (full) | SIDECAR_DESIGN v2.0 (project knowledge) |
-| Constitutional constraints | `Gemini.md` Section 5 |
-| Execution Script template | `Gemini.md` Section 7 |
-| PRD computation logic | `Gemini.md` Section 13 |
-| Session log format | `Gemini.md` Section 9 |
+| Constitutional constraints | `directives/Gemini.md` Section 5 |
+| Execution Script template | `directives/Gemini.md` Section 7 |
+| PRD computation logic | `directives/Gemini.md` Section 13 |
+| Session log format | `directives/Gemini.md` Section 9 |
 | Past session logs | `sessions/` folder |
 | Halt history | `lessons/halts.md` |
 | Exemplar outputs | `lessons/exemplars.md` |
@@ -110,4 +121,4 @@ Gemini is the development LLM executing code within Antigravity sessions. Claude
 
 ---
 
-*ONBOARDING.md v1.0 — SideCar Directive Library*
+*ONBOARDING.md v1.1 — SideCar Directive Library*
