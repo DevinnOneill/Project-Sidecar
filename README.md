@@ -1,6 +1,6 @@
 # SideCar MVP
 
-**Enlisted Personnel Distribution Intelligence Platform**
+**Personnel Distribution Intelligence Platform**
 Navy Personnel Command · NPC Agentic Lab · March 2026
 
 ---
