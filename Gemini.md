@@ -2,7 +2,7 @@
 
 > **Version:** 1.0
 > **Date:** March 25, 2026
-> **Authority:** Tier 1 — Strategic Governance (OSC Devin Oneil)
+> **Authority:** Tier 1 — Strategic Governance
 > **Governed By:** My Compass Tiered Agentic Development Framework v4.0
 > **Development LLM:** Google Gemini (via Antigravity)
 > **Governance LLM:** Anthropic Claude (Project Compass session management)
@@ -62,7 +62,7 @@ Load these directives in sequence before any execution begins. Each governs a sp
 
 ### Tier 1 — Strategic Governance (Human Decision Layer)
 
-**Owner:** OSC Devin Oneil
+
 **Authority:** Owns the Directive Library. Holds sole merge authority to `main`. Sets all module boundaries. Approves or rejects every task scope. Nothing in Tier 2 or Tier 3 can circumvent Tier 1 authority — not through shortcuts, not through agent autonomy, and not through schedule pressure.
 
 ### Tier 2 — Operational Coordination (Orchestrator)
