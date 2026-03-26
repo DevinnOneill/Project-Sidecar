@@ -42,7 +42,7 @@ Every page links to every other page through the top navigation bar. Click aroun
 
 ### Why so simple?
 
-SideCar must run on **NMCI** (Navy Marine Corps Intranet) machines. Those machines have:
+SideCar must run on **NMCI**  machines. Those machines have:
 - A browser (Chrome/Edge 110+)
 - No terminal
 - No Node.js
