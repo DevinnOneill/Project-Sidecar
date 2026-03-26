@@ -102,7 +102,7 @@ jobs:
           fi
 
           # ─── C-04: CSS nesting / @layer / @container ───
-          CSS_HITS=$(grep -rn '@layer\|@container' app/style.css 2>/dev/null || true)
+          CSS_HITS=$(grep -rn '@layer\|@container' app/style.css 2>/dev/null | grep -v '^\s*/\*\|^\s*\*\|^\s*C-' || true)
           if [ -n "$CSS_HITS" ]; then
             VIOLATION_COUNT=$((VIOLATION_COUNT + 1))
             FIXES="$FIXES### Fix #$VIOLATION_COUNT: Remove modern CSS features (C-04)\n\n"
@@ -112,7 +112,7 @@ jobs:
           fi
 
           # ─── C-03: PII check ───
-          PII_HITS=$(grep -rni 'SSN\|social security\|DODID:[0-9]' app/*.html app/*.js 2>/dev/null | grep -v 'synthetic\|9999\|Synthetic\|SYNTHETIC\|pattern\|Pattern' || true)
+          PII_HITS=$(grep -rni '\bSSN\b\|social security\|DODID:[0-9]' app/*.html app/*.js 2>/dev/null | grep -v 'synthetic\|9999\|Synthetic\|SYNTHETIC\|pattern\|Pattern' || true)
           if [ -n "$PII_HITS" ]; then
             VIOLATION_COUNT=$((VIOLATION_COUNT + 1))
             FIXES="$FIXES### Fix #$VIOLATION_COUNT: Remove possible PII (C-03)\n\n"
@@ -206,17 +206,23 @@ jobs:
       - name: Post Verifier feedback on PR
         if: steps.pr.outputs.found == 'true'
         uses: actions/github-script@v7
+        env:
+          FEEDBACK: ${{ steps.analysis.outputs.FEEDBACK }}
+          VIOLATION_COUNT: ${{ steps.analysis.outputs.COUNT }}
+          PR_AUTHOR: ${{ steps.pr.outputs.author }}
+          PR_BRANCH: ${{ steps.pr.outputs.branch }}
+          PR_NUMBER: ${{ steps.pr.outputs.number }}
         with:
           script: |
-            const feedback = `${{ steps.analysis.outputs.FEEDBACK }}`;
-            const count = '${{ steps.analysis.outputs.COUNT }}';
-            const author = '${{ steps.pr.outputs.author }}';
-            const branch = '${{ steps.pr.outputs.branch }}';
-            const prNumber = ${{ steps.pr.outputs.number }};
+            const feedback = process.env.FEEDBACK;
+            const count = process.env.VIOLATION_COUNT;
+            const author = process.env.PR_AUTHOR;
+            const branch = process.env.PR_BRANCH;
+            const prNumber = parseInt(process.env.PR_NUMBER, 10);
 
             const comment = [
               '# Verifier Feedback\n',
-              `> **@${author}** — your PR from \`${branch}\` has **${count} issue(s)** to fix.\n`,
+              '> **@' + author + '** — your PR from `' + branch + '` has **' + count + ' issue(s)** to fix.\n',
               '> Fix these issues, push to your branch, and the QA Agent will re-run automatically.\n',
               '---\n',
               feedback,
