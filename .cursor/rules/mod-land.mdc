@@ -1,0 +1,15 @@
+---
+description: MOD-LAND — Landing / Role Selection module rules
+globs: ["app/landing.html"]
+alwaysApply: false
+---
+
+# MOD-LAND: Landing / Role Selection
+
+- **Write:** app/landing.html ONLY
+- **Read:** app/style.css, app/app.js
+- **Focus:** UI-UX.md, ONBOARDING.md
+- **Key Constraints:** C-01, C-02, C-04, C-05, C-08, C-11, C-12, C-13
+
+Entry point for role selection. 90-second flag officer test applies.
+Do NOT modify app/style.css, app/app.js, or any other page file from this module.

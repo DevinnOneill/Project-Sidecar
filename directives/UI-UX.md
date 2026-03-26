@@ -1,8 +1,9 @@
 # UI-UX.md — Interface Standards (Covenant Design System)
 
-> **Version:** 1.0 | **Domain:** Visual Design, Component Behavior, Accessibility, NMCI Rendering
+> **Version:** 2.0 | **Domain:** Visual Design, Component Behavior, Accessibility, NMCI Rendering
 > **Authority:** Tier 1 | **Full Specification:** SIDECAR_DESIGN v2.0
 > **Loaded By:** Every session that modifies HTML or CSS
+> **Amended:** 2026-03-25 — Tier 1 authorized transition from dark/void to light/white+gold
 
 ---
 
@@ -12,8 +13,8 @@
 
 ## 2. Covenant — Five Principles
 
-1. **Void-first:** Dark surfaces are the primary surface. There is no light mode.
-2. **Gold as signal:** Brass gold marks what matters. Never decorative.
+1. **Light-first:** Clean white surfaces with purposeful gold accents. The white surface IS the interface. There is no dark mode.
+2. **Gold as signal:** Warm brass gold (#B39F75) marks what matters — borders, icons, active states. Never decorative fill on large surfaces.
 3. **Typography carries structure:** Hierarchy lives in typeface, weight, and scale — not color alone. Any view must be readable in grayscale.
 4. **Data is never softened:** Numbers, codes, and identifiers render in monospace at full contrast.
 5. **Motion confirms state:** Animation communicates state changes only. If removing an animation has no functional consequence, the animation should not exist.
@@ -26,7 +27,7 @@ The full `:root` token declaration in `Gemini.md` Section 14 is the quick refere
 - No hex values outside `:root` (Constraint C-11)
 - All numerical data uses `--font-data` (Constraint C-12)
 - PRD colors are semantic-only (Constraint C-14)
-- Background layers never invert (darker = deeper, always)
+- Background layers: lighter = deeper / more elevated (white base, off-white elevated)
 - Gold is never used as background fill on large surfaces
 
 ## 4. Typography Roles
@@ -53,14 +54,15 @@ The full `:root` token declaration in `Gemini.md` Section 14 is the quick refere
 ### Topbar
 - Gold rule border: 2px solid `--color-border-gold` at bottom
 - This line is the one permanent anchor of the interface. It is never removed.
-- Background: `--color-bg-void`
+- Background: `--color-bg-surface` (white)
 - Height: 56px
 
 ### Cards / Panels
-- Background: `--color-bg-surface`
+- Background: `--color-bg-surface` (white)
 - Border: 1px solid `--color-border-subtle`
-- Border-radius: 4px (sharp, not rounded)
+- Border-radius: 4px for data panels, 16px for landing cards
 - Padding: 16px 20px
+- Shadow: `--shadow-soft` or `--shadow-card` for elevation
 
 ### Tables
 - Header row: `--color-bg-elevated`, text in `--font-data` uppercase
@@ -70,14 +72,14 @@ The full `:root` token declaration in `Gemini.md` Section 14 is the quick refere
 - PRD column: colored dot + tier label using semantic PRD tokens
 
 ### PRD Badges
-- Background: PRD tier background token
+- Background: PRD tier background token (light-tinted per tier)
 - Text: PRD tier text token
 - Font: `--font-data`, uppercase, letter-spacing 0.05em
 - Border-radius: 2px
 - Padding: 2px 8px
 
 ### Navigation
-- Active state: `--color-gold-bright` text + `--color-border-gold` bottom border
+- Active state: `--color-gold-primary` text + `--color-border-gold` bottom border
 - Inactive: `--color-text-muted`
 - Font: `--font-display`
 
@@ -88,6 +90,7 @@ The full `:root` token declaration in `Gemini.md` Section 14 is the quick refere
 - No `@layer` cascade layers
 - No `backdrop-filter: blur()` as sole visual indicator (may be disabled)
 - No `dvh` / `svh` viewport units (use `vh` with fallback)
+- No Tailwind CSS CDN or any runtime CSS framework (blocked on NMCI, no network at file://)
 - Test with font fallbacks active — the interface must be fully functional on Georgia/Arial/Consolas
 
 ## 7. Accessibility Floor
@@ -100,4 +103,4 @@ The full `:root` token declaration in `Gemini.md` Section 14 is the quick refere
 
 ---
 
-*UI-UX.md v1.0 — SideCar Directive Library*
+*UI-UX.md v2.0 — SideCar Directive Library — Amended 2026-03-25 (dark→light)*

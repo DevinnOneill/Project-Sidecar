@@ -1,0 +1,251 @@
+name: SideCar Verifier Feedback
+
+# Runs after the QA Agent completes — provides developer-friendly fix guidance
+on:
+  workflow_run:
+    workflows: ["SideCar QA Agent"]
+    types: [completed]
+
+permissions:
+  pull-requests: write
+  contents: read
+  actions: read
+
+jobs:
+  verifier:
+    name: Verifier — Root Cause Analysis
+    # Only run when QA Agent failed
+    if: github.event.workflow_run.conclusion == 'failure'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Get PR number from workflow run
+        id: pr
+        uses: actions/github-script@v7
+        with:
+          script: |
+            // Find the PR associated with this workflow run
+            const headSha = context.payload.workflow_run.head_sha;
+            const headBranch = context.payload.workflow_run.head_branch;
+
+            const { data: prs } = await github.rest.pulls.list({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              head: `${context.repo.owner}:${headBranch}`,
+              state: 'open',
+            });
+
+            if (prs.length === 0) {
+              console.log('No open PR found for this branch');
+              core.setOutput('found', 'false');
+              return;
+            }
+
+            core.setOutput('found', 'true');
+            core.setOutput('number', prs[0].number);
+            core.setOutput('author', prs[0].user.login);
+            core.setOutput('branch', headBranch);
+
+      - name: Checkout PR code
+        if: steps.pr.outputs.found == 'true'
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_branch }}
+          fetch-depth: 0
+
+      - name: Run root-cause analysis
+        if: steps.pr.outputs.found == 'true'
+        id: analysis
+        run: |
+          FIXES=""
+          VIOLATION_COUNT=0
+
+          # ─── C-02: fetch() violations ───
+          FETCH_HITS=$(grep -rn 'fetch(' app/*.html app/*.js 2>/dev/null | grep -v 'SideCarAdapter' | grep -v '// Phase 1B' || true)
+          if [ -n "$FETCH_HITS" ]; then
+            VIOLATION_COUNT=$((VIOLATION_COUNT + 1))
+            FIXES="$FIXES### Fix #$VIOLATION_COUNT: Remove \`fetch()\` calls (C-02)\n\n"
+            FIXES="$FIXES**Why it broke:** SideCar runs from \`file://\` protocol on NMCI. The browser blocks \`fetch()\` on local files — it will silently fail and show no data.\n\n"
+            FIXES="$FIXES**Where:**\n\`\`\`\n$FETCH_HITS\n\`\`\`\n\n"
+            FIXES="$FIXES**How to fix:** Replace \`fetch()\` with the adapter pattern:\n"
+            FIXES="$FIXES\`\`\`javascript\n"
+            FIXES="$FIXES// WRONG\nfetch('/api/sailors').then(r => r.json())\n\n"
+            FIXES="$FIXES// RIGHT\nSideCarAdapter.getSailors().then(function(sailors) {\n  // use sailors here\n});\n"
+            FIXES="$FIXES\`\`\`\n\n---\n\n"
+          fi
+
+          # ─── C-01: import/export violations ───
+          MODULE_HITS=$(grep -rn '^\s*import \|^\s*export ' app/*.html app/*.js 2>/dev/null || true)
+          if [ -n "$MODULE_HITS" ]; then
+            VIOLATION_COUNT=$((VIOLATION_COUNT + 1))
+            FIXES="$FIXES### Fix #$VIOLATION_COUNT: Remove ES module syntax (C-01)\n\n"
+            FIXES="$FIXES**Why it broke:** Phase 1A is flat HTML/CSS/JS from \`file://\`. ES modules (\`import\`/\`export\`) require a server — they don't work from local files.\n\n"
+            FIXES="$FIXES**Where:**\n\`\`\`\n$MODULE_HITS\n\`\`\`\n\n"
+            FIXES="$FIXES**How to fix:** Move your function into \`app/app.js\` (in a separate MOD-JS session) or define it inline in a \`<script>\` block on your page. No \`import\` or \`export\` keywords.\n\n---\n\n"
+          fi
+
+          # ─── C-11: Hardcoded hex ───
+          if [ -f app/style.css ]; then
+            HEX_HITS=$(awk '/:root\s*\{/{in_root=1} /^\}/{if(in_root) in_root=0} !in_root && /#[0-9a-fA-F]{3,8}/' app/style.css || true)
+            if [ -n "$HEX_HITS" ]; then
+              VIOLATION_COUNT=$((VIOLATION_COUNT + 1))
+              FIXES="$FIXES### Fix #$VIOLATION_COUNT: Replace hardcoded hex colors (C-11)\n\n"
+              FIXES="$FIXES**Why it broke:** All colors must use CSS custom properties from \`:root\`. Hardcoded hex values break the design system — when tokens change, your colors won't update.\n\n"
+              FIXES="$FIXES**Where:**\n\`\`\`\n$HEX_HITS\n\`\`\`\n\n"
+              FIXES="$FIXES**How to fix:** Replace hex values with tokens:\n"
+              FIXES="$FIXES\`\`\`css\n"
+              FIXES="$FIXES/* WRONG */\ncolor: #B39F75;\nbackground: #FAFAFA;\n\n"
+              FIXES="$FIXES/* RIGHT */\ncolor: var(--color-gold-primary);\nbackground: var(--color-bg-void);\n"
+              FIXES="$FIXES\`\`\`\n\n"
+              FIXES="$FIXES**Available tokens:** See \`app/style.css\` \`:root\` block or \`directives/UI-UX.md\` Section 3.\n\n---\n\n"
+            fi
+          fi
+
+          # ─── C-04: CSS nesting / @layer / @container ───
+          CSS_HITS=$(grep -rn '@layer\|@container' app/style.css 2>/dev/null || true)
+          if [ -n "$CSS_HITS" ]; then
+            VIOLATION_COUNT=$((VIOLATION_COUNT + 1))
+            FIXES="$FIXES### Fix #$VIOLATION_COUNT: Remove modern CSS features (C-04)\n\n"
+            FIXES="$FIXES**Why it broke:** NMCI machines run Chrome 110+. \`@layer\` and \`@container\` aren't reliably supported. Your styles may not render at all on target machines.\n\n"
+            FIXES="$FIXES**Where:**\n\`\`\`\n$CSS_HITS\n\`\`\`\n\n"
+            FIXES="$FIXES**How to fix:** Use standard CSS selectors. No \`@layer\`, no \`@container\`, no CSS nesting (\`& .child\`).\n\n---\n\n"
+          fi
+
+          # ─── C-03: PII check ───
+          PII_HITS=$(grep -rni 'SSN\|social security\|DODID:[0-9]' app/*.html app/*.js 2>/dev/null | grep -v 'synthetic\|9999\|Synthetic\|SYNTHETIC\|pattern\|Pattern' || true)
+          if [ -n "$PII_HITS" ]; then
+            VIOLATION_COUNT=$((VIOLATION_COUNT + 1))
+            FIXES="$FIXES### Fix #$VIOLATION_COUNT: Remove possible PII (C-03)\n\n"
+            FIXES="$FIXES**Why it broke:** Phase 1A uses synthetic data ONLY. Real names, SSNs, DODIDs, or command identifiers are prohibited — this is a legal requirement, not a preference.\n\n"
+            FIXES="$FIXES**Where:**\n\`\`\`\n$PII_HITS\n\`\`\`\n\n"
+            FIXES="$FIXES**How to fix:** Use synthetic patterns from \`directives/SECURITY.md\` Section 3:\n"
+            FIXES="$FIXES- Names: \"Sailor, Alpha B.\" (phonetic alphabet)\n"
+            FIXES="$FIXES- DODIDs: \`9999XXXXXX\` pattern\n"
+            FIXES="$FIXES- Commands: \"USS EXAMPLE (CVN-00)\"\n\n---\n\n"
+          fi
+
+          # ─── C-07: CDN without fallback ───
+          CDN_HITS=$(grep -rn 'cdn\.\|cdnjs\.\|unpkg\.\|jsdelivr\.\|tailwindcss\|googleapis' app/*.html 2>/dev/null | grep -v '<!--' || true)
+          if [ -n "$CDN_HITS" ]; then
+            VIOLATION_COUNT=$((VIOLATION_COUNT + 1))
+            FIXES="$FIXES### Fix #$VIOLATION_COUNT: Remove external CDN dependencies (C-07)\n\n"
+            FIXES="$FIXES**Why it broke:** NMCI blocks external CDNs. \`file://\` protocol has no network access. Your CDN resources will fail to load — the page will break.\n\n"
+            FIXES="$FIXES**Where:**\n\`\`\`\n$CDN_HITS\n\`\`\`\n\n"
+            FIXES="$FIXES**How to fix:** Download the resource and include it locally in the \`app/\` directory, or rewrite with vanilla CSS/JS. No Tailwind, no external scripts.\n\n---\n\n"
+          fi
+
+          # ─── C-13: Dark mode / color scheme ───
+          DARK_HITS=$(grep -rn 'prefers-color-scheme' app/*.css app/*.html 2>/dev/null || true)
+          if [ -n "$DARK_HITS" ]; then
+            VIOLATION_COUNT=$((VIOLATION_COUNT + 1))
+            FIXES="$FIXES### Fix #$VIOLATION_COUNT: Remove color-scheme queries (C-13)\n\n"
+            FIXES="$FIXES**Why it broke:** SideCar is light mode only. White surfaces + brass gold accents. There is no dark mode toggle.\n\n"
+            FIXES="$FIXES**Where:**\n\`\`\`\n$DARK_HITS\n\`\`\`\n\n"
+            FIXES="$FIXES**How to fix:** Remove any \`@media (prefers-color-scheme: dark)\` blocks. Use the token system — it handles the correct colors.\n\n---\n\n"
+          fi
+
+          # ─── Missing files ───
+          for FILE in app/landing.html app/detailer.html app/placement.html app/style.css app/app.js; do
+            if [ ! -f "$FILE" ]; then
+              VIOLATION_COUNT=$((VIOLATION_COUNT + 1))
+              FIXES="$FIXES### Fix #$VIOLATION_COUNT: Missing required file: \`$FILE\`\n\n"
+              FIXES="$FIXES**Why it broke:** This file is part of the core module architecture. Removing it breaks navigation and the adapter layer.\n\n"
+              FIXES="$FIXES**How to fix:** Restore the file from \`main\` branch: \`git checkout main -- $FILE\`\n\n---\n\n"
+            fi
+          done
+
+          # ─── Navigation broken ───
+          NAV_ISSUES=""
+          for PAGE in app/landing.html app/detailer.html app/placement.html app/analytics.html; do
+            if [ -f "$PAGE" ]; then
+              for LINK in landing.html detailer.html placement.html analytics.html; do
+                SELF=$(basename "$PAGE")
+                if [ "$LINK" != "$SELF" ] && ! grep -q "$LINK" "$PAGE" 2>/dev/null; then
+                  NAV_ISSUES="$NAV_ISSUES- \`$PAGE\` is missing a link to \`$LINK\`\n"
+                fi
+              done
+            fi
+          done
+          if [ -n "$NAV_ISSUES" ]; then
+            VIOLATION_COUNT=$((VIOLATION_COUNT + 1))
+            FIXES="$FIXES### Fix #$VIOLATION_COUNT: Broken navigation links\n\n"
+            FIXES="$FIXES**Why it broke:** Every page must link to every other page through the topbar nav. Missing links mean users can't navigate.\n\n"
+            FIXES="$FIXES**Missing links:**\n$NAV_ISSUES\n"
+            FIXES="$FIXES**How to fix:** Add the missing \`<a href=\"...\"\` links to your page's \`<nav>\` section. Copy the nav from a working page like \`app/landing.html\`.\n\n---\n\n"
+          fi
+
+          # ─── Token system gaps ───
+          if [ -f app/style.css ]; then
+            TOKEN_ISSUES=""
+            for TOKEN in --color-bg-void --color-bg-surface --color-gold-primary --color-text-primary --color-border-gold --font-display --font-body --font-data; do
+              if ! grep -q "$TOKEN" app/style.css; then
+                TOKEN_ISSUES="$TOKEN_ISSUES- \`$TOKEN\`\n"
+              fi
+            done
+            if [ -n "$TOKEN_ISSUES" ]; then
+              VIOLATION_COUNT=$((VIOLATION_COUNT + 1))
+              FIXES="$FIXES### Fix #$VIOLATION_COUNT: Missing design tokens in style.css\n\n"
+              FIXES="$FIXES**Why it broke:** Pages reference these tokens. If they're missing from \`:root\`, styles fall back to browser defaults — the design breaks.\n\n"
+              FIXES="$FIXES**Missing tokens:**\n$TOKEN_ISSUES\n"
+              FIXES="$FIXES**How to fix:** Restore the tokens in \`app/style.css\` \`:root\` block. Reference values from \`directives/Gemini.md\` Section 14.\n\n---\n\n"
+            fi
+          fi
+
+          # Build final output
+          if [ "$VIOLATION_COUNT" -eq 0 ]; then
+            FEEDBACK="The QA Agent reported a failure but the Verifier found no specific constraint violations in the current code. This may be a merge conflict issue — check Phase 1 of the QA report."
+          else
+            FEEDBACK="$FIXES"
+          fi
+
+          echo "FEEDBACK<<ENDFEEDBACK" >> "$GITHUB_OUTPUT"
+          echo -e "$FEEDBACK" >> "$GITHUB_OUTPUT"
+          echo "ENDFEEDBACK" >> "$GITHUB_OUTPUT"
+          echo "COUNT=$VIOLATION_COUNT" >> "$GITHUB_OUTPUT"
+
+      - name: Post Verifier feedback on PR
+        if: steps.pr.outputs.found == 'true'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const feedback = `${{ steps.analysis.outputs.FEEDBACK }}`;
+            const count = '${{ steps.analysis.outputs.COUNT }}';
+            const author = '${{ steps.pr.outputs.author }}';
+            const branch = '${{ steps.pr.outputs.branch }}';
+            const prNumber = ${{ steps.pr.outputs.number }};
+
+            const comment = [
+              '# Verifier Feedback\n',
+              `> **@${author}** — your PR from \`${branch}\` has **${count} issue(s)** to fix.\n`,
+              '> Fix these issues, push to your branch, and the QA Agent will re-run automatically.\n',
+              '---\n',
+              feedback,
+              '\n---',
+              '\n**Need help?** Ask your AI assistant — it has the full governance context loaded.',
+              '\nSee `directives/Gemini.md` Section 5 for all constitutional constraints.',
+              '\n\n*Automated Verifier — SideCar Governed Development Cycle Step 9*',
+            ].join('\n');
+
+            // Check for existing verifier comment
+            const { data: comments } = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: prNumber,
+            });
+            const botComment = comments.find(c => c.body.includes('Verifier Feedback'));
+
+            if (botComment) {
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: botComment.id,
+                body: comment,
+              });
+            } else {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: prNumber,
+                body: comment,
+              });
+            }

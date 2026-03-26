@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SideCar — Landing</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* Page: MOD-LAND — Landing / Role Selection layout */
+
+    .landing-body {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    /* --- Hero --- */
+    .landing-hero {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      max-width: 1000px;
+      padding: var(--space-xl) var(--space-md);
+      margin-top: var(--space-3xl);
+      text-align: center;
+    }
+
+    .landing-hero__title {
+      font-size: 5rem;
+      font-weight: 900;
+      letter-spacing: -0.02em;
+      color: var(--color-text-primary);
+      margin-bottom: var(--space-md);
+      text-transform: uppercase;
+      line-height: 1;
+    }
+
+    .landing-hero__subtitle {
+      font-family: var(--font-body);
+      font-size: 1.5rem;
+      color: var(--color-gold-bright);
+      margin-bottom: 0;
+      font-style: normal;
+    }
+
+    /* --- Search Bar --- */
+    .landing-search {
+      width: 100%;
+      max-width: 720px;
+      margin: var(--space-2xl) auto var(--space-3xl);
+      position: relative;
+    }
+
+    .landing-search__glow {
+      position: absolute;
+      inset: 0;
+      background-color: var(--color-gold-glow);
+      border-radius: var(--radius-full);
+      filter: blur(10px);
+      opacity: 0;
+      transition: opacity 0.3s;
+      pointer-events: none;
+    }
+
+    .landing-search:hover .landing-search__glow {
+      opacity: 1;
+    }
+
+    .landing-search__inner {
+      position: relative;
+      background-color: var(--color-bg-surface);
+      border-radius: var(--radius-full);
+      display: flex;
+      align-items: center;
+      padding: var(--space-sm) var(--space-lg);
+      box-shadow: var(--shadow-card);
+      border: 2px solid var(--color-gold-border);
+      transition: box-shadow 0.2s;
+    }
+
+    .landing-search__inner:focus-within {
+      box-shadow: var(--shadow-lg), 0 0 0 3px var(--color-gold-glow);
+    }
+
+    .landing-search__icon {
+      width: 24px;
+      height: 24px;
+      color: var(--color-gold-primary);
+      margin-right: var(--space-md);
+      flex-shrink: 0;
+    }
+
+    .landing-search__input {
+      width: 100%;
+      border: none;
+      outline: none;
+      background: transparent;
+      font-size: 1.125rem;
+      padding: var(--space-sm) 0;
+      color: var(--color-text-secondary);
+      font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    .landing-search__input::placeholder {
+      color: var(--color-text-dim);
+    }
+
+    /* --- Navigation Cards --- */
+    .landing-cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--space-lg);
+      width: 100%;
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 0 var(--space-md);
+    }
+
+    .landing-card {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: var(--space-2xl) var(--space-lg);
+      background-color: var(--color-bg-surface);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-card);
+      border: 1px solid var(--color-border-subtle);
+      text-decoration: none;
+      transition: box-shadow 0.3s, transform 0.3s;
+      overflow: hidden;
+      height: 224px;
+    }
+
+    .landing-card:hover {
+      box-shadow: var(--shadow-lg);
+      transform: translateY(-4px);
+    }
+
+    .landing-card:focus-visible {
+      outline: 2px solid var(--color-gold-primary);
+      outline-offset: 4px;
+    }
+
+    .landing-card__hover-bg {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to bottom, transparent, var(--color-bg-elevated));
+      opacity: 0;
+      transition: opacity 0.3s;
+      pointer-events: none;
+    }
+
+    .landing-card:hover .landing-card__hover-bg {
+      opacity: 0.5;
+    }
+
+    .landing-card__icon {
+      color: var(--color-gold-primary);
+      margin-bottom: var(--space-lg);
+      position: relative;
+      z-index: 1;
+    }
+
+    .landing-card__icon svg {
+      width: 48px;
+      height: 48px;
+    }
+
+    .landing-card__title {
+      font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      font-size: 1.25rem;
+      font-weight: 500;
+      color: var(--color-text-secondary);
+      position: relative;
+      z-index: 1;
+      transition: color 0.2s;
+    }
+
+    .landing-card:hover .landing-card__title {
+      color: var(--color-text-primary);
+    }
+
+    /* --- Footer --- */
+    .landing-footer {
+      width: 100%;
+      padding: var(--space-lg) 0;
+      margin-top: var(--space-2xl);
+      text-align: center;
+    }
+
+    .landing-footer__text {
+      font-size: 0.875rem;
+      color: var(--color-text-dim);
+    }
+
+    .landing-footer__link {
+      color: var(--color-text-dim);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .landing-footer__link:hover {
+      color: var(--color-text-muted);
+    }
+
+    .landing-footer__sep {
+      margin: 0 var(--space-sm);
+    }
+
+    /* --- Responsive --- */
+    @media (max-width: 768px) {
+      .landing-hero__title {
+        font-size: 3.5rem;
+      }
+      .landing-hero__subtitle {
+        font-size: 1.25rem;
+      }
+      .landing-cards {
+        grid-template-columns: 1fr;
+        max-width: 400px;
+      }
+    }
+
+    @media (min-width: 769px) {
+      .landing-hero__title {
+        font-size: 6rem;
+      }
+      .landing-hero__subtitle {
+        font-size: 1.75rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Module: MOD-LAND — Landing / Role Selection -->
+  <div class="landing-body">
+
+    <!-- Hero Section -->
+    <main class="landing-hero">
+      <div style="text-align: center; margin-bottom: var(--space-2xl);">
+        <h1 class="landing-hero__title">SIDECAR</h1>
+        <p class="landing-hero__subtitle">Fixing yesterday's problems, tomorrow.</p>
+      </div>
+
+      <!-- Search Bar -->
+      <div class="landing-search" role="search">
+        <div class="landing-search__glow"></div>
+        <div class="landing-search__inner">
+          <svg class="landing-search__icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" stroke-linecap="round" stroke-linejoin="round"></path>
+          </svg>
+          <input
+            class="landing-search__input"
+            type="text"
+            placeholder="Search a Sailor, command, or billet..."
+            aria-label="Search a Sailor, command, or billet"
+          />
+        </div>
+      </div>
+
+      <!-- Navigation Cards -->
+      <nav class="landing-cards" aria-label="Role selection">
+        <!-- Card: Detailer -->
+        <a href="detailer.html" class="landing-card" aria-label="Enter as Detailer">
+          <div class="landing-card__hover-bg"></div>
+          <div class="landing-card__icon">
+            <svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" stroke-linecap="round" stroke-linejoin="round"></path>
+            </svg>
+          </div>
+          <h2 class="landing-card__title">Detailer</h2>
+        </a>
+
+        <!-- Card: Placement -->
+        <a href="placement.html" class="landing-card" aria-label="Enter as Placement Coordinator">
+          <div class="landing-card__hover-bg"></div>
+          <div class="landing-card__icon">
+            <svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" stroke-linecap="round" stroke-linejoin="round"></path>
+              <path d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z" stroke-linecap="round" stroke-linejoin="round"></path>
+            </svg>
+          </div>
+          <h2 class="landing-card__title">Placement</h2>
+        </a>
+
+        <!-- Card: Analytics -->
+        <a href="analytics.html" class="landing-card" aria-label="Enter as Rating Evaluator">
+          <div class="landing-card__hover-bg"></div>
+          <div class="landing-card__icon">
+            <svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 0 1 3 19.875v-6.75ZM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 0 1-1.125-1.125V8.625ZM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 0 1-1.125-1.125V4.125Z" stroke-linecap="round" stroke-linejoin="round"></path>
+            </svg>
+          </div>
+          <h2 class="landing-card__title">Analytics</h2>
+        </a>
+      </nav>
+    </main>
+
+    <!-- Footer -->
+    <footer class="landing-footer">
+      <p class="landing-footer__text">
+        Navy Personnel Command · NPC Agentic Lab · Phase 1A · Synthetic Data Only
+      </p>
+    </footer>
+
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

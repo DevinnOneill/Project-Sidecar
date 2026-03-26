@@ -1,0 +1,11 @@
+# SideCar — Code Ownership
+# All PRs to protected branches require review from code owners.
+# Tier 1 (DevinnOneill) is the sole approver for main and qa-staging.
+
+# Everything requires Tier 1 review
+* @DevinnOneill
+
+# Directives are Tier 1 only — extra visibility
+/directives/ @DevinnOneill
+/WHITE_PAPER.md @DevinnOneill
+/CLAUDE.md @DevinnOneill

@@ -1,0 +1,16 @@
+---
+description: MOD-DET — Detailer Dashboard module rules
+globs: ["app/detailer.html"]
+alwaysApply: false
+---
+
+# MOD-DET: Detailer Dashboard
+
+- **Write:** app/detailer.html ONLY
+- **Read:** app/style.css, app/app.js
+- **Focus:** UI-UX.md, INTEGRATIONS.md, TESTING.md
+- **Key Constraints:** C-01, C-02, C-03, C-04, C-08, C-09, C-11, C-12, C-13, C-14
+
+Primary detailer work surface. Uses SideCarAdapter.getSailors, getCommLog.
+Operational questions: PRD urgency, billet risk, contact history, portfolio health.
+Do NOT modify app/style.css, app/app.js, or any other page file from this module.
