@@ -117,7 +117,7 @@ These are the constitutional constraints. They're non-negotiable — the git hoo
 | **No CSS nesting, @layer, @container** | Write flat CSS only. No `&` selectors, no modern CSS features. | NMCI machines run older browsers (Chrome 110+). These features aren't supported. |
 | **One module per session** | If you're working on `app/detailer.html`, don't edit `app/style.css` or `app/app.js`. | Prevents conflicts when multiple developers work simultaneously. |
 | **Synthetic data only** | No real names, SSNs, DODIDs, or command identifiers. Use the patterns in `app/app.js`. | Phase 1A has no authorization for real data. Legal requirement. |
-| **Dark mode only** | No light mode. No `prefers-color-scheme`. The dark interface IS the design. | Covenant design system specification. |
+| **Light mode only** | No dark mode. No `prefers-color-scheme`. White surfaces + brass gold accents IS the design. | Covenant design system specification. |
 | **Adapter pattern only** | All data access goes through `SideCarAdapter`. Never access `SYNTHETIC_SAILORS` directly from pages. | The adapter swaps between synthetic, CSV, and API data without changing page code. |
 
 ---
@@ -206,7 +206,7 @@ Project-Sidecar/
 │   ├── Gemini.md               ← Master session brief (the AI reads this first)
 │   ├── DEVELOPMENT.md          ← Code standards, commit format, branch workflow
 │   ├── SECURITY.md             ← Data boundary law (synthetic only in Phase 1A)
-│   ├── UI-UX.md                ← Covenant design system (dark mode, tokens, fonts)
+│   ├── UI-UX.md                ← Covenant design system (light mode, tokens, fonts)
 │   ├── INTEGRATIONS.md         ← Adapter layer contracts
 │   ├── AUDIT.md                ← Independent verification protocol
 │   ├── TESTING.md              ← QA gate (4 dimensions, ≥7/10 to pass)
