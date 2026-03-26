@@ -1,0 +1,232 @@
+name: SideCar EOD Audit
+
+# Runs every day at 20:00 UTC — end-of-day change summary
+on:
+  schedule:
+    - cron: '0 20 * * *'
+  workflow_dispatch:  # Allow manual trigger
+
+permissions:
+  contents: read
+  issues: write
+  pull-requests: read
+
+jobs:
+  audit:
+    name: End-of-Day Change Audit
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Collect daily activity
+        id: report
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const now = new Date();
+            const yesterday = new Date(now.getTime() - 24 * 60 * 60 * 1000);
+            const since = yesterday.toISOString();
+            const dateLabel = now.toISOString().split('T')[0];
+
+            // ─── Commits across all branches (last 24h) ───
+            let commits = [];
+            try {
+              const { data: repoCommits } = await github.rest.repos.listCommits({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                since: since,
+                per_page: 100,
+              });
+              commits = repoCommits;
+            } catch (e) {
+              console.log('Could not fetch commits:', e.message);
+            }
+
+            let commitSection = '';
+            if (commits.length === 0) {
+              commitSection = '_No commits in the last 24 hours._\n';
+            } else {
+              commitSection = '| Commit | Author | Message | Time |\n';
+              commitSection += '|--------|--------|---------|------|\n';
+              for (const c of commits) {
+                const sha = c.sha.substring(0, 7);
+                const author = c.author ? `@${c.author.login}` : (c.commit.author.name || 'unknown');
+                const msg = c.commit.message.split('\n')[0].substring(0, 80);
+                const time = new Date(c.commit.author.date).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false });
+                commitSection += `| \`${sha}\` | ${author} | ${msg} | ${time} |\n`;
+              }
+            }
+
+            // ─── PRs opened, merged, or closed today ───
+            let prs = [];
+            try {
+              const { data: allPrs } = await github.rest.pulls.list({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                state: 'all',
+                sort: 'updated',
+                direction: 'desc',
+                per_page: 50,
+              });
+              prs = allPrs.filter(pr => new Date(pr.updated_at) >= yesterday);
+            } catch (e) {
+              console.log('Could not fetch PRs:', e.message);
+            }
+
+            let prSection = '';
+            if (prs.length === 0) {
+              prSection = '_No PR activity in the last 24 hours._\n';
+            } else {
+              prSection = '| PR | Author | Status | Title |\n';
+              prSection += '|----|--------|--------|-------|\n';
+              for (const pr of prs) {
+                const status = pr.merged_at ? '✅ Merged' : pr.state === 'closed' ? '❌ Closed' : '🔄 Open';
+                const title = pr.title.substring(0, 60);
+                prSection += `| #${pr.number} | @${pr.user.login} | ${status} | ${title} |\n`;
+              }
+            }
+
+            // ─── Branches with recent activity ───
+            let branches = [];
+            try {
+              const { data: allBranches } = await github.rest.repos.listBranches({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                per_page: 50,
+              });
+              branches = allBranches;
+            } catch (e) {
+              console.log('Could not fetch branches:', e.message);
+            }
+
+            let branchSection = '';
+            const activeBranches = [];
+            for (const branch of branches) {
+              try {
+                const { data: commit } = await github.rest.repos.getCommit({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  ref: branch.name,
+                });
+                if (new Date(commit.commit.author.date) >= yesterday) {
+                  const author = commit.author ? `@${commit.author.login}` : commit.commit.author.name;
+                  activeBranches.push({
+                    name: branch.name,
+                    author: author,
+                    message: commit.commit.message.split('\n')[0].substring(0, 60),
+                  });
+                }
+              } catch (e) {
+                // skip
+              }
+            }
+
+            if (activeBranches.length === 0) {
+              branchSection = '_No branch activity in the last 24 hours._\n';
+            } else {
+              branchSection = '| Branch | Last Author | Latest Commit |\n';
+              branchSection += '|--------|-------------|---------------|\n';
+              for (const b of activeBranches) {
+                branchSection += `| \`${b.name}\` | ${b.author} | ${b.message} |\n`;
+              }
+            }
+
+            // ─── QA Agent runs today ───
+            let qaSection = '';
+            try {
+              const { data: runs } = await github.rest.actions.listWorkflowRuns({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                workflow_id: 'qa-agent.yml',
+                created: `>=${since.split('T')[0]}`,
+                per_page: 20,
+              });
+
+              if (runs.workflow_runs.length === 0) {
+                qaSection = '_No QA Agent runs today._\n';
+              } else {
+                qaSection = '| Run | Branch | Status | Triggered By |\n';
+                qaSection += '|-----|--------|--------|-------------|\n';
+                for (const run of runs.workflow_runs) {
+                  const icon = run.conclusion === 'success' ? '✅' : run.conclusion === 'failure' ? '❌' : '🔄';
+                  qaSection += `| #${run.run_number} | \`${run.head_branch}\` | ${icon} ${run.conclusion || 'in progress'} | @${run.actor.login} |\n`;
+                }
+              }
+            } catch (e) {
+              qaSection = '_Could not fetch QA runs._\n';
+            }
+
+            // ─── Build the report ───
+            const body = [
+              `# EOD Audit — ${dateLabel}\n`,
+              `> Automated daily summary of all SideCar repository activity in the last 24 hours.\n`,
+              '---\n',
+              '## Commits\n',
+              commitSection,
+              '\n## Pull Requests\n',
+              prSection,
+              '\n## Active Branches\n',
+              branchSection,
+              '\n## QA Agent Runs\n',
+              qaSection,
+              '\n---',
+              `\n**Total:** ${commits.length} commits · ${prs.length} PRs updated · ${activeBranches.length} active branches`,
+              '\n\n*Automated EOD Audit — SideCar Governed Development Cycle*',
+            ].join('\n');
+
+            core.setOutput('body', body);
+            core.setOutput('title', `EOD Audit — ${dateLabel}`);
+            core.setOutput('date', dateLabel);
+            core.setOutput('commit_count', commits.length);
+            core.setOutput('pr_count', prs.length);
+
+      - name: Create or update audit issue
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const title = '${{ steps.report.outputs.title }}';
+            const body = `${{ steps.report.outputs.body }}`;
+
+            // Check if today's audit issue already exists (from manual re-run)
+            const { data: issues } = await github.rest.issues.listForRepo({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              labels: 'eod-audit',
+              state: 'open',
+              per_page: 5,
+            });
+
+            const existing = issues.find(i => i.title === title);
+
+            if (existing) {
+              await github.rest.issues.update({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: existing.number,
+                body: body,
+              });
+              console.log(`Updated existing audit issue #${existing.number}`);
+            } else {
+              // Close previous audit issues
+              for (const issue of issues) {
+                await github.rest.issues.update({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: issue.number,
+                  state: 'closed',
+                });
+              }
+
+              const { data: newIssue } = await github.rest.issues.create({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                title: title,
+                body: body,
+                labels: ['eod-audit'],
+              });
+              console.log(`Created audit issue #${newIssue.number}`);
+            }

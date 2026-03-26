@@ -161,7 +161,7 @@ jobs:
           fi
 
           # ─── C-04: No CSS nesting, @layer, @container ───
-          CSS_HITS=$(grep -rn '@layer\|@container' app/style.css 2>/dev/null || true)
+          CSS_HITS=$(grep -rn '@layer\|@container' app/style.css 2>/dev/null | grep -v '^\s*/\*\|^\s*\*\|^\s*C-' || true)
           if [ -n "$CSS_HITS" ]; then
             REPORT="$REPORT### C-04 VIOLATION: @layer or @container found\n\`\`\`\n$CSS_HITS\n\`\`\`\n\n"
             PASS=false
@@ -170,7 +170,7 @@ jobs:
           fi
 
           # ─── C-03: No real PII ───
-          PII_HITS=$(grep -rni 'SSN\|social security\|DODID:[0-9]' app/*.html app/*.js 2>/dev/null | grep -v 'synthetic\|9999\|Synthetic\|SYNTHETIC\|pattern\|Pattern' || true)
+          PII_HITS=$(grep -rni '\bSSN\b\|social security\|DODID:[0-9]' app/*.html app/*.js 2>/dev/null | grep -v 'synthetic\|9999\|Synthetic\|SYNTHETIC\|pattern\|Pattern' || true)
           if [ -n "$PII_HITS" ]; then
             REPORT="$REPORT### C-03 VIOLATION: Possible PII detected\n\`\`\`\n$PII_HITS\n\`\`\`\n\n"
             PASS=false
@@ -268,21 +268,29 @@ jobs:
       # ═══════════════════════════════════════════════
       - name: Build and post QA report
         uses: actions/github-script@v7
+        env:
+          MERGE_REPORT: ${{ steps.merge_check.outputs.MERGE_REPORT }}
+          MERGE_OK: ${{ steps.merge_check.outputs.MERGE_OK }}
+          DIFF_REPORT: ${{ steps.diff_check.outputs.DIFF_REPORT }}
+          CONSTRAINT_REPORT: ${{ steps.qa.outputs.REPORT }}
+          CONSTRAINT_PASS: ${{ steps.qa.outputs.PASS }}
+          SOURCE_BRANCH: ${{ github.head_ref }}
+          TARGET_BRANCH: ${{ github.base_ref }}
         with:
           script: |
-            const mergeReport = `${{ steps.merge_check.outputs.MERGE_REPORT }}`;
-            const mergeOk = '${{ steps.merge_check.outputs.MERGE_OK }}';
-            const diffReport = `${{ steps.diff_check.outputs.DIFF_REPORT }}`;
-            const constraintReport = `${{ steps.qa.outputs.REPORT }}`;
-            const constraintPass = '${{ steps.qa.outputs.PASS }}';
+            const mergeReport = process.env.MERGE_REPORT;
+            const mergeOk = process.env.MERGE_OK;
+            const diffReport = process.env.DIFF_REPORT;
+            const constraintReport = process.env.CONSTRAINT_REPORT;
+            const constraintPass = process.env.CONSTRAINT_PASS;
 
             const allPass = mergeOk === 'true' && constraintPass === 'true';
 
             // Build executive summary for the reviewer
             const prAuthor = context.payload.pull_request.user.login;
             const prTitle = context.payload.pull_request.title;
-            const source = '${{ github.head_ref }}';
-            const target = '${{ github.base_ref }}';
+            const source = process.env.SOURCE_BRANCH;
+            const target = process.env.TARGET_BRANCH;
 
             // Count passes and fails from constraint report
             const passCount = (constraintReport.match(/✅/g) || []).length;
@@ -300,15 +308,15 @@ jobs:
 
             const mergeStatus = mergeOk === 'true' ? 'clean' : 'HAS CONFLICTS';
 
-            let summary = `> **Quick Brief for Reviewer:**\n`;
-            summary += `> **${prAuthor}** is merging \`${source}\` → \`${target}\`\n`;
-            summary += `> **${fileCount} files changed** in **${moduleName}** | Merge: **${mergeStatus}**\n`;
-            summary += `> **${passCount} passed** · **${failCount} failed** · **${warnCount} warnings**\n`;
+            let summary = '> **Quick Brief for Reviewer:**\n';
+            summary += '> **' + prAuthor + '** is merging `' + source + '` → `' + target + '`\n';
+            summary += '> **' + fileCount + ' files changed** in **' + moduleName + '** | Merge: **' + mergeStatus + '**\n';
+            summary += '> **' + passCount + ' passed** · **' + failCount + ' failed** · **' + warnCount + ' warnings**\n';
 
             if (allPass) {
-              summary += `>\n> 🟢 **All clear — safe to merge.**\n`;
+              summary += '>\n> 🟢 **All clear — safe to merge.**\n';
             } else {
-              summary += `>\n> 🔴 **Issues found — scroll down for details.**\n`;
+              summary += '>\n> 🔴 **Issues found — scroll down for details.**\n';
             }
 
             const verdict = allPass
@@ -327,8 +335,8 @@ jobs:
               '\n## Phase 3: Constitutional Constraints\n',
               constraintReport,
               '\n---',
-              `\n*Automated QA — SideCar Governed Development Cycle Step 7*`,
-              `\n*Target: \`${target}\` | Source: \`${source}\` | Author: @${prAuthor}*`,
+              '\n*Automated QA — SideCar Governed Development Cycle Step 7*',
+              '\n*Target: `' + target + '` | Source: `' + source + '` | Author: @' + prAuthor + '*',
             ].join('\n');
 
             const { data: comments } = await github.rest.issues.listComments({

@@ -8,31 +8,39 @@
 
 /* --- DESIGN TOKENS --- */
 :root {
-  /* Backgrounds (lighter = deeper / more elevated) */
-  --color-bg-void:       #FAFAFA;
-  --color-bg-base:       #FDFDFD;
-  --color-bg-surface:    #FFFFFF;
-  --color-bg-elevated:   #F5F5F5;
-  --color-bg-overlay:    #F0EDE8;
+  /* --- Backgrounds --- */
+  --color-bg-base:       #F4F1EC;   /* warm linen — primary page background */
+  --color-bg-surface:    #EDEAE3;   /* warm stone — card/panel surfaces */
+  --color-bg-sunken:     #E3DFD7;   /* inset areas, table zebra rows */
+  --color-bg-dark:       #1C2B3A;   /* deep navy — header bar, login screen */
+  --color-bg-dark-mid:   #243346;   /* slightly lighter navy for panels on dark */
 
-  /* Gold (signal, not decoration) */
-  --color-gold-primary:  #B39F75;
-  --color-gold-bright:   #9E8869;
-  --color-gold-dim:      #C4B596;
-  --color-gold-glow:     rgba(179,159,117,0.10);
-  --color-gold-border:   #BA9D71;
+  /* --- Navy Primaries --- */
+  --color-navy-900:      #0F1B2D;   /* near-black navy */
+  --color-navy-700:      #1C2B3A;   /* primary dark surface */
+  --color-navy-500:      #2D4160;   /* medium navy, active states */
+  --color-navy-300:      #4A6FA5;   /* muted steel blue, links, accents */
+  --color-navy-100:      #A8BDD4;   /* very muted sky, disabled states */
 
-  /* Text */
-  --color-text-primary:  #111111;
-  --color-text-secondary:#444444;
-  --color-text-muted:    #666666;
-  --color-text-dim:      #999999;
+  /* --- Earth Tones --- */
+  --color-earth-700:     #6B5A45;   /* warm dark tan */
+  --color-earth-500:     #8B7355;   /* brass/khaki — secondary accent */
+  --color-earth-300:     #B5996E;   /* light tan */
+  --color-earth-100:     #D9C9B2;   /* pale sand, border highlights */
 
-  /* Borders */
-  --color-border-subtle: #E8E8E8;
-  --color-border-default:#D4D4D4;
-  --color-border-strong: #B0B0B0;
-  --color-border-gold:   #BA9D71;
+  /* --- Text --- */
+  --color-text-primary:  #1A1F2E;   /* near-black with blue undertone */
+  --color-text-secondary:#4A5568;   /* medium gray for supporting copy */
+  --color-text-muted:    #7A8494;   /* labels, metadata */
+  --color-text-inverse:  #EEE9E0;   /* warm white on dark backgrounds */
+  --color-text-inverse-muted: #9AABBF; /* muted on dark */
+
+  /* --- Borders & Dividers --- */
+  --color-border-subtle:     #D4CFC7;   /* hairline on light backgrounds */
+  --color-border-default:    #BFB9AF;   /* standard card borders */
+  --color-border-strong:     #8B7355;   /* stronger structural borders */
+  --color-border-dark:       #2D3E50;   /* borders on dark surfaces */
+  --color-border-gold:       #8B7355;   /* retaining token name, using earth tone */
 
   /* PRD Tiers (semantic — never repurpose per C-14) */
   --color-prd-gray:            #E8EAF0;
@@ -132,14 +140,14 @@ html {
 body {
   font-family: var(--font-body);
   color: var(--color-text-primary);
-  background-color: var(--color-bg-void);
+  background-color: var(--color-bg-base);
   line-height: 1.6;
   min-height: 100vh;
 }
 
 ::selection {
-  background-color: var(--color-gold-primary);
-  color: var(--color-bg-surface);
+  background-color: var(--color-navy-500);
+  color: var(--color-text-inverse);
 }
 
 /* --- TYPOGRAPHY --- */
@@ -169,8 +177,8 @@ p {
   justify-content: space-between;
   height: var(--topbar-height);
   padding: 0 var(--space-lg);
-  background-color: var(--color-bg-surface);
-  border-bottom: 2px solid var(--color-border-gold);
+  background-color: var(--color-bg-dark);
+  border-bottom: 2px solid var(--color-earth-500);
   position: sticky;
   top: 0;
   z-index: 100;
@@ -179,7 +187,7 @@ p {
 .topbar__brand {
   font-family: var(--font-display);
   font-size: 1.5rem;
-  color: var(--color-gold-primary);
+  color: var(--color-earth-300);
   letter-spacing: 0.08em;
   text-transform: uppercase;
   text-decoration: none;
@@ -195,7 +203,7 @@ p {
 .nav__link {
   font-family: var(--font-display);
   font-size: 0.875rem;
-  color: var(--color-text-muted);
+  color: var(--color-text-inverse-muted);
   text-decoration: none;
   text-transform: uppercase;
   letter-spacing: 0.06em;
@@ -205,16 +213,16 @@ p {
 }
 
 .nav__link:hover {
-  color: var(--color-text-secondary);
+  color: var(--color-text-inverse);
 }
 
 .nav__link--active {
-  color: var(--color-gold-primary);
-  border-bottom-color: var(--color-border-gold);
+  color: var(--color-earth-300);
+  border-bottom-color: var(--color-earth-300);
 }
 
 .nav__link:focus-visible {
-  outline: 2px solid var(--color-gold-primary);
+  outline: 2px solid var(--color-earth-300);
   outline-offset: 2px;
 }
 
@@ -249,7 +257,7 @@ p {
 }
 
 .card--elevated {
-  background-color: var(--color-bg-elevated);
+  background-color: var(--color-bg-base);
 }
 
 .card__header {
@@ -257,7 +265,7 @@ p {
   font-size: 1rem;
   text-transform: uppercase;
   letter-spacing: 0.04em;
-  color: var(--color-gold-primary);
+  color: var(--color-earth-500);
   margin-bottom: var(--space-md);
   padding-bottom: var(--space-sm);
   border-bottom: 1px solid var(--color-border-subtle);
@@ -272,7 +280,7 @@ p {
 }
 
 .data-table thead th {
-  background-color: var(--color-bg-elevated);
+  background-color: var(--color-bg-sunken);
   font-family: var(--font-data);
   font-size: 0.75rem;
   text-transform: uppercase;
@@ -291,7 +299,7 @@ p {
 }
 
 .data-table tbody tr:hover {
-  background-color: var(--color-bg-overlay);
+  background-color: var(--color-bg-sunken);
 }
 
 /* --- PRD BADGES --- */
@@ -367,16 +375,16 @@ p {
 }
 
 .btn--gold {
-  border-color: var(--color-border-gold);
-  color: var(--color-gold-primary);
+  border-color: var(--color-earth-500);
+  color: var(--color-earth-500);
 }
 
 .btn--gold:hover {
-  background-color: var(--color-gold-glow);
+  background-color: var(--color-bg-base);
 }
 
 .btn:focus-visible {
-  outline: 2px solid var(--color-gold-primary);
+  outline: 2px solid var(--color-navy-500);
   outline-offset: 2px;
 }
 
@@ -390,7 +398,7 @@ p {
 }
 
 .text-gold {
-  color: var(--color-gold-primary);
+  color: var(--color-earth-500);
 }
 
 .text-muted {
