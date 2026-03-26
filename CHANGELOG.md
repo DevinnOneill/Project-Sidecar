@@ -8,7 +8,7 @@
 
 ### 2026-03-25 — Repository Initialized
 - **Session:** SC-2026-0325-000 (Repository Setup)
-- **Author:** Tier 1 (OSC Oneil)
+- **Author:** Tier 1
 - **Action:** Initialized SideCar MVP repository with full Directive Library, governance structure, and Lessons Learned Repository
 - **Files Created:**
   - `Gemini.md` — Master Session Brief v1.0
