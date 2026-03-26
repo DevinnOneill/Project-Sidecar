@@ -2,9 +2,7 @@
 
 *Governed AI-Assisted Software Development for the Department of the Navy*
 
-RDML Jeff Heames, OSC Devin Oneil, LT Mark Talvacchia, LCDR Matthew Clark
-
-Project Compass Initiative
+roject Compass Initiative
 
 March 2026
 
