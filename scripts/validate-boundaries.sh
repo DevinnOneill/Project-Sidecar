@@ -39,7 +39,7 @@ for FILE in $STAGED_FILES; do
       echo ""
       continue
       ;;
-    WHITE_PAPER.md|READ_BEFORE_YOU_CODE.md|CLAUDE.md)
+    WHITE_PAPER.md|ONBOARDING.md|CLAUDE.md)
       echo ""
       echo "  WARNING: Staging governance file: $FILE"
       echo "  Governance file modifications require Tier 1 authorization."

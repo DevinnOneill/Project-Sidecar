@@ -6,20 +6,20 @@
 
 ---
 
-## 0. New Here? Start with READ_BEFORE_YOU_CODE.md
+## 0. New Here? Start with ONBOARDING.md
 
-If this is your first time touching this project, read `READ_BEFORE_YOU_CODE.md` in the project root **before anything else**. It's written in plain English and walks you through everything — setup, rules, workflow, and glossary. Then come back here for the formal gates below.
+If this is your first time touching this project, read `ONBOARDING.md` in the project root **before anything else**. It's written in plain English and walks you through everything — setup, rules, workflow, and glossary. Then come back here for the formal gates below.
 
 ## 1. Before You Write Any Code
 
 No developer begins production work until three gates are cleared:
 
-### Gate 0: Git Hook Setup
-Activate the project's git hooks so boundary and constraint violations are caught at commit time:
+### Gate 0: Onboarding Agent
+One command — clone and onboard in one shot:
 ```bash
-git config core.hooksPath .githooks
+git clone https://github.com/DevinnOneill/Project-Sidecar.git && cd Project-Sidecar && bash scripts/onboard.sh
 ```
-This is a one-time setup per clone. If you skip this, the pre-commit and commit-msg hooks won't run.
+The onboarding agent walks you through everything: git hooks, branch creation, dependency verification, the 7 rules, and first-run orientation. One-time per clone. If you've already onboarded, it detects the `.onboarded` sentinel and skips.
 
 ### Gate 1: Directive Library Review
 Read every file in this order. Confirm understanding of each.

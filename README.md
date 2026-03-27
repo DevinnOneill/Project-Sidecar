@@ -1,112 +1,88 @@
 # SideCar
 
-**Personnel Distribution Intelligence Platform**
+**The Navy's Agentic Distribution Platform**
+
 Navy Personnel Command · NPC Agentic Lab · March 2026
+
+---
+
+## 🚀 New Here? One Command and You're In.
+
+```bash
+git clone https://github.com/DevinnOneill/Project-Sidecar.git && cd Project-Sidecar && bash scripts/onboard.sh
+```
+
+**That's it.** Copy-paste the command above, hit Enter, and the onboarding agent walks you through everything:
+
+| What It Does | Time |
+|---|---|
+| Explains what SideCar is | 1 min |
+| How the project works | 1 min |
+| Sets up your workspace | automatic |
+| Creates your personal branch | automatic |
+| Opens SideCar in your browser | automatic |
+| Teaches you the 7 rules | 2 min |
+| Shows you how to save work | 1 min |
+| Git commands cheat sheet | 1 min |
+
+**No experience needed. Takes about 5 minutes. Everything is explained.**
+
+> 📖 Also see: [START_HERE.md](START_HERE.md) — one command, one page.
 
 ---
 
 ## What is SideCar?
 
-SideCar modernizes how the Navy distributes Sailors to assignments. Instead of the detailer passing the Sailor on, the Sailor is passed *through* the detailer with full continuity. No more gaps. No more lost context. Every handoff is tracked, every status is visible, and every decision has a data trail.
-
-Right now, SideCar is a **proof of concept** on synthetic data. No real Sailor records — everything is fabricated with realistic structure so we can build and test before connecting to real systems.
+SideCar modernizes how the Navy distributes Sailors to assignments. Right now, Detailers juggle **4 disconnected tools** — MyNavy Assignment exports, NSIPS, Outlook, and local spreadsheets. SideCar puts it all in **one browser-based dashboard**.
 
 **Who uses SideCar:**
-- **Detailers** — Assignment officers who manage Sailor portfolios
-- **Placement Coordinators** — Cross-portfolio visibility across a community
-- **Rating Evaluators** — Enterprise-level distribution analysis
 
----
+| Role | What They Do |
+|------|-------------|
+| **Detailers** | Manage Sailor assignment portfolios |
+| **Placement Coordinators** | Cross-community visibility and billet alignment |
+| **Rating Evaluators** | Enterprise-level distribution analysis |
 
-## Quick Start (< 2 minutes)
-
-**See the app right now:**
-
-```bash
-# Mac
-open index.html
-
-# Windows
-start index.html
-```
-
-Or just double-click `index.html` in your file explorer. Every page links to every other page. Click around — nothing will break.
-
----
-
-## New Developer? Start Here
-
-### Step 1: Clone and set up
-
-```bash
-git clone https://github.com/DevinnOneill/Project-Sidecar.git
-cd Project-Sidecar
-git config core.hooksPath .githooks    # activates safety hooks
-```
-
-### Step 2: Open in your browser
-
-```bash
-open index.html
-```
-
-Click through all 4 pages. You'll see the white and gold interface — that's the Covenant design system.
-
-### Step 3: Open in your editor
-
-Open the `Project-Sidecar` folder in VS Code, Cursor, or Claude Code. The AI assistant loads project rules automatically.
-
-### Step 4: Read the docs (30 min, required)
-
-| Order | File | What You'll Learn |
-|:---:|---|---|
-| 1 | [GIT.md](GIT.md) | **Start here** — full git workflow, how to commit, push, open PRs |
-| 2 | [directives/Gemini.md](directives/Gemini.md) | Master governance — module boundaries, constraints, design tokens |
-| 3 | [directives/DEVELOPMENT.md](directives/DEVELOPMENT.md) | Code standards, commit format, branch rules |
-| 4 | [directives/SECURITY.md](directives/SECURITY.md) | Data rules — synthetic only, what's prohibited |
-| 5 | [directives/UI-UX.md](directives/UI-UX.md) | Design system — colors, typography, components |
-| 6 | [directives/INTEGRATIONS.md](directives/INTEGRATIONS.md) | How `SideCarAdapter` works |
-| 7 | [directives/ONBOARDING.md](directives/ONBOARDING.md) | First-day checklist, common mistakes |
-
-### Step 5: Create your branch and start coding
-
-```bash
-git checkout -b dev/yourname/mod-det-your-task
-```
-
-Your AI assistant will scope your session before you write any code. See [GIT.md](GIT.md) for the full step-by-step workflow.
+**Current phase:** Phase 1A — Proof of Concept. All data is synthetic (fake but realistic). No real Sailor records.
 
 ---
 
 ## How This Project Works
 
-### Governed Development
-1. **Every file has a boundary.** You work on ONE file at a time. Need another file? New session.
-2. **An AI assistant helps you code.** It loads the rules automatically and guides you.
-3. **Git hooks catch mistakes at commit.** Wrong color format? Commit rejected with a clear fix.
-4. **QA Agent reviews every PR automatically.** Posts a pass/fail report on your PR within minutes.
-5. **Reviewers gate your code.** Nothing reaches production without human approval.
+This project uses a **governed development framework**. Here's the short version:
 
-### The Rules (Quick Version)
-
-| Rule | What It Means |
-|------|-------------|
-| **No `fetch()`** | All data comes through `SideCarAdapter` in `app/app.js` |
-| **No hex colors in CSS** | Use `var(--color-gold-primary)`, not `#B39F75` |
-| **No npm / no frameworks** | No React, Vue, Tailwind. Vanilla HTML/CSS/JS only |
-| **One module per session** | Working on `detailer.html`? Can't edit `style.css` too |
-| **Synthetic data only** | No real names, SSNs, DODIDs, or commands |
-| **Light mode only** | White surfaces + brass gold accents. No dark mode |
-| **Adapter pattern only** | All data through `SideCarAdapter`. Never hardcode values |
+| Concept | What It Means |
+|---------|---------------|
+| **One file at a time** | You work on ONE file per session. Need another? New session. |
+| **AI assistant** | Opens automatically in your editor. Knows the rules. Guides you. |
+| **Guardrails** | Git hooks catch mistakes at commit time. Clear error messages. |
+| **Code review** | Your branch → QA review → production. Nothing skips a step. |
+| **Halts are good** | If the system stops you, it caught something. Read the message, fix it. |
 
 ### Branch Workflow
 
 ```
-dev/yourname/task  →  qa-staging  →  main
-     (you)             (QA review)     (Tier 1 merge)
+Your Branch  →  qa-staging  →  main
+   (you)         (review)      (production)
 ```
 
-Every PR triggers the automated QA Agent. See [GIT.md](GIT.md) for the complete guide.
+Nobody's code goes straight to production. Ever.
+
+---
+
+## The 7 Rules
+
+These are enforced automatically by git hooks and AI. You don't need to memorize them — the system will stop you and explain what's wrong.
+
+| # | Rule | Why |
+|---|------|-----|
+| 1 | **No `fetch()` calls** | Must work on Navy NMCI computers with no internet |
+| 2 | **No hardcoded colors** | Use `var(--color-gold-primary)` not `#B39F75` |
+| 3 | **No npm / no frameworks** | No React, Vue, Tailwind. Vanilla HTML/CSS/JS only |
+| 4 | **One module per session** | Prevents conflicts between developers |
+| 5 | **Synthetic data only** | No real names, SSNs, DODIDs. Legal requirement. |
+| 6 | **Light mode only** | White + brass gold = Covenant design system |
+| 7 | **Adapter pattern only** | All data through `SideCarAdapter` in `app/app.js` |
 
 ---
 
@@ -131,48 +107,69 @@ Every PR triggers the automated QA Agent. See [GIT.md](GIT.md) for the complete 
 
 ```
 Project-Sidecar/
-├── README.md ................. You are here
-├── GIT.md .................... Git workflow guide (start here for git)
+├── START_HERE.md ............. 👋 New? Start here
+├── README.md ................. You are reading this
+├── ONBOARDING.md ............. The rules + onboarding guide
+├── GIT.md .................... Git workflow guide (step-by-step)
 ├── WHITE_PAPER.md ............ Governance framework (the "why")
-├── CLAUDE.md ................. Claude Code session loader
+├── CHANGELOG.md .............. Merge history
 ├── index.html ................ Entry point (redirects to app/)
 │
 ├── app/ ...................... All browser code
-│   ├── landing.html .......... MOD-LAND: Landing / Role Selection
-│   ├── detailer.html ......... MOD-DET: Detailer Dashboard
-│   ├── placement.html ........ MOD-PLAC: Placement Coordinator
-│   ├── analytics.html ........ MOD-ANLYT: Analytics Dashboard
-│   ├── style.css ............. MOD-CSS: Covenant Design System
-│   ├── app.js ................ MOD-JS: Shared logic + data + adapter
+│   ├── landing.html .......... Landing / Role Selection
+│   ├── detailer.html ......... Detailer Dashboard
+│   ├── placement.html ........ Placement Coordinator
+│   ├── analytics.html ........ Analytics Dashboard
+│   ├── style.css ............. Covenant Design System (CSS tokens)
+│   ├── app.js ................ Shared logic + data + adapter
 │   └── fonts/ ................ Local font files (woff2)
 │
-├── directives/ ............... Governance documents (Tier 1 owns these)
+├── scripts/ .................. Automation
+│   ├── onboard.sh ............ Onboarding agent (run this first!)
+│   ├── session-init.sh ....... Start a development session
+│   ├── session-close.sh ...... Close and log a session
+│   ├── validate-boundaries.sh  Module boundary checker
+│   └── validate-constraints.sh Constitutional constraint checker
+│
+├── directives/ ............... Governance documents (the rules)
 │   ├── Gemini.md ............. Master Session Brief
-│   ├── DEVELOPMENT.md ........ Code standards
+│   ├── DEVELOPMENT.md ........ Code standards, commit format
 │   ├── SECURITY.md ........... Data boundary law
-│   ├── UI-UX.md .............. Design system
+│   ├── UI-UX.md .............. Design system specs
 │   ├── INTEGRATIONS.md ....... Adapter contracts
 │   ├── AUDIT.md .............. Verification protocol
 │   ├── TESTING.md ............ Quality gate
-│   └── ONBOARDING.md ......... Developer onboarding
+│   └── ONBOARDING.md ......... Developer onboarding checklist
 │
-├── .github/workflows/ ........ Automated QA
-│   └── qa-agent.yml .......... Runs on every PR
+├── .githooks/ ................ Git hooks (automatic guardrails)
+│   ├── pre-commit ............ Boundary + constraint checks
+│   ├── commit-msg ............ Commit format enforcement
+│   └── post-checkout ......... Auto-triggers onboarding on clone
 │
-├── .githooks/ ................ Git hooks (boundary + constraint checks)
-├── scripts/ .................. Session init/close scripts
+├── .github/workflows/ ........ Automated QA on GitHub
+│   ├── qa-agent.yml .......... Runs on every PR
+│   ├── verifier-feedback.yml .. Independent verification
+│   └── eod-audit.yml ......... End-of-day audit
+│
+├── workflow/ .................. Module routing
+│   └── MODULE-MAP.md ......... Which module owns which file
+│
 ├── sessions/ ................. Session logs (append-only)
-└── lessons/ .................. Halts, exemplars, failure patterns
+└── lessons/ .................. Learning from every session
+    ├── halts.md .............. Halt events log
+    ├── exemplars.md .......... High-scoring outputs
+    └── patterns.md ........... Recurring failure patterns
 ```
 
 ---
 
-## Design System Cheat Sheet
+## Design System Quick Reference
 
 ### Colors (use the variable, never the hex)
+
 | Token | Use For |
 |---|---|
-| `--color-bg-void` | Page background (#FAFAFA) |
+| `--color-bg-void` | Page background |
 | `--color-bg-surface` | Card/panel background (white) |
 | `--color-bg-elevated` | Table headers, raised elements |
 | `--color-gold-primary` | Signal — links, accents, borders |
@@ -181,20 +178,46 @@ Project-Sidecar/
 | `--color-text-muted` | Secondary/inactive text |
 
 ### PRD Tier Colors (only for PRD urgency — never repurpose)
-| Tier | Badge Class | Dot Class |
-|---|---|---|
-| STABLE (9+ months) | `.prd-badge--stable` | `.status-dot--gray` |
-| WATCH (6-9 months) | `.prd-badge--watch` | `.status-dot--green` |
-| URGENT (3-6 months) | `.prd-badge--urgent` | `.status-dot--yellow` |
-| CRITICAL (0-3 months) | `.prd-badge--critical` | `.status-dot--red` |
-| EXPIRED (past due) | `.prd-badge--expired` | `.status-dot--escalated` |
+
+| Tier | Meaning |
+|---|---|
+| STABLE (9+ months) | Gray — no action needed |
+| WATCH (6-9 months) | Green — monitor |
+| URGENT (3-6 months) | Yellow — action soon |
+| CRITICAL (0-3 months) | Red — action now |
+| EXPIRED (past due) | Purple — escalated |
 
 ### Fonts
+
 | Content Type | Token | Fallback |
 |---|---|---|
 | Page titles, nav | `var(--font-display)` | Impact |
 | Body text | `var(--font-body)` | Georgia |
 | Numbers, dates, codes | `var(--font-data)` | Consolas |
+
+---
+
+## Commit Format
+
+```
+[SC-YYYY-MMDD-NNN] MODULE-ID: Brief description
+```
+
+**Example:**
+```
+[SC-2026-0327-001] MOD-DET: Add PRD tier column to dashboard table
+```
+
+**Module IDs:**
+
+| ID | File | What It Is |
+|---|---|---|
+| `MOD-LAND` | `app/landing.html` | Landing page |
+| `MOD-DET` | `app/detailer.html` | Detailer Dashboard |
+| `MOD-PLAC` | `app/placement.html` | Placement Coordinator |
+| `MOD-ANLYT` | `app/analytics.html` | Analytics Dashboard |
+| `MOD-CSS` | `app/style.css` | Design system |
+| `MOD-JS` | `app/app.js` | Shared logic + data |
 
 ---
 
@@ -227,6 +250,7 @@ Phase 2 (target): getSailors() → Dataverse API
 | **NMCI** | Navy Marine Corps Intranet — the target network. |
 | **Adapter** | `SideCarAdapter` in `app/app.js` — the only way to access data. |
 | **Module** | A single page/file with defined boundaries. |
+| **Session** | One work period on one module. Starts with scope, ends with commit. |
 | **Halt** | System stopped you for a rule violation. Read the message, fix, retry. |
 | **Tier 1** | Human decision layer. Owns directives and merge authority. |
 
