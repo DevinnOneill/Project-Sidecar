@@ -37,11 +37,8 @@ SideCar modernizes how the Navy distributes Sailors to assignments. Right now, D
 
 **Who uses SideCar:**
 
-| Role | What They Do |
-|------|-------------|
-| **Detailers** | Manage Sailor assignment portfolios |
-| **Placement Coordinators** | Cross-community visibility and billet alignment |
-| **Rating Evaluators** | Enterprise-level distribution analysis |
+Every stakeholder within the distribution workflow. 
+
 
 **Current phase:** Phase 1A — Proof of Concept. All data is synthetic (fake but realistic). No real Sailor records.
 
