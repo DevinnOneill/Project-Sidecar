@@ -18,20 +18,20 @@ Nothing skips a stage. Nothing goes backwards.
 
 ---
 
-## One-Time Setup (Do This After Cloning)
+## One-Time Setup
+
+One command — clone and onboard in one shot:
 
 ```bash
-# 1. Clone the repo
-git clone https://github.com/DevinnOneill/Project-Sidecar.git
-cd Project-Sidecar
-
-# 2. Activate the git hooks (catches mistakes before they reach GitHub)
-git config core.hooksPath .githooks
-
-# 3. Confirm it worked
-git config core.hooksPath
-# Should print: .githooks
+git clone https://github.com/DevinnOneill/Project-Sidecar.git && cd Project-Sidecar && bash scripts/onboard.sh
 ```
+
+The onboarding agent automatically:
+- Activates git hooks (catches mistakes before they reach GitHub)
+- Asks your name and creates your dev branch from main
+- Verifies fonts and core files
+- Opens SideCar in your browser
+- Walks you through the rules and how to save your work
 
 ---
 

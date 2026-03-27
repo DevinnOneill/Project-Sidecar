@@ -40,7 +40,7 @@ Follow the **Session Load Protocol** defined in directives/Gemini.md Section 20:
 - C-09: Adapter layer pattern. All data through SideCarAdapter.
 - C-11: No hardcoded hex values outside :root.
 - C-12: Typography discipline (Bebas Neue, Libre Baskerville, DM Mono).
-- C-13: Dark mode only. No light mode.
+- C-13: Light mode only. No dark mode.
 - C-14: PRD color semantic lock. 5 tier colors used ONLY for PRD urgency.
 
 ## Reference

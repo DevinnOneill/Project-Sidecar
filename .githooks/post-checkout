@@ -1,0 +1,37 @@
+#!/bin/bash
+# =============================================================
+# SideCar — Post-Checkout Hook
+# Auto-triggers onboarding on first checkout after clone.
+# If the developer hasn't been onboarded yet, runs onboard.sh.
+#
+# Arguments from git:
+#   $1 = ref of previous HEAD
+#   $2 = ref of new HEAD
+#   $3 = 1 if branch checkout, 0 if file checkout
+# =============================================================
+
+# Prevent recursion — onboard.sh sets this env var during its run
+if [ "$SIDECAR_ONBOARDING" = "1" ]; then
+  exit 0
+fi
+
+# Only trigger on branch checkout (not file checkout)
+if [ "$3" != "1" ]; then
+  exit 0
+fi
+
+# Check if already onboarded
+if [ -f .onboarded ]; then
+  exit 0
+fi
+
+# Check if the onboarding script exists
+if [ ! -f scripts/onboard.sh ]; then
+  exit 0
+fi
+
+# Run the onboarding agent
+echo ""
+echo "  First time here? Let's get you set up!"
+echo ""
+bash scripts/onboard.sh

@@ -90,7 +90,7 @@
 
 ## MOD-DIR: Directive Library (Tier 1 Only)
 
-- **Files:** `directives/*`, `WHITE_PAPER.md`, `READ_BEFORE_YOU_CODE.md`
+- **Files:** `directives/*`, `WHITE_PAPER.md`, `ONBOARDING.md`
 - **Write:** Tier 1 authorization required
 - **Read:** All (loaded at every session start)
 - **Focus Directives:** N/A — these ARE the directives
