@@ -3,7 +3,7 @@
 > **Version:** 2.0 | **Domain:** Visual Design, Component Behavior, Accessibility, NMCI Rendering
 > **Authority:** Tier 1 | **Full Specification:** SIDECAR_DESIGN v2.0
 > **Loaded By:** Every session that modifies HTML or CSS
-> **Amended:** 2026-03-25 — Tier 1 authorized transition from dark/void to light/white+gold
+> **Amended:** 2026-03-26 — Tier 1 authorized transition to Warm Linen and Deep Navy aesthetic
 
 ---
 
@@ -13,8 +13,8 @@
 
 ## 2. Covenant — Five Principles
 
-1. **Light-first:** Clean white surfaces with purposeful gold accents. The white surface IS the interface. There is no dark mode.
-2. **Gold as signal:** Warm brass gold (#B39F75) marks what matters — borders, icons, active states. Never decorative fill on large surfaces.
+1. **Cinematic restraint/Warm Navy:** Warm linen surfaces with deep navy for primary structural elements and brass/khaki accents. Pure white (#FFFFFF) is explicitly avoided to prevent eye fatigue.
+2. **Earthy signals:** Brass and khaki (earth tones) mark what matters. Deep navy provides weight and contrast.
 3. **Typography carries structure:** Hierarchy lives in typeface, weight, and scale — not color alone. Any view must be readable in grayscale.
 4. **Data is never softened:** Numbers, codes, and identifiers render in monospace at full contrast.
 5. **Motion confirms state:** Animation communicates state changes only. If removing an animation has no functional consequence, the animation should not exist.
@@ -27,8 +27,8 @@ The full `:root` token declaration in `Gemini.md` Section 14 is the quick refere
 - No hex values outside `:root` (Constraint C-11)
 - All numerical data uses `--font-data` (Constraint C-12)
 - PRD colors are semantic-only (Constraint C-14)
-- Background layers: lighter = deeper / more elevated (white base, off-white elevated)
-- Gold is never used as background fill on large surfaces
+- Background layers: never pure white. Use warm linen and stone for calm focus.
+- Deep Navy is reserved for topbars and headers.
 
 ## 4. Typography Roles
 
@@ -52,9 +52,9 @@ The full `:root` token declaration in `Gemini.md` Section 14 is the quick refere
 ## 5. Component Specifications (Summary)
 
 ### Topbar
-- Gold rule border: 2px solid `--color-border-gold` at bottom
+- Earth accent border: 2px solid `--color-earth-500` at bottom
 - This line is the one permanent anchor of the interface. It is never removed.
-- Background: `--color-bg-surface` (white)
+- Background: `--color-bg-dark` (deep navy)
 - Height: 56px
 
 ### Cards / Panels
