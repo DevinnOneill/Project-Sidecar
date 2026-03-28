@@ -1,106 +1,537 @@
 # UI-UX.md — Interface Standards (Covenant Design System)
 
-> **Version:** 2.0 | **Domain:** Visual Design, Component Behavior, Accessibility, NMCI Rendering
-> **Authority:** Tier 1 | **Full Specification:** SIDECAR_DESIGN v2.0
+> **Version:** 3.0 | **Domain:** Visual Design, Component Behavior, Accessibility, NMCI Rendering
+> **Authority:** Tier 1 | **Source:** SIDECAR_DESIGN v2.0 (adapted to light mode)
 > **Loaded By:** Every session that modifies HTML or CSS
-> **Amended:** 2026-03-26 — Tier 1 authorized transition to Warm Linen and Deep Navy aesthetic
+> **Amended:** 2026-03-27 — Full expansion from SIDECAR_DESIGN v2.0 source document
 
 ---
 
 ## 1. The Design Rule
 
-**If it reads as SaaS, redesign it.** SideCar is a mission-operations instrument. A dashboard aesthetic borrowed from B2B software products is incompatible with the Covenant direction.
+**If it reads as SaaS, redesign it.** SideCar is a mission-operations instrument. A dashboard aesthetic borrowed from B2B software products is incompatible with the Covenant direction. The reference points for Covenant are cinematic — institutional gravity, not consumer delight.
 
 ## 2. Covenant — Five Principles
 
-1. **Cinematic restraint/Warm Navy:** Warm linen surfaces with deep navy for primary structural elements and brass/khaki accents. Pure white (#FFFFFF) is explicitly avoided to prevent eye fatigue.
-2. **Earthy signals:** Brass and khaki (earth tones) mark what matters. Deep navy provides weight and contrast.
-3. **Typography carries structure:** Hierarchy lives in typeface, weight, and scale — not color alone. Any view must be readable in grayscale.
-4. **Data is never softened:** Numbers, codes, and identifiers render in monospace at full contrast.
+1. **Warm Navy / Cinematic restraint:** Warm linen surfaces with deep navy for primary structural elements and brass/khaki gold accents. Pure white (`#FFFFFF`) is explicitly avoided to prevent eye fatigue. The warm surface IS the interface.
+2. **Gold as signal:** Brass and khaki gold marks what matters — active navigation states, section dividers, key structural labels. It is an operational indicator. Never use gold for decoration or large surface fills.
+3. **Typography carries structure:** Information hierarchy lives in typeface, weight, and scale — not color alone. Any view must be readable in grayscale.
+4. **Data is never softened:** Numbers, codes, and identifiers render in monospace at full contrast. No rounded softening of data values. No animated count-ups.
 5. **Motion confirms state:** Animation communicates state changes only. If removing an animation has no functional consequence, the animation should not exist.
 
-## 3. Token Authority
+---
 
-The full `:root` token declaration in `Gemini.md` Section 14 is the quick reference. SIDECAR_DESIGN v2.0 is the authoritative source.
+## 3. Color Token System
 
-**Hard rules:**
-- No hex values outside `:root` (Constraint C-11)
-- All numerical data uses `--font-data` (Constraint C-12)
-- PRD colors are semantic-only (Constraint C-14)
-- Background layers: never pure white. Use warm linen and stone for calm focus.
-- Deep Navy is reserved for topbars and headers.
+### Token Authority
+The `:root` declaration in `app/style.css` is the single source of truth for all color values. `Gemini.md` Section 14 is the quick reference. This document is the specification.
 
-## 4. Typography Roles
+**HARD RULE:** If a hex value appears anywhere in component CSS, in a `style` attribute, or in a JavaScript style assignment outside of the `:root` token declaration — it is a constraint violation (C-11). Find the appropriate token or create a new one.
 
-| Role | Font | Token | Usage |
+### Background Layer Tokens
+Background tokens define the depth hierarchy. These are the light-mode Covenant surfaces:
+
+| Token | Role |
+|---|---|
+| `--color-bg-void` | Page body background. The absolute floor — warm linen. |
+| `--color-bg-base` | Primary application surface. Default background for page content. |
+| `--color-bg-surface` | Cards, panels, containers. One level above base. |
+| `--color-bg-elevated` | Dropdowns, tooltips, modals, table headers. Floats above surface. |
+| `--color-bg-overlay` | Hover states on rows and cards. Focused input backgrounds. |
+| `--color-bg-dark` | Deep navy — reserved for topbar and primary structural headers. |
+
+### Gold Accent Tokens
+
+| Token | Use — and What It Must Not Be Used For |
+|---|---|
+| `--color-gold-primary` | Navigation borders, section dividers, key structural labels. NOT decorative. |
+| `--color-gold-bright` | High-emphasis text, active states, heading accents. NOT backgrounds. |
+| `--color-gold-dim` | Inactive gold elements, secondary rule lines. NOT primary actions. |
+| `--color-gold-glow` | Ambient glow behind gold elements. NOT as fill. |
+
+### Text Tokens
+
+| Token | Role |
+|---|---|
+| `--color-text-primary` | All primary body copy. Default text on light backgrounds. |
+| `--color-text-secondary` | Supporting labels, secondary field values. |
+| `--color-text-muted` | Inactive labels, placeholder text, column headers. |
+| `--color-text-dim` | Disabled states, very low-emphasis metadata. |
+
+### Border Tokens
+
+| Token | Role |
+|---|---|
+| `--color-border-subtle` | Internal table rules, low-emphasis separators. |
+| `--color-border-default` | Standard card and panel borders, form field outlines. |
+| `--color-border-strong` | Focused input states, emphasized panel edges. |
+| `--color-border-gold` | Topbar gold rule. The one permanent gold line. Never removed. |
+
+### PRD Status Tokens
+
+**CRITICAL RULE (C-14):** PRD tier color tokens are used ONLY to represent PRD urgency. Repurposing a PRD color for a non-PRD UI element creates semantic ambiguity in a critical operational signal.
+
+| Tier | Background Token | Text Token | Status Dot Token |
 |---|---|---|---|
-| Display | Bebas Neue | `--font-display` | Page titles, section headers, navigation labels |
-| Body | Libre Baskerville | `--font-body` | Narrative text, descriptions, instructions |
-| Data | DM Mono | `--font-data` | All numbers, dates, codes, identifiers, PRD values |
+| Gray (STABLE) | `--color-prd-gray` | `--color-prd-gray-text` | `--color-dot-gray` |
+| Green (WATCH) | `--color-prd-green` | `--color-prd-green-text` | `--color-dot-green` |
+| Yellow (URGENT) | `--color-prd-yellow` | `--color-prd-yellow-text` | `--color-dot-yellow` |
+| Red (CRITICAL) | `--color-prd-red` | `--color-prd-red-text` | `--color-dot-red` |
+| Escalated (EXPIRED) | `--color-prd-escalated` | `--color-prd-escalated-text` | `--color-dot-escalated` |
 
-**Font loading:** Three-layer fallback (Constraint C-05):
+---
+
+## 4. Typography System
+
+### Font Roles — Three Fonts, Three Jobs
+
+SideCar uses exactly three fonts. Each has a single defined role. Using the wrong font for a context is a design violation.
+
+| Font | Token | Role | Used For | NEVER Used For |
+|---|---|---|---|---|
+| Bebas Neue | `--font-display` | Display | Page titles, section headers, stat callout numbers | Dropdown options, form fields, body copy, anything below 18px |
+| Libre Baskerville | `--font-body` | Body / Narrative | Problem statement copy, comm log summaries, notes, paragraphs | Data table cells, numeric fields, code, labels, navigation |
+| DM Mono | `--font-data` | Data / UI | All table cells, filter inputs, chip labels, nav links, badge text, timestamps | Long-form narrative paragraphs |
+
+### Type Scale Tokens
+
 ```css
-@font-face {
-  font-family: 'Bebas Neue';
-  src: url('https://fonts.gstatic.com/...') format('woff2'),  /* CDN — may be blocked */
-       url('fonts/BebasNeue.woff2') format('woff2');           /* Local fallback */
-  font-display: swap;
+:root {
+  /* ── DISPLAY (Bebas Neue) ────────── */
+  --type-display-xl:  48px;   /* Hero stat numbers, page heroes */
+  --type-display-lg:  36px;   /* Page section titles */
+  --type-display-md:  28px;   /* Card titles, sub-section heads */
+  --type-display-sm:  22px;   /* Widget labels */
+
+  /* ── BODY (Libre Baskerville) ───── */
+  --type-body-lg:     18px;   /* Lead paragraphs */
+  --type-body-md:     15px;   /* Standard body copy */
+  --type-body-sm:     13px;   /* Captions, footnotes */
+
+  /* ── DATA (DM Mono) ─────────────── */
+  --type-data-xl:     16px;   /* Large callout values */
+  --type-data-md:     14px;   /* Table cells, field values */
+  --type-data-sm:     12px;   /* Metadata, timestamps */
+  --type-data-xs:     11px;   /* Chip labels, badge text, nav */
+
+  /* ── LINE HEIGHTS ───────────────── */
+  --leading-tight:    1.1;    /* Display only */
+  --leading-normal:   1.5;    /* Body copy */
+  --leading-data:     1.4;    /* Table rows */
+
+  /* ── LETTER SPACING ─────────────── */
+  --tracking-display: 0.04em; /* Bebas Neue */
+  --tracking-caps:    0.12em; /* Uppercase data labels */
+  --tracking-data:    0.06em; /* DM Mono table cells */
 }
-/* System fallback in token: 'Bebas Neue', Impact, sans-serif */
 ```
 
-## 5. Component Specifications (Summary)
+### Typography Rules
 
-### Topbar
-- Earth accent border: 2px solid `--color-earth-500` at bottom
-- This line is the one permanent anchor of the interface. It is never removed.
-- Background: `--color-bg-dark` (deep navy)
-- Height: 56px
+| Rule | Specification |
+|---|---|
+| Bebas Neue minimum size | 18px rendered. Never below this threshold. |
+| Dropdown option text | DM Mono at `--type-data-md` (14px). Never Bebas Neue. |
+| Navigation link labels | DM Mono at `--type-data-xs` (11px), uppercase, `--tracking-caps`. |
+| Table column headers | DM Mono at `--type-data-xs` (11px), uppercase, `--tracking-caps`. |
+| Table cell values | DM Mono at `--type-data-md` (14px), `--tracking-data`. |
+| Comm log entries / notes | Libre Baskerville at `--type-body-md` (15px). |
+| PRD badge labels | DM Mono at `--type-data-xs` (11px), uppercase. |
+| Summary card stat numbers | Bebas Neue at `--type-display-xl` (48px). |
+| Form placeholder text | DM Mono at `--type-data-md`, color `--color-text-dim`. |
+| Data freshness timestamp | DM Mono at `--type-data-xs`, color `--color-text-dim`. |
 
-### Cards / Panels
-- Background: `--color-bg-surface` (white)
-- Border: 1px solid `--color-border-subtle`
-- Border-radius: 4px for data panels, 16px for landing cards
-- Padding: 16px 20px
-- Shadow: `--shadow-soft` or `--shadow-card` for elevation
+### Font Loading — Three-Layer Fallback Protocol (C-05)
 
-### Tables
-- Header row: `--color-bg-elevated`, text in `--font-data` uppercase
-- Row hover: `--color-bg-overlay`
-- Row borders: `--color-border-subtle`
-- All data cells: `--font-data`
-- PRD column: colored dot + tier label using semantic PRD tokens
+**Layer 1 — Remote Load (Preferred):** Use `<link>` tags in `<head>`. Never `@import` inside CSS — `@import` blocks rendering and fails silently behind NMCI proxies.
 
-### PRD Badges
-- Background: PRD tier background token (light-tinted per tier)
-- Text: PRD tier text token
-- Font: `--font-data`, uppercase, letter-spacing 0.05em
-- Border-radius: 2px
-- Padding: 2px 8px
+**Layer 2 — Local Font Package:** Distribute `.woff2` files in a `/fonts` directory. Define `@font-face` rules in `style.css` before any other usage. Fires automatically if remote load fails.
 
-### Navigation
-- Active state: `--color-gold-primary` text + `--color-border-gold` bottom border
-- Inactive: `--color-text-muted`
-- Font: `--font-display`
+**Layer 3 — System Font Stack:**
+```css
+:root {
+  --font-display: 'Bebas Neue', Impact, sans-serif;
+  --font-body:    'Libre Baskerville', Georgia, serif;
+  --font-data:    'DM Mono', 'Courier New', monospace;
+}
 
-## 6. NMCI Rendering Constraints
+/* Activated by .font-fallback class */
+.font-fallback {
+  --font-display: 'Arial Black', Impact, sans-serif;
+  --font-body:    Georgia, 'Times New Roman', serif;
+  --font-data:    'Courier New', Courier, monospace;
+}
+```
 
-- No CSS nesting (`& .child` syntax — Chrome 120+, beyond baseline)
-- No `@container` queries (Chrome 105+, but inconsistent on NMCI builds)
+### Font Detection Script (NMCI-Hardened)
+
+```javascript
+(function () {
+  'use strict';
+  var TIMEOUT = 2500; // ms — accounts for NMCI proxy latency
+
+  function fallback(reason) {
+    document.documentElement.classList.add('font-fallback');
+    console.warn('[COVENANT] Font fallback active:', reason);
+  }
+
+  if (!document.fonts || typeof document.fonts.check !== 'function') {
+    fallback('FontFace API unavailable in this environment');
+    return;
+  }
+
+  var timeout = new Promise(function (resolve) {
+    setTimeout(function () { resolve('timeout'); }, TIMEOUT);
+  });
+
+  Promise.race([document.fonts.ready, timeout]).then(function () {
+    var ok = document.fonts.check('1em "Bebas Neue"') &&
+             document.fonts.check('1em "Libre Baskerville"') &&
+             document.fonts.check('1em "DM Mono"');
+    if (!ok) fallback('One or more primary fonts failed to load');
+  });
+}());
+```
+
+---
+
+## 5. Spacing System & Layout
+
+### 8px Base Grid
+
+```css
+:root {
+  --space-1:   4px;  /* Micro: icon-to-label, badge internal padding */
+  --space-2:   8px;  /* Tight: chip padding, inline element gaps */
+  --space-3:  12px;  /* Default internal padding */
+  --space-4:  16px;  /* Standard component padding */
+  --space-5:  24px;  /* Section internal spacing */
+  --space-6:  32px;  /* Between major components */
+  --space-7:  48px;  /* Section-to-section rhythm */
+  --space-8:  64px;  /* Page-level vertical breathing room */
+
+  --radius-none: 0px;    /* Tables, hard-edged panels */
+  --radius-xs:   2px;    /* Status dots, tiny elements */
+  --radius-sm:   4px;    /* Input fields, chips, data panels */
+  --radius-md:   6px;    /* Cards, panels, dropdowns */
+  --radius-lg:   8px;    /* Modals */
+  --radius-pill: 100px;  /* Toggle chips, filter pills */
+  /* HARD RULE: No component uses border-radius > 10px except landing cards (16px). */
+}
+```
+
+### Layout Architecture — Three Structural Zones
+
+Every SideCar page uses the same three-zone architecture. These zones never overlap and never change between pages.
+
+| Zone | Height / Position | Description | CSS Key Properties |
+|---|---|---|---|
+| **Topbar** | 56px, fixed top | Navigation: wordmark, page links, data freshness indicator, role badge. Never scrolls. | `position:fixed; top:0; height:56px; z-index:1000` |
+| **Gold Rule** | 2px, fixed at bottom of topbar | Earth accent border line. The permanent visual anchor. Always visible. | `position:fixed; top:56px; height:2px; background:var(--color-earth-500); z-index:1001` |
+| **Content Area** | `calc(100vh - 58px)` from `top:58px` | All page content. Scrollable. Max-width 1440px centered. | `margin-top:58px; overflow-y:auto; max-width:1440px` |
+
+---
+
+## 6. Component Specifications
+
+### 6.1 Topbar
+
+```css
+.topbar {
+  position: fixed; top: 0; left: 0; right: 0;
+  height: 56px;
+  background: var(--color-bg-dark);
+  display: flex; align-items: center;
+  padding: 0 var(--space-6);
+  gap: var(--space-5);
+  z-index: 1000;
+}
+```
+
+**Topbar Gold/Earth Rule:**
+The accent border at the bottom of the topbar is never removed, hidden, conditionally rendered, or made subject to scroll. It renders on every page, on every load, immediately. It is the one permanent visual anchor of the Covenant interface.
+
+### 6.2 PRD Badges
+
+PRD badges appear in the Sailor Priority Queue and the PRD pipeline strip. The badge CSS class is assigned by the `computePRDTier()` function in `app.js`. The UI rendering layer never reads a PRD date directly.
+
+```css
+.prd-badge {
+  display: inline-flex; align-items: center; gap: var(--space-1);
+  font-family: var(--font-data);
+  font-size: var(--type-data-xs);
+  letter-spacing: var(--tracking-caps);
+  text-transform: uppercase;
+  padding: 3px 8px;
+  border-radius: var(--radius-xs);
+  border: 1px solid transparent;
+  white-space: nowrap;
+}
+```
+
+Each tier applies its token pair: `background: var(--color-prd-[tier])` and `color: var(--color-prd-[tier]-text)`.
+
+### 6.3 Status Dots
+
+Status dots occupy column 1 of the Sailor Priority Queue. Red and Escalated dots have a CSS pulse animation. This is the only permitted animation on live data content.
+
+```css
+.status-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+  flex-shrink: 0;
+}
+.status-dot--red       { background: var(--color-dot-red);
+                         box-shadow: 0 0 6px var(--color-dot-red);
+                         animation: dot-pulse-red 2s ease-in-out infinite; }
+.status-dot--escalated { background: var(--color-dot-escalated);
+                         box-shadow: 0 0 8px rgba(155,48,184,0.5);
+                         animation: dot-pulse-esc 1.8s ease-in-out infinite; }
+
+@keyframes dot-pulse-red { 0%,100%{ opacity:1; } 50%{ opacity:0.4; } }
+@keyframes dot-pulse-esc { 0%,100%{ opacity:1; } 50%{ opacity:0.5; } }
+```
+
+### 6.4 Data Tables
+
+**TABLE RULES:** Tables never have outer drop shadows. Tables never have gradient row backgrounds. Row hover must use `var(--color-bg-overlay)`. Escalated rows receive a full-row background treatment. Column headers are DM Mono, uppercase, `--tracking-caps` — never Bebas Neue.
+
+```css
+.data-table { width:100%; border-collapse:collapse; font-family:var(--font-data); font-size:var(--type-data-md); }
+.data-table th {
+  font-size:var(--type-data-xs); letter-spacing:var(--tracking-caps); text-transform:uppercase;
+  color:var(--color-text-muted); padding:var(--space-3) var(--space-4);
+  text-align:left; white-space:nowrap; cursor:pointer; user-select:none;
+}
+.data-table td {
+  padding:var(--space-3) var(--space-4);
+  color:var(--color-text-primary);
+  line-height:var(--leading-data);
+  border-bottom:1px solid var(--color-border-subtle);
+  vertical-align:middle;
+}
+.data-table tbody tr:hover td { background:var(--color-bg-overlay); cursor:pointer; }
+```
+
+### 6.5 Filter Bar
+
+```css
+.filter-bar {
+  display:flex; gap:var(--space-3); align-items:center; flex-wrap:wrap;
+  background:var(--color-bg-surface); border:1px solid var(--color-border-subtle);
+  border-radius:var(--radius-md); padding:var(--space-3) var(--space-4);
+  margin-bottom:var(--space-4);
+}
+
+.filter-input {
+  flex:1; min-width:220px; background:transparent;
+  border:1px solid var(--color-border-subtle); border-radius:var(--radius-sm);
+  padding:10px 12px; color:var(--color-text-primary);
+  font-family:var(--font-data); font-size:var(--type-data-md);
+  letter-spacing:var(--tracking-data); outline:none;
+  transition:border-color 0.15s ease;
+}
+.filter-input::placeholder { color:var(--color-text-dim); }
+.filter-input:focus         { border-color:var(--color-border-strong); }
+```
+
+### 6.6 Chips (Filter Toggles)
+
+```css
+.chip {
+  font-family:var(--font-data); font-size:var(--type-data-xs);
+  letter-spacing:var(--tracking-caps); text-transform:uppercase;
+  padding:5px 10px; border:1px solid var(--color-border-subtle);
+  border-radius:var(--radius-pill); color:var(--color-text-dim);
+  background:transparent; cursor:pointer; transition:all 0.15s ease;
+}
+.chip:hover  { border-color:var(--color-border-default); color:var(--color-text-secondary); }
+.chip.active { border-color:var(--color-gold-primary); background:var(--color-gold-glow); color:var(--color-gold-bright); }
+```
+
+### 6.7 Mode Toggle (Placement Page)
+
+The mode toggle on the Placement page switches between Coordinator and Evaluator scope.
+
+```css
+.mode-toggle {
+  display:inline-flex;
+  border:1px solid var(--color-border-default);
+  border-radius:var(--radius-sm); overflow:hidden;
+}
+.mode-toggle__btn {
+  font-family:var(--font-data); font-size:var(--type-data-xs);
+  letter-spacing:var(--tracking-caps); text-transform:uppercase;
+  padding:8px 20px; background:transparent; border:none;
+  color:var(--color-text-muted); cursor:pointer;
+  transition:all 0.15s ease;
+}
+.mode-toggle__btn:hover  { color:var(--color-text-primary); }
+.mode-toggle__btn.active { background:var(--color-gold-glow); color:var(--color-gold-bright); }
+```
+
+---
+
+## 7. Motion System
+
+### Timing Tokens
+
+```css
+:root {
+  --duration-instant:  80ms;   /* Button press, checkbox tap */
+  --duration-fast:    150ms;   /* Hover states, chip active */
+  --duration-normal:  250ms;   /* Dropdown open, panel reveal */
+  --duration-slow:    400ms;   /* Page-load stagger entries */
+
+  --ease-out:   cubic-bezier(0.16, 1, 0.3, 1);    /* Entrances */
+  --ease-in:    cubic-bezier(0.4,  0, 1,   1);    /* Exits */
+  --ease-inout: cubic-bezier(0.65, 0, 0.35, 1);   /* State transitions */
+}
+```
+
+### Page Load Reveal — Required on All Pages
+
+On every page load, all primary content regions receive one staggered entrance sequence. The total sequence completes in under 600ms. Elements start invisible and slightly offset downward. The animation fires once and never repeats.
+
+```css
+.reveal { opacity:0; transform:translateY(12px); }
+.reveal.is-visible {
+  animation: reveal-enter var(--duration-slow) var(--ease-out) forwards;
+}
+@keyframes reveal-enter { to { opacity:1; transform:translateY(0); } }
+
+[data-delay="1"] { animation-delay:0ms;   }
+[data-delay="2"] { animation-delay:80ms;  }
+[data-delay="3"] { animation-delay:160ms; }
+[data-delay="4"] { animation-delay:240ms; }
+[data-delay="5"] { animation-delay:320ms; }
+```
+
+```javascript
+// Double rAF ensures paint before animation
+document.addEventListener('DOMContentLoaded', function () {
+  requestAnimationFrame(function () {
+    requestAnimationFrame(function () {
+      document.querySelectorAll('.reveal').forEach(function (el) {
+        el.classList.add('is-visible');
+      });
+    });
+  });
+});
+```
+
+### Permitted Animations (Complete List)
+
+Only the following animations are permitted. Any animation not on this list requires Tier 1 authorization.
+
+| Animation | Target | Duration | Trigger | Purpose |
+|---|---|---|---|---|
+| Page load reveal | All `.reveal` elements | 400–600ms staggered | DOMContentLoaded | Communicates page readiness |
+| Hover state | Nav links, table rows, cards | 150ms | `:hover` | Confirms interactivity |
+| Focus ring | All interactive elements | 80ms | `:focus-visible` | Accessibility — keyboard nav |
+| Dropdown open | Filter select elements | 250ms | click / focus | Communicates state change |
+| Red dot pulse | `.status-dot--red` | 2s loop | Always-on CSS | Communicates urgency |
+| Escalated dot pulse | `.status-dot--escalated` | 1.8s loop | Always-on CSS | Communicates highest urgency |
+| Chip active toggle | `.chip.active` | 150ms | JS class toggle | Confirms filter selection |
+| Mode toggle switch | `.mode-toggle__btn.active` | 150ms | JS class toggle | Confirms scope change |
+
+### ANIMATED DATA PROHIBITED
+
+Data values must never animate (no count-up on load, no value transitions). Data in SideCar represents real career-affecting Sailor records. Animating values implies real-time updates and erodes trust in the data freshness indicator. This is a hard prohibition.
+
+---
+
+## 8. NMCI Rendering Constraints
+
+- No CSS nesting (`& .child` syntax — Chrome 120+, beyond NMCI baseline)
+- No `@container` queries (Chrome 105+, inconsistent on NMCI builds)
 - No `@layer` cascade layers
 - No `backdrop-filter: blur()` as sole visual indicator (may be disabled)
 - No `dvh` / `svh` viewport units (use `vh` with fallback)
-- No Tailwind CSS CDN or any runtime CSS framework (blocked on NMCI, no network at file://)
-- Test with font fallbacks active — the interface must be fully functional on Georgia/Arial/Consolas
+- No `top-level await`
+- No ES modules (`import`/`export`)
+- No Tailwind CSS CDN or any runtime CSS framework (blocked on NMCI, no network at `file://`)
+- **Target baseline:** Chrome 110+ / Edge 110+
+- **Test with font fallbacks active** — the interface must be fully functional on Georgia/Arial/Consolas
 
-## 7. Accessibility Floor
+---
+
+## 9. Prohibited Patterns
+
+These prohibitions are constitutional. Any of the following in a delivered artifact is a constraint violation.
+
+### Layout Prohibitions
+
+| Prohibited | Why | Compliant Alternative |
+|---|---|---|
+| Sidebar navigation | Violates Covenant layout architecture | Topbar-only navigation |
+| Hamburger / drawer menu | SaaS / mobile-first pattern | Topbar nav with active state |
+| Drop shadows on data tables | Creates false depth on Covenant surfaces | Border + background contrast only |
+| Widget drag-and-drop | Consumer product pattern | Fixed institutional layout |
+
+### Color Prohibitions
+
+| Prohibited | Why |
+|---|---|
+| Any hardcoded hex in component CSS | Breaks token system. Single source of truth is `:root` only. |
+| Gradient fills on cards, tables, or panels | Violates flat surface aesthetic. |
+| Purple, teal, or blue as general UI accents | Purple is reserved for Escalated PRD tier. Semantic confusion. |
+| Pure white (`#FFFFFF`) as page background | Creates eye fatigue. Use warm linen tokens. |
+| PRD tier colors for non-PRD UI elements | Destroys the semantic integrity of the urgency signal system. |
+
+### Typography Prohibitions
+
+| Prohibited | Why |
+|---|---|
+| Inter, Roboto, `system-ui` as primary fonts | Generic. Incompatible with Covenant identity. |
+| Bebas Neue below 18px | Illegible at small sizes. WCAG violation. |
+| Bebas Neue in dropdowns or form fields | Lacks legibility for selection interfaces. |
+| Animated or counting-up data values | Implies real-time data. Erodes data freshness trust. |
+| Emoji as content or status indicators | Renders inconsistently across NMCI browser configurations. |
+
+### Engineering Prohibitions
+
+| Prohibited | Why |
+|---|---|
+| External CDN JS without local fallback | Breaks on NMCI. Constraint C-07. |
+| `fetch()` calls to local `file://` paths | CORS block in Chrome/Edge. Constraint C-02. |
+| PRD tier logic in UI or rendering layer | Constraint C-14. Single processing layer in `app.js` only. |
+| `@import` for Google Fonts | Blocks rendering, fails silently behind NMCI proxies. |
+| `localStorage`/`sessionStorage` for PII | Constraint C-03. No PII on device. |
+| `border-radius` above 10px on data elements | Exceeds Covenant radius constraint (exception: landing cards at 16px). |
+
+---
+
+## 10. Accessibility Floor
 
 - Color contrast: WCAG AA minimum (4.5:1 for body text, 3:1 for large text)
 - All interactive elements keyboard-navigable
 - Focus indicators visible (2px solid `--color-gold-primary`)
 - No information conveyed by color alone (always pair with text or icon)
 - All tables include `<th scope="col">` headers
+- All status flag icons include tooltip text (see Quick-Flag semantics in Gemini.md Section 18)
 
 ---
 
-*UI-UX.md v2.0 — SideCar Directive Library — Amended 2026-03-25 (dark→light)*
+## 11. Data Freshness Indicator
+
+Every page must render a data freshness timestamp in the topbar:
+
+```
+Data Last Refreshed: 2026-03-27 14:30
+```
+
+- **Source:** `SideCarAdapter.getLastUpdated()`
+- **Font:** `--font-data` (DM Mono)
+- **Size:** `--type-data-xs` (11px)
+- **Color:** `--color-text-dim`
+- **Position:** Topbar, right-aligned
+
+This is not decorative. The disconnected data architecture means users must always know how stale their view is.
+
+---
+
+*UI-UX.md v3.0 — SideCar Directive Library — Expanded 2026-03-27*
+
+
