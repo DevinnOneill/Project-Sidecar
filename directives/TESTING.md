@@ -105,6 +105,71 @@ Click every navigation link from every page. Verify correct page loads with no b
 ### Data Adapter Test
 Verify all displayed data originates from `SideCarAdapter` calls — no hardcoded values in HTML.
 
+### RBAC View Validation Test
+Verify role-based rendering serves the correct scope per persona:
+
+| Role | Expected View | Verify |
+|---|---|---|
+| **Detailer** | Personal roster only — Sailors assigned to their PERS code | Cannot see Sailors outside their constituency |
+| **Placement Officer** | Commands under their COG — all Sailors at those commands | Cannot modify individual assignment proposals |
+| **TYCOM/ISIC** | Aggregate manning across subordinate units | Sees aggregate numbers, not individual Sailor records |
+| **Flag Officer** | Landing page executive summary | Passes 90-second comprehension test |
+
+### Manning Calculation Validation Test
+Verify the manning percentage calculation supports both analytical lenses:
+
+| Test Case | Input | Expected Output |
+|---|---|---|
+| **Billet-Based** | Command with 10 authorized billets, 8 filled | Manning: 80% |
+| **DMP-Limited** | Same command, DMP limits to 9 billets, 8 filled | Manning: 89% |
+| **Zero billets** | Command with 0 authorized billets | Display "N/A" — never divide by zero |
+| **Overmanned** | 10 authorized, 12 assigned | Manning: 120% — display with appropriate indicator |
+
+### Mass Update Validation Gateway Test (Future Module)
+Verify the validation engine blocks invalid bulk operations:
+
+| Test Case | Expected Result |
+|---|---|
+| Assign Aviation AQD to Surface Warfare (1110) designator | **HARD ERROR** — transaction rejected |
+| Update 500 records with valid AQD for their designator | Transaction succeeds, generates unique Transaction Number |
+| Bulk update with no RBAC authorization | **DENIED** — user lacks write access |
+| Rollback request for completed mass update | Transaction reversed using stored Transaction Number |
+
+### Data Freshness Timestamp Test
+Verify every screen renders `Data Last Refreshed: [timestamp]`:
+
+- [ ] Timestamp visible on every page load
+- [ ] Timestamp uses `SideCarAdapter.getLastUpdated()`
+- [ ] Rendered in `--font-data` at `--type-data-xs` with `--color-text-dim`
+- [ ] Position: topbar, right-aligned
+- [ ] Timestamp updates when data source changes (CSV reimport or API refresh)
+
+### Quick-Flag Icon Rendering Test (Detailer View)
+Verify all status flag icons render correctly in the sticky Status column:
+
+| Flag | Icon | Hover Tooltip |
+|---|:---:|---|
+| 8 Flag (Promotion Hold) | ⚑ | "8 Flag: Promotion Hold" |
+| 8,8 Flag (Active Legal) | ⚖ | "8,8 Flag: Active Legal Investigation" |
+| 4 Flag (Colocation) | 💐 | "4 Flag: Colocation Request" |
+| 6 Flag (EFMP) | 🏥 | "6 Flag: Exceptional Family Member Program" |
+| LIMDU | ✚ | "LIMDU: Limited Duty (Medical Hold)" |
+| OPSDEF | 👶 | "OPSDEF: Operational Deferment" |
+
+- [ ] Icons render in a sticky column pinned next to Name/Rank
+- [ ] Tooltips trigger on hover with slight delay (prevent flicker)
+- [ ] Multiple flags on one Sailor render side-by-side without overflow
+- [ ] No flag text is shown — icons only, with tooltip fallback
+
+### Comm Log Immutability Test
+Verify append-only constraint (C-10):
+
+- [ ] New entries append to log successfully via `SideCarAdapter.addCommEntry()`
+- [ ] No UI affordance exists to edit existing entries
+- [ ] No UI affordance exists to delete existing entries
+- [ ] Entries maintain chronological order
+- [ ] Each entry stores `sailorId`, `date`, `type`, and `summary`
+
 ---
 
-*TESTING.md v1.0 — SideCar Directive Library*
+*TESTING.md v2.0 — SideCar Directive Library*

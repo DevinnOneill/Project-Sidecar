@@ -85,6 +85,66 @@ When communicating with developers, you are:
 
 You execute within the Antigravity IDE. The Directive Library loads at session open. You receive an Execution Script before writing any code. You produce structured output with boundary confirmation. You do not freelance, interpret ambiguity, or expand scope. If a condition is unclear, you halt and request clarification — that is the architecture working as designed.
 
+### The Triad of Detailing — Why SideCar Exists
+
+The Navy's personnel distribution operates through a conceptual framework called the **Triad of Detailing**, comprising three functions:
+
+1. **Allocation** — Determining how many billets of each type are funded and where they exist across the fleet (TFMMS/OPNAV).
+2. **Placement** — Advocating for commands and ensuring critical billets are filled with correctly qualified personnel (Placement Officers / PERS-4013).
+3. **Assignment (Detailing)** — Advocating for the individual Sailor's career while matching them to available billets (Detailers / Assignment Officers).
+
+These three functions are theoretically coordinated but have historically been executed on **completely isolated software platforms** (OAIS for officers, EAIS for enlisted, ODIS for queries, NSIPS for records, MNA for marketplace). This fragmentation creates severe information asymmetry, context loss, and manual workarounds.
+
+**SideCar eliminates this fragmentation.** It provides a single interface that serves all three functions of the Triad simultaneously.
+
+### The Sidecar-as-Overlay Strategy
+
+SideCar is named after the Kubernetes sidecar container pattern — a utility that attaches to a primary system to enhance it without modifying the primary system's fragile core code.
+
+In practice, this means:
+- **Phase 1A (Now):** SideCar is a standalone dashboard using synthetic data. It proves the UI, the workflow, and the governance framework.
+- **Phase 1B (Near-term):** SideCar becomes a **functional overlay** — it ingests real data from the Authoritative Data Environment (ADE) and displays it, but the legacy systems (EAIS/OAIS/ODIS) still handle transactions.
+- **Phase 2 (2027 target):** As OAIS and EAIS are decommissioned per the DON CIO mandate (all legacy networks transition to enterprise by Dec 31, 2027), SideCar transitions from overlay to **primary transactional engine**.
+
+This phased approach eliminates the catastrophic risk of abruptly shutting down systems that manage 376,000+ enlisted and 60,000+ officer careers.
+
+### The Five MVP Modules
+
+Every feature in SideCar maps to one of five named modules defined during PERS-4 workflow analysis:
+
+| MVP Module | SideCar File | Purpose |
+|---|---|---|
+| **Universal Dashboards** | `landing.html` + `detailer.html` | Command View + Personnel View — the "This is X person in the Navy" interface |
+| **PRD-Based Slate Generation** | `detailer.html` | Matching rotating personnel to available billets with community-specific scoring |
+| **Communications Log** | All pages (via adapter) | Persistent CRM replacing Outlook — tied to billet, not person |
+| **Mass Update Functionality** | Future module | Bulk AQD/Subspec/screening updates with targeted email |
+| **Separations Tracker** | Future module | Live NSIPS separation status + 5-year archive |
+
+### Full Persona Hierarchy — Who Uses SideCar and Why
+
+**Primary Users: Detailers (Assignment Officers)**
+- Career advocates for individual Sailors
+- Pain: Extreme context loss on desk turnover (comm history dies in personal Outlook)
+- Pain: "Swivel-chair" data entry across MNA, NSIPS, OAIS/EAIS, and Excel
+- Pain: Manual spreadsheet-based cognitive overload when matching rollers to billets
+- Pain: Hours wasted negotiating with Sailors who intend to separate
+- Pain: No way to query cohorts without pulling massive data requests and manually sorting
+- Need: Rapid access to comprehensive personnel profiles, historical communications, and real-time billet availability
+
+**Secondary Primary Users: Placement Officers (Command Advocates / PERS-4013)**
+- Advocates for commands and fleet readiness
+- Pain: Information asymmetry — operating from a different data baseline than Detailers
+- Pain: No visibility into long-term gaps caused by SkillBridge or terminal leave (up to 180 days before official EAOS)
+- Pain: Cannot see true unit health without cross-referencing OAIS/EAIS and ODIS
+- Need: Macro-level visibility into manning percentages, projected gaps, and aggregate community health
+
+**Strategic Users: MCAs, TYCOMs, ISICs, Flag Officers**
+- Monitor overarching force health across subordinate units
+- Pain: Cannot quickly digest career trajectory, qualifications, and deployability during high-level briefings
+- Pain: Siloed, un-auditable distribution processes — impossible to track enterprise-wide trends
+- Need: Aggregated reporting and predictive analytics WITHOUT transactional detail
+- The landing page must pass the **90-second flag officer test**: understand the problem, the solution, and the value with no verbal explanation
+
 ---
 
 ## SECTION 2 — DIRECTIVE LIBRARY LOAD ORDER
@@ -566,33 +626,99 @@ Before finishing ANY output, confirm:
 
 ## SECTION 18 — NAVY TERMINOLOGY (QUICK REFERENCE)
 
+### Organizational and Operational Terms
+
 | Term | Definition |
 |---|---|
 | **Sailor** | The subject of SideCar data. Always capitalized. |
-| **Detailer** | Navy assignment officer. The primary SideCar user. |
-| **Placement Coordinator** | Command advocate managing billet alignment across a community. |
+| **Detailer** | Navy assignment officer. Career advocate for the Sailor. The primary SideCar user. |
+| **Placement Officer** | Command advocate (PERS-4013) managing billet alignment and fleet readiness. |
+| **Placement Coordinator** | Cross-portfolio Placement Officer managing billet alignment across a community. |
 | **Rating Evaluator** | Enterprise-scope analyst for community health and pipeline risk. |
-| **PERS Code** | Organizational code within Navy Personnel Command. |
-| **PRD** | Projected Rotation Date. The core urgency driver in SideCar. |
-| **EAOS** | End of Active Obligated Service. |
-| **PCS** | Permanent Change of Station. |
-| **DODID** | DoD Identification Number. Unique key for all personnel data. |
-| **Billet** | An assigned position within a command. |
-| **UIC** | Unit Identification Code. |
-| **BSC** | Billet Specialty Code. |
-| **NSIPS** | Navy Standard Integrated Personnel System. |
-| **MNA** | MyNavy Assignment. |
+| **CPPA** | Command Pay and Personnel Administrator. Primary interface between Sailors and Transaction Service Centers. |
+| **CCC** | Command Career Counselor. |
+| **MCA** | Manning Control Authority. Sets requisition priorities for forces under their purview. |
+| **TYCOM** | Type Commander. Strategic leader monitoring aggregate force health. |
+| **ISIC** | Immediate Superior in Command. |
+| **PERS Code** | Organizational code within Navy Personnel Command (e.g., PERS-401, PERS-4013). |
+| **Triad of Detailing** | The three functions of distribution: Allocation, Placement, Assignment. |
+| **CNPC** | Commander, Navy Personnel Command. |
+| **FRI** | Fleet Readiness Integrator. |
+| **DMAP** | Detailing Marketplace Assignment Policy. Newer enlisted assignment methodology. |
+
+### Personnel Data Terms (ODIS Field Names)
+
+| Term | ODIS Field | Definition |
+|---|---|---|
+| **PRD** | `PRD` (Numeric 6, YYYYMM) | Projected Rotation Date. Core urgency driver. Triggers 12–15 month negotiation window. |
+| **EAOS** | `EAOS` (Numeric 6) | End of Active Obligated Service. |
+| **DODID** | `DODID` (Char 10) | DoD Identification Number. Unique key for all personnel data. |
+| **PCS** | — | Permanent Change of Station. |
+| **AQD** | `AQD` (Char 3) | Additional Qualification Designator. Skills beyond primary designator. |
+| **NEC** | `NEC` (Char 4) | Navy Enlisted Classification. Enlisted skill identifier. |
+| **DESIG** | `DESIG` (Char 4) | Designator. Four-digit code for primary naval specialty (e.g., 1110 = Surface Warfare). |
+| **SUBSPEC** | `SUBSPEC` (Char 5) | Subspecialty code. Level of expertise from experience or education. |
+| **ACC** | `ACC` (Char 3) | Accounting Category Code. Status: student, transient, operational, etc. |
+| **NOBC** | `NOBC` (Char 4) | Naval Officer Billet Classification. Specialized qualification from billet service. |
+| **PAYGRADE** | `PAYGRADE` (Numeric 3) | Military pay grade. Used for billet-rank matching validation. |
+| **AVAIL.DT** | `AVAIL.DT` (Numeric 6, YYYYMM) | Availability Date. When member is available for transfer (distinct from PRD). |
+| **ELD** | — | Estimated Loss Date. When a separating Sailor actually departs (accounts for terminal leave, SkillBridge). |
+| **YCS** | — | Years of Commissioned Service (or Total Service for enlisted). |
+| **MSO/MSR** | — | Minimum Service Obligation / Minimum Service Requirement. |
+
+### Billet and Command Terms (ODIS Field Names)
+
+| Term | ODIS Field | Definition |
+|---|---|---|
+| **Billet** | — | An assigned position within a command. |
+| **UIC** | `AUIC/PUIC` (Char 5) | Unit Identification Code (Actual/Parent). |
+| **BSC** | `BSC` (Numeric 5) | Billet Sequence Code. Primary key linking a manpower requirement to a person. |
+| **ACTYCODE** | `ACTYCODE` (Char 10) | Activity Code. Ten-digit code: 4 type + 4 hull/squadron + 2 parent/component. |
+| **GEOLOC** | `GEOLOC` (Char 8) | Geographic Location Code: 2 country + 2 state + 4 city. |
+| **COG** | — | Cognizance Code. Identifies the command's organizational chain. |
+| **AMSL** | — | Activity Manning Status Listing. |
+| **O.BA / E.BA** | `O.BA/E.BA` (Numeric 5) | Officer/Enlisted Billets Authorized. Denominator for manning % calculation. |
+
+### System and Integration Terms
+
+| Term | Definition |
+|---|---|
+| **NSIPS** | Navy Standard Integrated Personnel System. Authoritative for personnel data. |
+| **MNA** | MyNavy Assignment. Web-based marketplace interface for Sailors and commands. |
+| **OAIS** | Officer Assignment Information System. Legacy mainframe for officer detailing. |
+| **EAIS** | Enlisted Assignment Information System. Legacy mainframe for enlisted detailing. |
+| **ODIS** | Online Distribution Information System. Ad-hoc query system for personnel/activity data. |
+| **ADE** | Authoritative Data Environment. Modern containerized platform — Phase 1B integration target. |
+| **Jupiter** | Navy enterprise data environment. Discoverable, API-first data access. |
+| **TFMMS** | Total Force Management/Manpower Management System. Manpower requirements and balancing. |
 | **NMCI** | Navy Marine Corps Intranet. The enterprise network environment. |
+| **Nautilus** | Cloud-managed Virtual Desktop Infrastructure replacing NMCI seats. |
 | **GCC High** | Microsoft 365 Government Community Cloud High. Phase 2 target. |
 | **ATO** | Authority to Operate. Required for real data access. |
+| **cATO** | Continuous Authority to Operate. Ongoing monitoring-based authorization. |
+| **RMF** | Risk Management Framework. DoD security assessment process. |
 | **CUI** | Controlled Unclassified Information. |
-| **AMSL** | Activity Manning Status Listing. |
-| **AQD** | Additional Qualification Designator. |
-| **NEC** | Navy Enlisted Classification. |
+| **SORN** | System of Records Notice. Privacy Act compliance documentation. |
 | **LIMDU** | Limited Duty. Medical hold status. |
 | **ORDMOD** | Order Modification. |
 | **FITREP** | Fitness Report. Officer evaluation record. |
+| **EVAL** | Enlisted Evaluation. Enlisted performance record. |
 | **COLO** | Colocation. Married military members assigned near each other. |
+| **EFMP** | Exceptional Family Member Program. Special needs dependent support. |
+| **OPSDEF** | Operational Deferment (e.g., pregnancy). |
+| **HUMS** | Humanitarian Reassignment. |
+| **SkillBridge** | DoD program allowing service members to intern with civilian companies up to 180 days before separation. |
+
+### Status Flags (Quick-Flag Semantics)
+
+| Flag Code | Icon | Meaning |
+|---|:---:|---|
+| **8 Flag** | ⚑ | Promotion Hold |
+| **8,8 Flag** | ⚖ | Active Legal Investigation |
+| **4 Flag** | 💐 | Colocation (spouse also in service) |
+| **6 Flag** | 🏥 | Exceptional Family Member Program (EFMP) |
+| **LIMDU** | ✚ | Limited Duty (medical hold) |
+| **OPSDEF** | 👶 | Operational Deferment |
 
 ---
 

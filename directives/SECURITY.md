@@ -60,6 +60,71 @@ SideCar advances to real data ONLY when:
 
 **Until all four conditions are met, Phase 1A data rules are absolute.**
 
+## 7. Privacy Act and SORN Compliance
+
+When SideCar transitions to real data in Phase 2, it will be subject to Privacy Act System of Records Notices (SORNs):
+
+| SORN | Coverage |
+|---|---|
+| **N01080-1** | Personnel records, service history, pay data |
+| **N01301-2** | Assignment and distribution records |
+
+**Phase 1A implication:** Even though we use synthetic data now, the application architecture must be designed to enforce SORN-level data handling from the start. This means:
+- Role-based access controls must be structurally present (not bolted on later)
+- Audit logging must be scaffolded now (append-only comm log is the first example)
+- Data masking patterns must be architecturally supported
+
+## 8. Data Lifecycle Governance
+
+The Separations Tracker module requires strict data lifecycle rules:
+
+| Rule | Specification |
+|---|---|
+| **Active records** | Full personnel data retained for active-duty members and those within 5 years of separation |
+| **5-year archive** | After 5 years post-separation, personalized profile data (PII) is **automatically deleted** |
+| **Anonymized retention** | Structural metadata (rate, designator, command type, separation reason) is retained permanently for enterprise analytics and congressional inquiry |
+| **Comm log retention** | Communication records tied to separated personnel follow the 5-year deletion rule for PII fields, but anonymized summaries persist |
+
+**Phase 1A implication:** The adapter interface should support a concept of "archived" vs. "active" records even in synthetic data, so the UI patterns for handling archived data are built now.
+
+## 9. RMF/ATO/cATO Authorization Pathway
+
+SideCar must achieve Authority to Operate (ATO) before processing real data:
+
+| Step | Description | Phase |
+|---|---|---|
+| **RMF Categorization** | System categorized under DoD Risk Management Framework based on data sensitivity (CUI/PII) | Phase 1B planning |
+| **Control Selection** | NIST 800-53 security controls selected based on categorization | Phase 1B planning |
+| **Implementation** | Controls implemented in the application architecture | Phase 1B development |
+| **Assessment** | Independent security assessment with vulnerability scanning, penetration testing, STIG compliance | Phase 1B pre-launch |
+| **ATO Issuance** | Formal authorization to process real data | Phase 2 gate |
+| **cATO Transition** | Continuous monitoring, automated control assessments, rapid vulnerability remediation | Phase 2 ongoing |
+
+**Phase 1A implication:** Security controls must be designed into the architecture now. DISA STIG/SRG compliance requirements affect how we handle authentication, encryption, logging, and endpoint hardening. Even without real data, the application structure must not create barriers to future ATO.
+
+## 10. Zero Trust Architecture Alignment
+
+The Navy's Flank Speed (M365 GCC High) and Nautilus (VDI) environments are built on Zero Trust principles:
+
+- **Continuous authentication:** Every session, every request must be authorized
+- **Least privilege:** Users see only data commensurate with their echelon of command and verified need-to-know
+- **Micro-segmentation:** Application components must minimize attack surfaces
+- **No implicit trust:** Even on the NMCI network, the application assumes the network is hostile
+
+**Phase 1A implication:** The RBAC structure in the UI (Detailer sees their roster, Placement sees their commands, TYCOM sees aggregate) must be designed now. Phase 1A enforces RBAC through role-based view rendering. Phase 2 enforces it through Active Directory security groups and ICAM integration.
+
+## 11. Health Data Considerations (LIMDU, EFMP, Medical)
+
+SideCar displays health-adjacent status flags (LIMDU, EFMP, OPSDEF) that may intersect with HIPAA requirements:
+
+| Flag | Health Data? | Handling Rule |
+|---|---|---|
+| **LIMDU** | Yes — indicates medical hold | Display presence of flag only. Never display diagnosis, prognosis, or medical details. |
+| **EFMP** | Yes — indicates special needs dependent | Display enrollment status only. Never display dependent condition. |
+| **OPSDEF** | Potentially | Display status only. Never display underlying reason beyond category code. |
+
+**Phase 1A implication:** Synthetic data may include these flags as boolean values, but must never include synthetic medical narratives or diagnostic information — even fabricated ones. The pattern of "flag-only, no detail" must be established in the UI now.
+
 ---
 
-*SECURITY.md v1.0 — SideCar Directive Library*
+*SECURITY.md v2.0 — SideCar Directive Library*
