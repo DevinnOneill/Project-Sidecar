@@ -2,7 +2,7 @@
 
 *Governed AI-Assisted Software Development for the Department of the Navy*
 
-roject Compass Initiative
+Project Compass Initiative
 
 March 2026
 
