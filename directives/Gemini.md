@@ -157,10 +157,11 @@ Load these directives in sequence before any execution begins. Each governs a sp
 | 2 | **DEVELOPMENT.md** | Development standards, branch workflow, commit format, session protocol | `directives/DEVELOPMENT.md` |
 | 3 | **SECURITY.md** | Data boundary law, PII/CUI constraints, adapter-only integration | `directives/SECURITY.md` |
 | 4 | **UI-UX.md** | Covenant design system, component specs, accessibility, NMCI rendering | `directives/UI-UX.md` |
-| 5 | **INTEGRATIONS.md** | Adapter layer contracts, data source interfaces, offline behavior | `directives/INTEGRATIONS.md` |
-| 6 | **AUDIT.md** | Verification protocol, halt conditions, structured verdict format | `directives/AUDIT.md` |
-| 7 | **TESTING.md** | Quality gate thresholds, four-dimension scoring, remediation protocol | `directives/TESTING.md` |
-| 8 | **ONBOARDING.md** | New developer protocol, first-session rules, role authority map | `directives/ONBOARDING.md` |
+| 5 | **UX-PATTERNS.md** | Interaction patterns, feature specs, Quick-Flags, Baseball Card, tooltips | `directives/UX-PATTERNS.md` |
+| 6 | **INTEGRATIONS.md** | Adapter layer contracts, data source interfaces, offline behavior | `directives/INTEGRATIONS.md` |
+| 7 | **AUDIT.md** | Verification protocol, halt conditions, structured verdict format | `directives/AUDIT.md` |
+| 8 | **TESTING.md** | Quality gate thresholds, four-dimension scoring, remediation protocol | `directives/TESTING.md` |
+| 9 | **ONBOARDING.md** | New developer protocol, first-session rules, role authority map | `directives/ONBOARDING.md` |
 
 **If any directive fails to load, halt. Do not proceed with partial governance.**
 
@@ -759,14 +760,15 @@ On session open, read the following documents in order:
 3. `directives/DEVELOPMENT.md` — Code standards
 4. `directives/SECURITY.md` — Data boundary law
 5. `directives/UI-UX.md` — Covenant design system
-6. `directives/INTEGRATIONS.md` — Adapter layer contracts
-7. `directives/AUDIT.md` — Verification protocol
-8. `directives/TESTING.md` — Quality assurance standards
-9. `directives/ONBOARDING.md` — Developer onboarding
-10. `workflow/MODULE-MAP.md` — Module routing table
-11. `lessons/halts.md` — Past halt events
-12. `lessons/patterns.md` — Recurring failure patterns
-13. `lessons/exemplars.md` — High-scoring outputs
+6. `directives/UX-PATTERNS.md` — Interaction patterns and feature specs
+7. `directives/INTEGRATIONS.md` — Adapter layer contracts
+8. `directives/AUDIT.md` — Verification protocol
+9. `directives/TESTING.md` — Quality assurance standards
+10. `directives/ONBOARDING.md` — Developer onboarding
+11. `workflow/MODULE-MAP.md` — Module routing table
+12. `lessons/halts.md` — Past halt events
+13. `lessons/patterns.md` — Recurring failure patterns
+14. `lessons/exemplars.md` — High-scoring outputs
 
 ### Step 2: Confirm Load
 
@@ -774,8 +776,8 @@ Before proceeding, explicitly confirm what was loaded. Example output:
 
 ```
 Loaded: WHITE_PAPER.md, Gemini.md, DEVELOPMENT.md, SECURITY.md,
-        UI-UX.md, INTEGRATIONS.md, AUDIT.md, TESTING.md, ONBOARDING.md,
-        MODULE-MAP.md, 0 halts, 0 patterns, 0 exemplars. Ready.
+        UI-UX.md, UX-PATTERNS.md, INTEGRATIONS.md, AUDIT.md, TESTING.md,
+        ONBOARDING.md, MODULE-MAP.md, 0 halts, 0 patterns, 0 exemplars. Ready.
 ```
 
 Do not skip this confirmation. It mirrors Governed Development Cycle Step 1.
