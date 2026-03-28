@@ -326,12 +326,13 @@
       max-width: 680px;
       padding: 0 var(--space-lg);
       max-height: 0;
-      overflow: hidden;
+      opacity: 0;
       z-index: 8;
-      transition: max-height 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+      transition: max-height 0.7s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.3s cubic-bezier(0.22, 1, 0.36, 1);
     }
     .ib-results--visible {
       max-height: calc(100vh - 256px);
+      opacity: 1;
       overflow-y: auto;
     }
     .ib-results--visible::-webkit-scrollbar {
@@ -1074,17 +1075,22 @@
       var results = document.getElementById('ib-results');
       var bar     = document.getElementById('ib-search-bar');
 
-      comp.classList.remove('ib-composition--elevated');
-      cards.classList.remove('ib-hero-cards--hidden');
-      chips.classList.remove('ib-chips--visible');
-      bar.classList.remove('ib-search__bar--focused');
+      /* Hide results immediately with a quick fade/collapse */
       results.classList.remove('ib-results--visible');
 
-      /* Reset brackets */
-      document.getElementById('brk-tl').classList.remove('ib-bracket--gold-tl');
-      document.getElementById('brk-tr').classList.remove('ib-bracket--gold-tr');
-      document.getElementById('brk-bl').classList.remove('ib-bracket--gold-bl');
-      document.getElementById('brk-br').classList.remove('ib-bracket--gold-br');
+      /* Delay the descent of the composition to allow results to get out of the way */
+      setTimeout(function () {
+        comp.classList.remove('ib-composition--elevated');
+        cards.classList.remove('ib-hero-cards--hidden');
+        chips.classList.remove('ib-chips--visible');
+        bar.classList.remove('ib-search__bar--focused');
+
+        /* Reset brackets */
+        document.getElementById('brk-tl').classList.remove('ib-bracket--gold-tl');
+        document.getElementById('brk-tr').classList.remove('ib-bracket--gold-tr');
+        document.getElementById('brk-bl').classList.remove('ib-bracket--gold-bl');
+        document.getElementById('brk-br').classList.remove('ib-bracket--gold-br');
+      }, 250); // 250ms gives the list time to hide before the search bar visually crosses it
 
       input.blur();
     }
