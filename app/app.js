@@ -106,18 +106,161 @@ function prdBadgeClass(tier) {
    ----------------------------------------------------------- */
 
 var SYNTHETIC_SAILORS = [
-  { id: '9999000001', lastName: 'Alpha',   firstName: 'Aaron',  rate: 'IT',  payGrade: 'E5', prd: '2026-02-15', eaos: '2027-06-30', command: 'USS EXAMPLE (CVN-00)',      uic: 'XXXXX', billet: 'LAN Admin',            lastContact: '2026-01-10', detailer: 'PERS-401' },
-  { id: '9999000002', lastName: 'Bravo',   firstName: 'Beth',   rate: 'IT',  payGrade: 'E6', prd: '2026-05-20', eaos: '2028-09-15', command: 'NAVSTA TESTPORT',           uic: 'XXXX1', billet: 'ISSM',                 lastContact: '2026-03-01', detailer: 'PERS-401' },
-  { id: '9999000003', lastName: 'Charlie', firstName: 'Carlos', rate: 'CTN', payGrade: 'E5', prd: '2026-08-10', eaos: '2027-12-01', command: 'NIOC DEMO',                 uic: 'XXXX2', billet: 'CND Watch Officer',    lastContact: '2026-02-20', detailer: 'PERS-401' },
-  { id: '9999000004', lastName: 'Delta',   firstName: 'Diana',  rate: 'YN',  payGrade: 'E4', prd: '2026-12-01', eaos: '2028-03-15', command: 'COMNAVPERSCOM HQ',           uic: 'XXXX3', billet: 'Admin Clerk',           lastContact: '2026-03-20', detailer: 'PERS-401' },
-  { id: '9999000005', lastName: 'Echo',    firstName: 'Edwin',  rate: 'IT',  payGrade: 'E7', prd: '2027-03-15', eaos: '2030-01-01', command: 'USS PLACEHOLDER (DDG-00)',   uic: 'XXXX4', billet: 'DIVO IT',              lastContact: '2026-02-01', detailer: 'PERS-401' },
-  { id: '9999000006', lastName: 'Foxtrot', firstName: 'Faye',   rate: 'CTN', payGrade: 'E6', prd: '2026-04-01', eaos: '2027-08-20', command: 'NIOC DEMO',                 uic: 'XXXX2', billet: 'Senior CND Analyst',   lastContact: '2026-03-15', detailer: 'PERS-401' },
-  { id: '9999000007', lastName: 'Golf',    firstName: 'George', rate: 'IT',  payGrade: 'E4', prd: '2026-01-15', eaos: '2027-04-10', command: 'NAVSTA TESTPORT',           uic: 'XXXX1', billet: 'Help Desk Tech',       lastContact: '2025-12-20', detailer: 'PERS-401' },
-  { id: '9999000008', lastName: 'Hotel',   firstName: 'Helen',  rate: 'YN',  payGrade: 'E5', prd: '2026-06-30', eaos: '2028-11-30', command: 'COMNAVPERSCOM HQ',           uic: 'XXXX3', billet: 'Personnel Specialist', lastContact: '2026-03-10', detailer: 'PERS-401' },
-  { id: '9999000009', lastName: 'India',   firstName: 'Ivan',   rate: 'CTN', payGrade: 'E7', prd: '2026-09-15', eaos: '2029-06-01', command: 'USS EXAMPLE (CVN-00)',      uic: 'XXXXX', billet: 'Crypto Board Chief',   lastContact: '2026-01-25', detailer: 'PERS-401' },
-  { id: '9999000010', lastName: 'Juliet',  firstName: 'Jane',   rate: 'IT',  payGrade: 'E5', prd: '2026-03-10', eaos: '2027-09-01', command: 'USS PLACEHOLDER (DDG-00)',   uic: 'XXXX4', billet: 'Systems Admin',        lastContact: '2026-02-28', detailer: 'PERS-401' },
-  { id: '9999000011', lastName: 'Kilo',    firstName: 'Kevin',  rate: 'IT',  payGrade: 'E6', prd: '2027-06-01', eaos: '2029-12-15', command: 'NAVSTA TESTPORT',           uic: 'XXXX1', billet: 'Network Chief',        lastContact: '2026-03-22', detailer: 'PERS-401' },
-  { id: '9999000012', lastName: 'Lima',    firstName: 'Laura',  rate: 'CTN', payGrade: 'E4', prd: '2026-07-20', eaos: '2027-10-30', command: 'NIOC DEMO',                 uic: 'XXXX2', billet: 'CND Analyst',          lastContact: '2026-03-05', detailer: 'PERS-401' }
+  {
+    id: '9999000001', lastName: 'Alpha',   firstName: 'Aaron',   middleInitial: 'J.',
+    rate: 'IT',  payGrade: 'E5', prd: '2026-02-15', eaos: '2027-06-30',
+    command: 'USS COMMAND NAME', uic: 'USS', billet: 'LAN ADMIN',
+    lastContact: '2026-01-10', detailer: 'PERS-401',
+    reportDate: '2023-08-10', entryDate: '2017-06-01',
+    seaShoreCode: 'SEA', seaToursCompleted: 2, shoreToursCompleted: 1,
+    dateOfRateAdvancement: '2022-03-01',
+    quals: ['SW'], necCodes: ['2780', '9502'],
+    clearanceLevel: 'SECRET', clearanceExpDate: '2027-06-01',
+    lastEvalDate: '2025-10-15', lastEvalAvg: 3.6, lastEvalPromoRec: 'P',
+    pvolCurrent: [72, 65, 80, 60, 55], pvolTarget: [85, 80, 85, 80, 70],
+    flags: { limdu: true, legalHold: true, colo: true, efmp: true, promoHold: true, opsdef: true, hyt: false, adminHold: false, promoSelect: true },
+    bsc: 'XXXXX', binNumber: '99900000', cogCode: 'Placement officer info\n(XXXXX)',
+    billetHistory: [
+      { uic: '2780', command: 'USS COMMAND', billet: 'Billet', startDate: '12/26/2021', detachDate: '12/12/2021' },
+      { uic: '2780', command: 'USS COMMAND', billet: 'Billet', startDate: '12/11/2021', detachDate: '13/14/2021' },
+      { uic: '2510', command: 'USS COMMAND', billet: 'Billet', startDate: '12/28/2021', detachDate: '12/21/2021' },
+      { uic: '2510', command: 'USS COMMAND', billet: 'Billet', startDate: '12/26/2021', detachDate: '12/13/2021' }
+    ],
+    aqdMatrix: [
+      { yy: '1', aqd: '4', col1: '4', col2: '5', col3: '10' },
+      { yy: '2', aqd: '2', col1: '5', col2: '8', col3: '10' },
+      { yy: '3', aqd: '3', col1: '5', col2: '8', col3: '11' },
+      { yy: '4', aqd: '3', col1: '6', col2: '9', col3: '12' }
+    ],
+    education: [
+      { degree: 'Degree', year: 'Year', major: 'Major', university: 'University' },
+      { degree: 'Degree', year: '2006', major: 'Major', university: 'University' },
+      { degree: 'Degree', year: '2007', major: 'Major', university: 'University' },
+      { degree: 'Degree', year: '2009', major: 'Convincaication', university: 'University' }
+    ],
+    personalInfo: {
+      family: 'Colocation info - Spouse Name\nBranch\nDOD ID',
+      dutyStation: 'Duty Station',
+      prd: '', contact: '', efmp: '', limdu: '', pfa: ''
+    }
+  },
+  {
+    id: '9999000002', lastName: 'Bravo',   firstName: 'Beth',    middleInitial: 'M.',
+    rate: 'IT',  payGrade: 'E6', prd: '2026-05-20', eaos: '2028-09-15',
+    command: 'NAVSTA TESTPORT', uic: 'XXXX1', billet: 'ISSM',
+    lastContact: '2026-03-01', detailer: 'PERS-401', reportDate: '2023-01-15', entryDate: '2014-09-15',
+    seaShoreCode: 'SHORE', seaToursCompleted: 2, shoreToursCompleted: 1, dateOfRateAdvancement: '2021-09-16',
+    quals: ['SW', 'AW'], necCodes: ['2735', '2780'], clearanceLevel: 'TS/SCI', clearanceExpDate: '2029-01-01',
+    lastEvalDate: '2025-12-01', lastEvalAvg: 4.0, lastEvalPromoRec: 'EP',
+    pvolCurrent: [88, 90, 75, 85, 78], pvolTarget: [90, 90, 85, 90, 85],
+    flags: { limdu: false, legalHold: false, colo: false, efmp: false, promoHold: false, opsdef: false, hyt: false, adminHold: false },
+    bsc: '12345', binNumber: '9234567', cogCode: 'PERS-408\n(XXXXX)',
+    billetHistory: [{ uic: 'XXXX1', command: 'NAVSTA TESTPORT', billet: 'ISSM', startDate: '01/15/2023', detachDate: 'Present' }],
+    aqdMatrix: [{ yy: '1', aqd: '4', col1: '7', col2: '7', col3: '10' }],
+    education: [{ degree: 'B.S.', year: '2020', major: 'Computer Sci', university: 'UMGC' }],
+    personalInfo: { family: 'None', dutyStation: 'Norfolk', prd: '', contact: '', efmp: '', limdu: '', pfa: '' }
+  },
+  {
+    id: '9999000003', lastName: 'Charlie', firstName: 'Carlos',  middleInitial: 'R.',
+    rate: 'CTN', payGrade: 'E5', prd: '2026-08-10', eaos: '2027-12-01', command: 'NIOC DEMO', uic: 'XXXX2', billet: 'CND Watch Officer',
+    lastContact: '2026-02-20', detailer: 'PERS-401', reportDate: '2024-02-01', entryDate: '2018-03-15',
+    seaShoreCode: 'SHORE', seaToursCompleted: 1, shoreToursCompleted: 1, dateOfRateAdvancement: '2023-03-16',
+    quals: ['SW'], necCodes: ['2791', '9502'], clearanceLevel: 'TS/SCI', clearanceExpDate: '2028-03-01',
+    lastEvalDate: '2025-11-15', lastEvalAvg: 3.8, lastEvalPromoRec: 'P',
+    pvolCurrent: [70, 80, 60, 72, 65], pvolTarget: [85, 85, 80, 80, 75],
+    flags: { limdu: false, legalHold: false, colo: true, efmp: false, promoHold: false, opsdef: false, hyt: false, adminHold: false },
+    bsc: '45678', binNumber: '8392100', cogCode: 'PERS-408\n(XXXXX)'
+  },
+  {
+    id: '9999000004', lastName: 'Delta', firstName: 'Diana', middleInitial: 'S.',
+    rate: 'YN', payGrade: 'E4', prd: '2026-12-01', eaos: '2028-03-15', command: 'COMNAVPERSCOM HQ', uic: 'XXXX3', billet: 'Admin Clerk',
+    lastContact: '2026-03-20', detailer: 'PERS-401', reportDate: '2025-01-10', entryDate: '2021-06-01',
+    seaShoreCode: 'SHORE', seaToursCompleted: 0, shoreToursCompleted: 1, dateOfRateAdvancement: '2024-03-16',
+    quals: [], necCodes: ['9502'], clearanceLevel: 'SECRET', clearanceExpDate: '2028-06-01',
+    lastEvalDate: '2025-12-15', lastEvalAvg: 3.4, lastEvalPromoRec: 'P',
+    pvolCurrent: [55, 50, 30, 60, 62], pvolTarget: [70, 65, 50, 70, 70],
+    flags: { limdu: false, legalHold: false, colo: false, efmp: false, promoHold: false, opsdef: false, hyt: false, adminHold: false }
+  },
+  {
+    id: '9999000005', lastName: 'Echo', firstName: 'Edwin', middleInitial: 'T.',
+    rate: 'IT', payGrade: 'E7', prd: '2027-03-15', eaos: '2030-01-01', command: 'USS PLACEHOLDER (DDG-00)', uic: 'XXXX4', billet: 'DIVO IT',
+    lastContact: '2026-02-01', detailer: 'PERS-401', reportDate: '2024-07-01', entryDate: '2008-05-15',
+    seaShoreCode: 'SEA', seaToursCompleted: 4, shoreToursCompleted: 2, dateOfRateAdvancement: '2019-09-16',
+    quals: ['SW', 'AW', 'SUW'], necCodes: ['2780', '2735', '9502'], clearanceLevel: 'TS/SCI', clearanceExpDate: '2026-05-01',
+    lastEvalDate: '2025-10-01', lastEvalAvg: 4.0, lastEvalPromoRec: 'EP',
+    pvolCurrent: [95, 92, 98, 88, 80], pvolTarget: [95, 95, 95, 95, 90],
+    flags: { limdu: false, legalHold: false, colo: false, efmp: false, promoHold: false, opsdef: false, hyt: false, adminHold: false }
+  },
+  {
+    id: '9999000006', lastName: 'Foxtrot', firstName: 'Faye', middleInitial: 'A.',
+    rate: 'CTN', payGrade: 'E6', prd: '2026-04-01', eaos: '2027-08-20', command: 'NIOC DEMO', uic: 'XXXX2', billet: 'Senior CND Analyst',
+    lastContact: '2026-03-15', detailer: 'PERS-401', reportDate: '2023-06-20', entryDate: '2013-07-01',
+    seaShoreCode: 'SHORE', seaToursCompleted: 2, shoreToursCompleted: 2, dateOfRateAdvancement: '2020-09-16',
+    quals: ['SW', 'AW'], necCodes: ['2791', '2780'], clearanceLevel: 'TS/SCI', clearanceExpDate: '2030-07-01',
+    lastEvalDate: '2025-12-01', lastEvalAvg: 3.9, lastEvalPromoRec: 'EP',
+    pvolCurrent: [85, 88, 70, 82, 76], pvolTarget: [90, 90, 85, 90, 85],
+    flags: { limdu: true, legalHold: false, colo: false, efmp: false, promoHold: false, opsdef: false, hyt: false, adminHold: false }
+  },
+  {
+    id: '9999000007', lastName: 'Golf', firstName: 'George', middleInitial: 'K.',
+    rate: 'IT', payGrade: 'E4', prd: '2026-01-15', eaos: '2027-04-10', command: 'NAVSTA TESTPORT', uic: 'XXXX1', billet: 'Help Desk Tech',
+    lastContact: '2025-12-20', detailer: 'PERS-401', reportDate: '2023-10-01', entryDate: '2020-01-15',
+    seaShoreCode: 'SHORE', seaToursCompleted: 0, shoreToursCompleted: 1, dateOfRateAdvancement: '2023-03-16',
+    quals: [], necCodes: ['2780'], clearanceLevel: 'SECRET', clearanceExpDate: '2027-01-01',
+    lastEvalDate: '2025-09-15', lastEvalAvg: 3.2, lastEvalPromoRec: 'P',
+    pvolCurrent: [50, 48, 35, 55, 60], pvolTarget: [65, 65, 55, 65, 65],
+    flags: { limdu: false, legalHold: true, colo: false, efmp: false, promoHold: false, opsdef: false, hyt: false, adminHold: false }
+  },
+  {
+    id: '9999000008', lastName: 'Hotel', firstName: 'Helen', middleInitial: 'B.',
+    rate: 'YN', payGrade: 'E5', prd: '2026-06-30', eaos: '2028-11-30', command: 'COMNAVPERSCOM HQ', uic: 'XXXX3', billet: 'Personnel Specialist',
+    lastContact: '2026-03-10', detailer: 'PERS-401', reportDate: '2024-03-01', entryDate: '2016-08-20',
+    seaShoreCode: 'SHORE', seaToursCompleted: 1, shoreToursCompleted: 2, dateOfRateAdvancement: '2022-09-16',
+    quals: ['SW'], necCodes: ['9502'], clearanceLevel: 'SECRET', clearanceExpDate: '2026-08-01',
+    lastEvalDate: '2025-11-01', lastEvalAvg: 3.7, lastEvalPromoRec: 'MP',
+    pvolCurrent: [74, 68, 65, 70, 72], pvolTarget: [80, 80, 75, 80, 80],
+    flags: { limdu: false, legalHold: false, colo: false, efmp: true, promoHold: false, opsdef: false, hyt: false, adminHold: false }
+  },
+  {
+    id: '9999000009', lastName: 'India', firstName: 'Ivan', middleInitial: 'C.',
+    rate: 'CTN', payGrade: 'E7', prd: '2026-09-15', eaos: '2029-06-01', command: 'USS EXAMPLE (CVN-00)', uic: 'XXXXX', billet: 'Crypto Board Chief',
+    lastContact: '2026-01-25', detailer: 'PERS-401', reportDate: '2023-11-15', entryDate: '2005-03-01',
+    seaShoreCode: 'SEA', seaToursCompleted: 5, shoreToursCompleted: 2, dateOfRateAdvancement: '2016-09-16',
+    quals: ['SW', 'AW', 'SUW'], necCodes: ['2791', '2780', '2735'], clearanceLevel: 'TS/SCI', clearanceExpDate: '2031-03-01',
+    lastEvalDate: '2025-10-15', lastEvalAvg: 4.0, lastEvalPromoRec: 'EP',
+    pvolCurrent: [96, 94, 99, 90, 85], pvolTarget: [98, 96, 98, 95, 92],
+    flags: { limdu: false, legalHold: false, colo: true, efmp: true, promoHold: false, opsdef: false, hyt: false, adminHold: false }
+  },
+  {
+    id: '9999000010', lastName: 'Juliet', firstName: 'Jane', middleInitial: 'L.',
+    rate: 'IT', payGrade: 'E5', prd: '2026-03-10', eaos: '2027-09-01', command: 'USS PLACEHOLDER (DDG-00)', uic: 'XXXX4', billet: 'Systems Admin',
+    lastContact: '2026-02-28', detailer: 'PERS-401', reportDate: '2024-04-20', entryDate: '2018-08-01',
+    seaShoreCode: 'SEA', seaToursCompleted: 2, shoreToursCompleted: 1, dateOfRateAdvancement: '2022-03-16',
+    quals: ['SW', 'AW'], necCodes: ['2780', '9502'], clearanceLevel: 'SECRET', clearanceExpDate: '2028-08-01',
+    lastEvalDate: '2025-11-15', lastEvalAvg: 3.8, lastEvalPromoRec: 'P',
+    pvolCurrent: [78, 75, 82, 70, 68], pvolTarget: [85, 80, 85, 80, 75],
+    flags: { limdu: false, legalHold: false, colo: false, efmp: false, promoHold: false, opsdef: false, hyt: false, adminHold: false }
+  },
+  {
+    id: '9999000011', lastName: 'Kilo', firstName: 'Kevin', middleInitial: 'P.',
+    rate: 'IT', payGrade: 'E6', prd: '2027-06-01', eaos: '2029-12-15', command: 'NAVSTA TESTPORT', uic: 'XXXX1', billet: 'Network Chief',
+    lastContact: '2026-03-22', detailer: 'PERS-401', reportDate: '2024-10-01', entryDate: '2012-11-01',
+    seaShoreCode: 'SHORE', seaToursCompleted: 3, shoreToursCompleted: 2, dateOfRateAdvancement: '2019-03-16',
+    quals: ['SW', 'AW'], necCodes: ['2780', '2735', '9502'], clearanceLevel: 'TS/SCI', clearanceExpDate: '2029-11-01',
+    lastEvalDate: '2025-12-01', lastEvalAvg: 3.9, lastEvalPromoRec: 'EP',
+    pvolCurrent: [88, 85, 78, 84, 80], pvolTarget: [92, 90, 88, 90, 88],
+    flags: { limdu: false, legalHold: false, colo: false, efmp: false, promoHold: false, opsdef: false, hyt: false, adminHold: false }
+  },
+  {
+    id: '9999000012', lastName: 'Lima', firstName: 'Laura', middleInitial: 'D.',
+    rate: 'CTN', payGrade: 'E4', prd: '2026-07-20', eaos: '2027-10-30', command: 'NIOC DEMO', uic: 'XXXX2', billet: 'CND Analyst',
+    lastContact: '2026-03-05', detailer: 'PERS-401', reportDate: '2024-09-15', entryDate: '2021-02-01',
+    seaShoreCode: 'SHORE', seaToursCompleted: 0, shoreToursCompleted: 1, dateOfRateAdvancement: '2024-03-16',
+    quals: [], necCodes: ['2791'], clearanceLevel: 'TS/SCI', clearanceExpDate: '2028-02-01',
+    lastEvalDate: '2025-10-01', lastEvalAvg: 3.5, lastEvalPromoRec: 'P',
+    pvolCurrent: [60, 65, 40, 58, 62], pvolTarget: [70, 72, 60, 70, 70],
+    flags: { limdu: false, legalHold: false, colo: false, efmp: false, promoHold: false, opsdef: false, hyt: false, adminHold: false }
+  }
 ];
 
 var SYNTHETIC_COMM_LOG = [
@@ -300,46 +443,77 @@ var SYNTHETIC_FORM_RESPONSES = [
     formType: 'prd_preferences',
     submittedDate: '2026-01-20',
     billetChoices: [
-      { rank: 1, billet: 'ISSM', command: 'NIOC Maryland', location: 'Fort Meade, MD' },
-      { rank: 2, billet: 'Network Chief', command: 'NAVSTA Norfolk', location: 'Norfolk, VA' },
-      { rank: 3, billet: 'ISSM', command: 'SPAWAR San Diego', location: 'San Diego, CA' }
+      { rank: 1, billet: 'ISSM', command: 'NIOC Maryland', location: 'Fort Meade, MD', rotation: 'Shore', matchScore: 94 },
+      { rank: 2, billet: 'Network Chief', command: 'NAVSTA Norfolk', location: 'Norfolk, VA', rotation: 'Shore', matchScore: 88 },
+      { rank: 3, billet: 'ISSM', command: 'SPAWAR San Diego', location: 'San Diego, CA', rotation: 'Shore', matchScore: 81 }
     ],
     geoPreference: 'East Coast preferred, will accept West Coast',
     seaShore: 'Shore duty requested (completing sea tour)',
     coloStatus: { requested: false, spouseInfo: null },
     efmpStatus: { enrolled: false, category: null },
-    specialCircumstances: 'None'
+    specialCircumstances: 'None',
+    pastApplications: [
+      { appDate: '2025-08-15', command: 'NIOC Hawaii', billet: 'ISSM', location: 'Pearl Harbor, HI', outcome: 'Declined' },
+      { appDate: '2025-04-01', command: 'NAVSTA Norfolk', billet: 'Network Chief', location: 'Norfolk, VA', outcome: 'Applied' }
+    ]
   },
   {
     sailorId: '9999000009',
     formType: 'prd_preferences',
     submittedDate: '2026-02-10',
     billetChoices: [
-      { rank: 1, billet: 'Senior Enlisted Advisor', command: 'NSA Washington', location: 'Washington, DC' },
-      { rank: 2, billet: 'Division Chief', command: 'NIOC Georgia', location: 'Fort Gordon, GA' },
-      { rank: 3, billet: 'CND Department Chief', command: 'NIOC Hawaii', location: 'Pearl Harbor, HI' }
+      { rank: 1, billet: 'Senior Enlisted Advisor', command: 'NSA Washington', location: 'Washington, DC', rotation: 'Shore', matchScore: 97 },
+      { rank: 2, billet: 'Division Chief', command: 'NIOC Georgia', location: 'Fort Gordon, GA', rotation: 'Shore', matchScore: 91 },
+      { rank: 3, billet: 'CND Department Chief', command: 'NIOC Hawaii', location: 'Pearl Harbor, HI', rotation: 'Shore', matchScore: 85 }
     ],
     geoPreference: 'Mid-Atlantic strongly preferred for family stability',
     seaShore: 'Shore duty (completing second sea tour)',
     coloStatus: { requested: true, spouseInfo: 'Spouse AD Navy YN1, currently JBAB' },
     efmpStatus: { enrolled: true, category: 'Category 3 — dependent requires specialty care' },
-    specialCircumstances: 'Request proximity to Walter Reed for dependent medical care'
+    specialCircumstances: 'Request proximity to Walter Reed for dependent medical care',
+    pastApplications: [
+      { appDate: '2025-09-01', command: 'NSA Washington', billet: 'Senior Enlisted Advisor', location: 'Washington, DC', outcome: 'Matched' },
+      { appDate: '2025-05-10', command: 'NIOC Maryland', billet: 'Division Chief', location: 'Fort Meade, MD', outcome: 'Applied' },
+      { appDate: '2024-11-20', command: 'NIOC Georgia', billet: 'CND Dept Chief', location: 'Fort Gordon, GA', outcome: 'Declined' }
+    ]
   },
   {
     sailorId: '9999000010',
     formType: 'prd_preferences',
     submittedDate: '2026-02-25',
     billetChoices: [
-      { rank: 1, billet: 'Systems Admin', command: 'NAVSTA Norfolk', location: 'Norfolk, VA' },
-      { rank: 2, billet: 'LAN Admin', command: 'NAVSTA Mayport', location: 'Mayport, FL' },
-      { rank: 3, billet: 'IT Helpdesk Lead', command: 'NAVSTA Rota', location: 'Rota, Spain' }
+      { rank: 1, billet: 'Systems Admin', command: 'NAVSTA Norfolk', location: 'Norfolk, VA', rotation: 'Shore', matchScore: 92 },
+      { rank: 2, billet: 'LAN Admin', command: 'NAVSTA Mayport', location: 'Mayport, FL', rotation: 'Shore', matchScore: 84 },
+      { rank: 3, billet: 'IT Helpdesk Lead', command: 'NAVSTA Rota', location: 'Rota, Spain', rotation: 'OCONUS Shore', matchScore: 78 }
     ],
     geoPreference: 'Southeast US, open to OCONUS',
     seaShore: 'Shore duty requested',
     coloStatus: { requested: false, spouseInfo: null },
     efmpStatus: { enrolled: false, category: null },
-    specialCircumstances: 'Interested in overseas accompanied tour'
+    specialCircumstances: 'Interested in overseas accompanied tour',
+    pastApplications: [
+      { appDate: '2025-10-05', command: 'NAVSTA Norfolk', billet: 'Systems Admin', location: 'Norfolk, VA', outcome: 'Matched' }
+    ]
   }
+];
+
+/* -----------------------------------------------------------
+   SYNTHETIC COMPASS DATA (Sailor self-reported goals)
+   Separate from preference form — this is career narrative
+   ----------------------------------------------------------- */
+var SYNTHETIC_COMPASS = [
+  { sailorId: '9999000001', goalShortTerm: 'Advance to IT1', goalLongTerm: 'Lateral transfer to officer candidate program', education: 'Associate degree in Networking (in progress)', advancementIntent: 'advance', notes: 'Very motivated sailor, interested in OCS after E-6.' },
+  { sailorId: '9999000002', goalShortTerm: 'Make Chief board this cycle', goalLongTerm: 'Become a Cyber Warrant Officer (CWO)', education: 'B.S. Computer Science (completed)', advancementIntent: 'advance', notes: 'Top performer. Strong EP trend. Recommend for senior billet.' },
+  { sailorId: '9999000003', goalShortTerm: 'Shore duty near family in D.C. area', goalLongTerm: 'Retire from Navy after 20 years', education: 'No current enrollment', advancementIntent: 'advance', notes: 'COLO request pending spouse orders. Do not assign outside JBAB area without coordination.' },
+  { sailorId: '9999000004', goalShortTerm: 'Advance to YN3 / complete reenlistment', goalLongTerm: 'Work as a federal HR specialist post-service', education: 'GED completed; considering college', advancementIntent: 'advance', notes: 'Junior sailor, still orienting to the fleet.' },
+  { sailorId: '9999000005', goalShortTerm: 'Successfully complete current sea tour', goalLongTerm: 'CPO Mesa or CWO after final sea tour', education: 'M.S. Cybersecurity (completed)', advancementIntent: 'advance', notes: '18-year sailor. Exceptional leader. Succession planning needed at billet.' },
+  { sailorId: '9999000006', goalShortTerm: 'Recover from LIMDU and return to full duty', goalLongTerm: 'Make Chief, stay in CTN community', education: 'Continuing ed in cyber analysis', advancementIntent: 'advance', notes: 'LIMDU active — consult medical before assigning operational billet.' },
+  { sailorId: '9999000007', goalShortTerm: 'Resolve legal situation and PCS', goalLongTerm: 'Separate at EAOS and enter IT sector', education: 'No current enrollment', advancementIntent: 'separate', notes: 'Legal hold active. Assignment cannot proceed until hold is lifted.' },
+  { sailorId: '9999000008', goalShortTerm: 'Find EFMP-compatible Cat 4 billet', goalLongTerm: 'Reenlist and continue shore rotation', education: 'Online HR certification', advancementIntent: 'advance', notes: 'EFMP Category 4 hardship. Only Category 4 locations are viable.' },
+  { sailorId: '9999000009', goalShortTerm: 'Secure COLO billet near JBAB', goalLongTerm: 'Retire with 24 years of service', education: 'B.S. Management (completed)', advancementIntent: 'retire', notes: 'Top senior enlisted. Orders nearly finalized. COLO coordination with spouse detailer required.' },
+  { sailorId: '9999000010', goalShortTerm: 'Report to NAVSTA Norfolk', goalLongTerm: 'Make E-6 and consider lateral transfer', education: 'Taking Comptia Security+ prep course', advancementIntent: 'advance', notes: 'Orders issued. Interested in OCONUS for follow-on tour.' },
+  { sailorId: '9999000011', goalShortTerm: 'Complete current shore tour', goalLongTerm: 'Finish 20 years and retire', education: 'B.S. IT Management (completed)', advancementIntent: 'retire', notes: '14-year sailor. Mature, skilled CPO material. Stable. No action required until next PRD window.' },
+  { sailorId: '9999000012', goalShortTerm: 'Consider cross-rate to IT', goalLongTerm: 'Work in federal cyber sector post-service', education: 'CompTIA Security+ in progress', advancementIntent: 'separate', notes: 'Junior sailor exploring cross-rate or separation options at EAOS.' }
 ];
 
 
@@ -732,6 +906,16 @@ var SideCarAdapter = {
   getOrderStatus: function(sailorId) {
     var status = SYNTHETIC_ORDER_STATUS.find(function(s) { return s.sailorId === sailorId; });
     return Promise.resolve(status || null);
+  },
+
+  /**
+   * Get Project Compass self-report data for a Sailor.
+   * @param {string} sailorId
+   * @returns {Promise<Object|null>}
+   */
+  getCompass: function(sailorId) {
+    var entry = SYNTHETIC_COMPASS.find(function(c) { return c.sailorId === sailorId; });
+    return Promise.resolve(entry || null);
   },
 
   /**

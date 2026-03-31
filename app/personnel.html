@@ -3,234 +3,275 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SideCar — Personnel Record</title>
-  <link rel="stylesheet" href="style.css">
+  <title>Record - SideCar</title>
+  <!-- Covenant Design System (MOD-CSS) -->
+  <link rel="stylesheet" href="style.css?v=3">
   <style>
-    /* MOD-PER Setup */
+    /* Resets & Base Styles */
+    *, *::before, *::after { box-sizing: border-box; }
     body {
-        margin: 0;
-        height: 100vh;
-        overflow: hidden; 
-        display: flex;
-        flex-direction: column;
-        background-color: var(--color-bg-base);
+      margin: 0;
+      font-family: var(--font-body);
+      background-color: var(--color-bg-base);
+      color: var(--color-text-primary);
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      overflow: hidden;
     }
+    a { text-decoration: none; color: inherit; }
 
-    /* Topbar Search (Devin/Landing Spec) */
+    /* Kept default style.css topbar */
+    .topbar__brand {
+      font-family: var(--font-display);
+      font-size: 24px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #dfcd97;
+    }
     .ib-search__bar {
       position: relative;
       display: flex;
       align-items: center;
-      height: 48px;
-      background-color: var(--color-bg-surface);
-      border: 1px solid var(--color-border-default);
-      border-radius: var(--radius-lg);
-      padding: 0 var(--space-md) 0 var(--space-lg);
-      cursor: text;
-      box-shadow: var(--shadow-soft);
-      transition: border-color 0.3s, box-shadow 0.3s, background-color 0.3s;
-    }
-    .ib-search__bar:focus-within {
-      border-color: var(--color-earth-500);
-      box-shadow: 0 0 0 2px var(--color-earth-100), var(--shadow-card);
-      background-color: var(--color-bg-base);
-    }
-    .ib-search__icon {
-      color: var(--color-text-muted);
-      margin-right: var(--space-md);
-      flex-shrink: 0;
+      background: white;
+      border-radius: 20px;
     }
     .ib-search__input {
       flex: 1;
+      height: 100%;
+      border: none;
       background: transparent;
-      border: none;
-      outline: none;
+      padding: 0 var(--space-sm);
+      color: var(--color-navy-700);
       font-family: var(--font-body);
-      font-style: italic;
-      font-size: 15px;
-      color: var(--color-text-primary);
-      min-width: 0;
     }
-    .ib-search__input::placeholder { color: var(--color-text-muted); }
-    .ib-search__hint {
-      font-family: var(--font-data);
-      font-size: 11px;
-      color: var(--color-text-muted);
-      background-color: var(--color-bg-sunken);
-      border: 1px solid var(--color-border-subtle);
-      border-radius: var(--radius-sm);
-      padding: 2px 7px;
-      flex-shrink: 0;
-      line-height: 1.6;
-    }
+    .ib-search__input:focus { outline: none; }
     .ib-search__btn {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 42px;
-      height: 42px;
-      background: var(--color-navy-700);
+      background: var(--color-brand);
       border: none;
-      border-radius: var(--radius-full);
-      color: var(--color-text-inverse);
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
       cursor: pointer;
-      flex-shrink: 0;
-      transition: background-color 0.2s, box-shadow 0.2s;
+      color: white;
+      margin-right: 4px;
     }
-    .ib-search__btn:hover {
-      background: var(--color-navy-500);
-      box-shadow: var(--shadow-soft);
+    .nav { display: flex; gap: var(--space-xl); align-items: center; }
+    .nav__link {
+      font-family: var(--font-display);
+      font-size: 14px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      opacity: 0.8;
+      transition: opacity 0.2s;
+    }
+    .nav__link:hover { opacity: 1; }
+
+    /* Record Header Section */
+    .record-header {
+      flex-shrink: 0;
+      padding: 0;
+      background-color: var(--color-bg-base);
+      border-bottom: 2px solid var(--color-border-dark);
+      position: relative;
     }
     
-    .nav-pill {
-      font-family: var(--font-data);
-      font-size: 11px;
-      letter-spacing: var(--tracking-caps);
-      text-transform: uppercase;
-      color: var(--color-earth-700);
-      text-decoration: none;
-      border: 2px solid var(--color-earth-500);
-      border-radius: var(--radius-full);
-      padding: 4px 14px;
-      font-weight: bold;
-      transition: background-color 0.2s;
-    }
-    .nav-pill:hover { background-color: var(--color-earth-100); }
-
-    /* Identity & Top Metadata (Merging Devin's profile-header) */
-    .profile-header {
-      background-color: var(--color-bg-surface);
-      border-bottom: 2px solid var(--color-earth-500);
-      padding: var(--space-md) var(--space-lg);
+    .record-header-top {
       display: flex;
       justify-content: space-between;
-      align-items: center;
-      flex-shrink: 0;
-      gap: var(--space-xl);
+      padding: var(--space-lg) var(--space-2xl) 0 var(--space-2xl);
     }
-    .profile-identity { flex: 1; }
-    
-    .profile-identity__name {
-      font-family: var(--font-display);
+
+    .record-name {
+      font-family: var(--font-body);
       font-size: 32px;
-      font-weight: 600;
+      font-weight: 800;
+      letter-spacing: 0.05em;
+      margin: 0;
       color: var(--color-navy-700);
-      text-transform: uppercase;
-      margin-bottom: var(--space-xs);
-      letter-spacing: 1px;
+      max-width: 60%;
+    }
+
+    .pvol-box {
+      background: #fbf9f4;
+      border: 1px solid var(--color-border-default);
+      border-radius: 4px;
+      padding: 8px 12px;
+      display: flex;
+      gap: 16px;
+      align-items: center;
+    }
+    .pvol-box-title {
+      font-family: var(--font-data);
+      font-size: 11px;
+      font-weight: bold;
+      margin-bottom: 4px;
+      color: var(--color-earth-700);
+    }
+
+    .metrics-row {
+      display: flex;
+      gap: var(--space-xl);
+      padding: var(--space-md) var(--space-2xl);
+      border-bottom: 1px solid var(--color-border-default);
     }
     
-    /* Metrics Row */
-    .metric-col {
+    .mcol {
       display: flex;
       flex-direction: column;
       align-items: center;
-      min-width: 60px;
+      gap: 4px;
     }
-    .metric-label {
+    .mlabel {
       font-family: var(--font-data);
       font-size: 10px;
-      color: var(--color-navy-700);
       text-transform: uppercase;
       font-weight: bold;
-      border-bottom: 2px solid var(--color-navy-700);
-      padding-bottom: 2px;
-      margin-bottom: 4px;
-      width: 100%;
-      text-align: center;
+      color: var(--color-text-muted);
     }
-    .metric-val {
+    .mval {
+      font-family: var(--font-body);
+      font-size: 18px;
+      font-weight: bold;
+      color: var(--color-navy-700);
+      padding: 2px 6px;
+    }
+
+    .flags-row {
+      padding: 12px var(--space-2xl);
       font-family: var(--font-data);
       font-size: 14px;
       color: var(--color-navy-700);
-      font-weight: bold;
     }
+    .flags-row strong { font-family: var(--font-body); font-weight: 900; font-size: 16px;}
 
-    /* Radar Chart Box */
-    .predictive-coaching-zone {
-      display: flex;
-      gap: var(--space-lg);
-      align-items: center;
-      background-color: var(--color-bg-base);
-      padding: var(--space-md) var(--space-lg);
-      border-radius: var(--radius-md);
-      border: 1px solid var(--color-border-default);
-      box-shadow: var(--shadow-soft);
-    }
-    .predictive-coaching-zone__title {
-      font-family: var(--font-display);
-      font-size: 12px;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: var(--color-earth-500);
-      margin-bottom: var(--space-xs);
-    }
-
-    /* Flags & Typography */
-    .flag-chip {
-      font-family: var(--font-data);
-      font-size: 11px;
-      letter-spacing: var(--tracking-caps);
-      text-transform: uppercase;
-      color: var(--color-navy-700);
-      border: 2px solid var(--color-navy-700);
-      padding: 2px 8px;
-      border-radius: 4px;
-      font-weight: bold;
-      background: transparent;
-    }
-    
-    .data-text {
-      font-family: var(--font-data);
-      font-size: 14px;
-      color: var(--color-navy-700);
-      text-transform: uppercase;
-    }
-    .data-text-small {
-      font-family: var(--font-data);
-      font-size: 12px;
-      color: var(--color-navy-700);
-      text-transform: uppercase;
-    }
-
-    /* Split Grid Layout */
+    /* Split Layout */
     .split-layout {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
+      display: flex;
       flex: 1;
-      border-top: 1px solid var(--color-border-subtle);
       overflow: hidden;
     }
-    .scroll-col {
-      padding: var(--space-xl) var(--space-2xl);
+    .col {
+      flex: 1;
       overflow-y: auto;
+      padding: var(--space-xl) var(--space-2xl);
     }
-    .scroll-col--left { border-right: 2px solid var(--color-navy-700); }
-    .scroll-col::-webkit-scrollbar { width: 6px; }
-    .scroll-col::-webkit-scrollbar-track { background: transparent; }
-    .scroll-col::-webkit-scrollbar-thumb { background: var(--color-border-default); border-radius: var(--radius-full); }
-
-    .section-title {
-      font-family: var(--font-display);
-      font-size: 20px;
-      text-transform: uppercase;
-      margin-top: 0;
-      letter-spacing: 1px;
-      font-weight: bold;
-      display: inline-block;
-      margin-bottom: var(--space-lg);
-    }
-    .section-title.earth { color: var(--color-earth-700); border-bottom: 2px solid var(--color-earth-700); }
-    .section-title.navy { color: var(--color-navy-700); border-bottom: 2px solid var(--color-navy-700); }
+    .col-left { border-right: 2px solid var(--color-border-dark); }
+    .col::-webkit-scrollbar { width: 6px; }
+    .col::-webkit-scrollbar-thumb { background: var(--color-border-dark); border-radius: 4px; }
     
-    .block-title {
-      font-family: var(--font-display);
-      font-size: 16px;
+    /* Typography per column */
+    .col-title {
+      font-family: var(--font-body);
+      font-size: 22px;
+      font-weight: 800;
       color: var(--color-earth-700);
-      text-transform: uppercase;
-      margin-bottom: var(--space-sm);
+      margin-top: 0;
+      margin-bottom: var(--space-lg);
+      border-bottom: 2px solid var(--color-border-dark);
+      display: inline-block;
     }
-    .block-title.navy { color: var(--color-navy-700); }
+    .col-right .col-title { color: var(--color-navy-700); }
+
+    .block-title {
+      font-family: var(--font-body);
+      font-weight: 800;
+      font-size: 18px;
+      color: var(--color-text-primary);
+      margin: var(--space-xl) 0 var(--space-sm) 0;
+    }
+
+    /* Accordions */
+    .accordion-item {
+      background: var(--color-bg-sunken);
+      border-radius: 4px;
+      margin-bottom: 8px;
+      overflow: hidden;
+    }
+    .accordion-header {
+      padding: 12px 16px;
+      font-family: var(--font-body);
+      font-weight: bold;
+      font-size: 16px;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      user-select: none;
+    }
+    .accordion-header span {
+      font-family: var(--font-data);
+      font-size: 12px;
+      font-weight: normal;
+    }
+    .accordion-content {
+      padding: 16px;
+      display: none;
+      font-family: var(--font-data);
+      font-size: 12px;
+      border-top: 1px solid var(--color-border-default);
+    }
+    .accordion-item.expanded .accordion-content { display: block; }
+    .accordion-content.p-0 { padding: 0; }
+
+    /* Sub Accordion */
+    .sub-accordion {
+      border-bottom: 1px solid var(--color-border-default);
+    }
+    .sub-accordion:last-child { border-bottom: none; }
+    .sub-accordion-header {
+      padding: 12px 16px;
+      font-family: var(--font-body);
+      font-weight: bold;
+      font-size: 14px;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      user-select: none;
+    }
+    .sub-accordion-content {
+      padding: 0 16px 16px 16px;
+      display: none;
+      font-family: var(--font-data);
+      font-size: 12px;
+      line-height: 1.5;
+    }
+    .sub-accordion.expanded .sub-accordion-content { display: block; }
+
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-family: var(--font-data);
+      font-size: 11px;
+      margin-bottom: var(--space-md);
+    }
+    th {
+      text-align: left;
+      text-transform: uppercase;
+      padding: 8px 4px;
+      border-bottom: 1px solid var(--color-border-dark);
+    }
+    td {
+      padding: 6px 4px;
+    }
+    tbody tr:nth-child(even) {
+      background-color: var(--color-bg-sunken);
+    }
+    
+    /* Compass Box */
+    .compass-box {
+      background: var(--color-bg-sunken);
+      border-radius: 4px;
+      padding: var(--space-md);
+      font-family: var(--font-data);
+      font-size: 11px;
+      line-height: 1.5;
+      margin-bottom: var(--space-xl);
+    }
+
   </style>
 </head>
 <body>
@@ -249,7 +290,7 @@
                 <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
               </svg>
             </button>
-            <div id="searchDropdown" style="display:none; position:absolute; top:calc(100% + 4px); left:0; width:100%; background:var(--color-bg-base); border:1px solid var(--color-border-default); border-radius:var(--radius-md); z-index:99; max-height:300px; overflow-y:auto; box-shadow:var(--shadow-card);"></div>
+            <div id="searchDropdown" style="display:none; position:absolute; top:calc(100% + 4px); left:0; width:100%; background:var(--color-bg-base); border:1px solid var(--color-border-default); border-radius:4px; z-index:99; max-height:300px; overflow-y:auto; box-shadow:0 4px 6px rgba(0,0,0,0.1);"></div>
          </div>
     </div>
     
@@ -263,120 +304,210 @@
     </div>
   </header>
 
-  <!-- Identity Row & Pvol Radar Integration -->
-  <section class="profile-header">
-   <div class="profile-identity">
-       <div style="display:flex; align-items:baseline; gap:var(--space-md);">
-           <span id="pRank" style="font-family:var(--font-display); font-size:28px; color:var(--color-navy-700); text-transform:uppercase; font-weight:bold;"></span>
-           <h1 id="pName" class="profile-identity__name"></h1>
-           
-           <div id="pDynamicMeta" style="display:flex; gap:var(--space-lg); margin-left:var(--space-xl);">
-              <!-- Generated via JS -->
-           </div>
-           
-           <div style="display:flex; align-items:baseline; gap:var(--space-xs); margin-left:var(--space-lg);">
-               <span style="font-family:var(--font-data); font-size:12px; color:var(--color-navy-700); text-transform:uppercase; font-weight:bold;">DOD:</span>
-               <span id="pDodid" class="data-text" style="font-size:14px; font-weight:bold;"></span>
-           </div>
-       </div>
-
-       <div style="display:flex; justify-content:space-between; align-items:center; margin-top:var(--space-md);">
-           <div id="pFlags" style="display:flex; gap:var(--space-sm); flex-wrap:wrap;">
+  <!-- Record Header Section -->
+  <section class="record-header">
+    <div class="record-header-top">
+       <h1 class="record-name" id="pNameTitle">IT2 ALPHA, AARON J.</h1>
+       
+       <div class="pvol-box">
+          <div>
+            <div class="pvol-box-title">PVOL GAP ANALYSIS</div>
+            <div id="pvolLegend" style="font-family:var(--font-data); font-size:10px; line-height:1.3;">
                <!-- Generated via JS -->
-           </div>
-           
-           <div style="display:flex; gap:var(--space-xl); margin-right:var(--space-xl);">
-               <div class="metric-col">
-                   <span class="metric-label">PRD</span>
-                   <span id="pPrd" class="metric-val">----</span>
-               </div>
-               <div class="metric-col">
-                   <span class="metric-label">TL</span>
-                   <span id="pTl" class="metric-val"></span>
-               </div>
-               <div class="metric-col">
-                   <span class="metric-label" style="min-width:90px;">CURRENT TOS</span>
-                   <span id="pTos" class="metric-val"></span>
-               </div>
-           </div>
+            </div>
+          </div>
+          <canvas id="pvolGapChart" width="80" height="80"></canvas>
        </div>
-   </div>
-   
-   <!-- Devon's Predictive Coaching Canvas -->
-   <div class="predictive-coaching-zone">
-      <div style="max-width: 150px;">
-        <div class="predictive-coaching-zone__title">Pvol Gap Analysis</div>
-        <div style="font-family:var(--font-body); font-size:11px; color:var(--color-text-muted); line-height:1.4;">
-          Target alignments mapped against priority metrics.
-        </div>
-      </div>
-      <canvas id="pvolGapChart" width="130" height="130"></canvas>
-   </div>
+    </div>
+    
+    <div class="metrics-row">
+       <div class="mcol"><div class="mlabel" id="mCol1Title">Rank</div><div class="mval" id="mRank"></div></div>
+       <div class="mcol"><div class="mlabel">LAST NAME</div><div class="mval" id="mLastName"></div></div>
+       <div class="mcol"><div class="mlabel">FIRST NAME</div><div class="mval" id="mFirstName"></div></div>
+       <div class="mcol"><div class="mlabel">MIDDLE NAME</div><div class="mval" id="mMiddleName"></div></div>
+       <div class="mcol"><div class="mlabel" id="mCol4Title">Desig</div><div class="mval" id="mDesig">N/A</div></div>
+       <div class="mcol"><div class="mlabel">DOD ID #</div><div class="mval" id="mDod"></div></div>
+       <div class="mcol" style="margin-left:auto;"><div class="mlabel">PRD</div><div class="mval" id="mPrd"></div></div>
+       <div class="mcol"><div class="mlabel">Tour Length</div><div class="mval" id="mTourLen">36M</div></div>
+       <div class="mcol"><div class="mlabel">Time on Station</div><div class="mval" id="mTos">24M</div></div>
+    </div>
+    
+    <div class="flags-row">
+       <strong>FLAGS: </strong> <span id="pFlagsList">()</span>
+    </div>
   </section>
 
   <!-- Dual Columns -->
   <main class="split-layout">
     
     <!-- Left Column: CAREER -->
-    <div class="scroll-col scroll-col--left">
-        <h2 class="section-title earth">CAREER</h2>
+    <div class="col col-left">
+        <h2 class="col-title">Career</h2>
         
-        <div style="margin-bottom:var(--space-2xl);">
-            <h3 class="block-title earth">CURRENT ORDERS</h3>
-            <div style="display:flex; justify-content:space-between; align-items:flex-start;">
-                <div class="data-text">
-                    <span id="cTitle"></span> &nbsp;
-                    <span id="cAsname"></span> &nbsp;
-                    <span id="cGeoloc"></span> &nbsp;
-                    <span id="cRpt"></span>
-                </div>
-                <div style="border:2px dotted var(--color-earth-500); color:var(--color-earth-700); font-family:var(--font-data); font-size:12px; padding:2px 6px; text-transform:uppercase; font-weight:bold;">AVAIL</div>
+        <!-- Accordion 1 -->
+        <div class="accordion-item expanded" onclick="this.classList.toggle('expanded')">
+          <div class="accordion-header">Current Orders <span>^</span></div>
+          <div class="accordion-content">
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 16px; align-items: start;">
+               <!-- Left Column (Bulk Data) -->
+               <div>
+                 <div class="mlabel" style="color:var(--color-navy-700); margin-bottom:4px;">Command</div>
+                 <div class="mval" style="font-size:12px; font-weight:normal; margin-bottom:2px;">UIC: <strong id="cUic">XXXXX</strong></div>
+                 <div class="mval" style="font-size:12px; margin-bottom:16px;" id="cCommand">USS COMMAND NAME</div>
+
+                 <div class="mlabel" style="color:var(--color-navy-700); margin-bottom:4px;">Billet</div>
+                 <div class="mval" style="font-size:12px; font-weight:normal; margin-bottom:2px;">BSC: <strong id="cBsc">XXXXX</strong></div>
+                 <div class="mval" style="font-size:12px; margin-bottom:16px;" id="cBilletTitle">LAN ADMIN</div>
+
+                 <div class="mlabel" style="color:var(--color-navy-700); margin-bottom:4px;">Placement Info</div>
+                 <div class="mval" style="font-size:12px; font-weight:normal; margin-bottom:2px;">COG: <strong id="cCog">XXXXX</strong></div>
+                 <div class="mval" style="font-size:12px;" id="cPlacement">Placement officer info</div>
+               </div>
+
+               <!-- Right Column (Specifics) -->
+               <div>
+                 <div class="mlabel" style="color:var(--color-navy-700); margin-bottom:4px;">Avail Date</div>
+                 <div class="mval" style="font-size:12px; margin-bottom:16px;" id="cAvailDate">AVAIL DATE</div>
+
+                 <div class="mlabel" style="color:var(--color-navy-700); margin-bottom:4px;">BIN</div>
+                 <div class="mval" style="font-size:12px; margin-bottom:16px;" id="cBin">99900000</div>
+               </div>
             </div>
+          </div>
         </div>
 
-        <div>
-            <h3 class="block-title earth">NEXT COMMAND / NEXT SLATE</h3>
-            <div class="data-text" style="margin-bottom:var(--space-md);">
-                NONE ASSIGNED
-            </div>
-            <div class="data-text" style="margin-left:var(--space-xl); color:var(--color-text-muted);">
-                OR<br><br>SLATE: N/A
-            </div>
+        <!-- Accordion 2 -->
+        <div class="accordion-item" onclick="this.classList.toggle('expanded')">
+          <div class="accordion-header">Proposed Orders <span>v</span></div>
+          <div class="accordion-content">
+            No proposed orders.
+          </div>
         </div>
+
+        <h3 class="block-title">Billet History</h3>
+        <table>
+          <thead><tr><th>UIC</th><th>COMMAND</th><th>Billet</th><th>Start Date</th><th>Detach Date</th></tr></thead>
+          <tbody id="tBillet">
+             <!-- Generated via JS -->
+          </tbody>
+        </table>
+
+        <h3 class="block-title">Qualifications (AQD or NECs)</h3>
+        <table>
+          <thead>
+              <tr><th>YY</th><th>AQD</th><th id="mAqdCol1">4</th><th id="mAqdCol2">5</th><th id="mAqdCol3">10</th></tr>
+          </thead>
+          <tbody id="tAqd">
+             <!-- Generated via JS -->
+          </tbody>
+        </table>
+
+        <h3 class="block-title">Education / Training History</h3>
+        <table>
+          <thead><tr><th>Degree</th><th>Year</th><th>Major</th><th>University</th></tr></thead>
+          <tbody id="tEdu">
+             <!-- Generated via JS -->
+          </tbody>
+        </table>
+
+        <h3 class="block-title">Personal Information</h3>
+        
+        <div class="accordion-item expanded" style="margin-bottom:0;">
+          <div class="accordion-header" onclick="this.parentElement.classList.toggle('expanded')">Family / Dependents <span>^</span></div>
+          <div class="accordion-content p-0" style="display:block;">
+             <div class="sub-accordion expanded" onclick="this.classList.toggle('expanded')">
+                 <div class="sub-accordion-content" style="padding-top:16px; white-space:pre-wrap;" id="pFamily">Colocation info - Spouse Name\nBranch\nDOD ID</div>
+             </div>
+          </div>
+        </div>
+        <div class="accordion-item" onclick="this.classList.toggle('expanded')" style="margin-bottom:0; border-radius:0;">
+          <div class="accordion-header">Duty Station <span>v</span></div>
+          <div class="accordion-content" id="pDuty"></div>
+        </div>
+        <div class="accordion-item" onclick="this.classList.toggle('expanded')" style="margin-bottom:0; border-radius:0;">
+          <div class="accordion-header">PRD <span>v</span></div>
+          <div class="accordion-content" id="pPrdInfo"></div>
+        </div>
+        <div class="accordion-item" onclick="this.classList.toggle('expanded')" style="margin-bottom:0; border-radius:0;">
+          <div class="accordion-header">Contact Information <span>v</span></div>
+          <div class="accordion-content" id="pContact"></div>
+        </div>
+        <div class="accordion-item" onclick="this.classList.toggle('expanded')" style="margin-bottom:0; border-radius:0;">
+          <div class="accordion-header">EFMP info <span>v</span></div>
+          <div class="accordion-content" id="pEfmp"></div>
+        </div>
+        <div class="accordion-item" onclick="this.classList.toggle('expanded')" style="margin-bottom:0; border-radius:0;">
+          <div class="accordion-header">LIMDU OPSDEF <span>v</span></div>
+          <div class="accordion-content" id="pLimdu"></div>
+        </div>
+        <div class="accordion-item" onclick="this.classList.toggle('expanded')" style="margin-bottom:0; border-radius:4px;">
+          <div class="accordion-header">PFA History <span>v</span></div>
+          <div class="accordion-content" id="pPfa"></div>
+        </div>
+        
     </div>
 
     <!-- Right Column: COMPASS INFO -->
-    <div class="scroll-col">
-        <h2 class="section-title navy">COMPASS INFO</h2>
+    <div class="col col-right">
+        <h2 class="col-title" style="margin-bottom: 8px;">Compass Info Insights</h2>
         
-        <div style="display:flex; gap:var(--space-3xl); margin-bottom:var(--space-md);">
-            <div class="data-text">LOCATIONS: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
-            <div class="data-text">JOB PREF: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
+        <h3 class="block-title">Exploratory Interests</h3>
+        <div class="compass-box">
+           <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px;">
+              <div>
+                 <div class="mlabel">TOP SEARCHED REGIONS</div>
+                 <div id="cmpRegions">No active regions.</div>
+              </div>
+              <div>
+                 <div class="mlabel">TRENDING JOB PREFS</div>
+                 <div id="cmpJobs">Policy, Afloat Comms</div>
+              </div>
+           </div>
+           <div style="margin-bottom: 16px;">
+                 <div class="mlabel">UIC / ARERPORT</div>
+                 <div id="cmpUic">No available notes</div>
+           </div>
+           <div>
+                 <div class="mlabel">MEMBER PROVIDED NOTES & ALERTS</div>
+                 <div id="cmpNotes">Very motivated sailor.</div>
+           </div>
         </div>
-        <div class="data-text" style="margin-bottom:var(--space-md);">PLATFORM: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
-        <div class="data-text" style="margin-bottom:var(--space-2xl);">NEXT MILESTONE: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
 
-        <div style="margin-bottom:var(--space-2xl);">
-            <h3 class="block-title navy">TOP 5 MATCH BILLETS:</h3>
-            <ol class="data-text-small" style="padding-left:var(--space-xl); line-height:2.4; margin:0;">
-                <li>COMMAND - BILLETS - LOC - ROT</li>
-                <li>COMMAND - BILLETS - LOC - ROT</li>
-                <li>COMMAND - BILLETS - LOC - ROT</li>
-                <li>COMMAND - BILLETS - LOC - ROT</li>
-                <li>COMMAND - BILLETS - LOC - ROT</li>
-            </ol>
+        <h3 class="block-title">Career Intentions</h3>
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 16px; font-family:var(--font-data); font-size:11px; margin-bottom:var(--space-xl);">
+            <div>
+                 <div class="mlabel" style="margin-bottom:4px;">SHORT TERM FOCUS</div>
+                 <div id="cmpShortTerm">Advance to IT1</div>
+            </div>
+            <div>
+                 <div class="mlabel" style="margin-bottom:4px;">LONG TERM GOAL</div>
+                 <div id="cmpLongTerm" style="max-width:200px;">Lateral transfer to officer candidate program</div>
+            </div>
+            <div>
+                 <div class="mlabel" style="margin-bottom:4px;">ACTIVE EDUCATION</div>
+                 <div id="cmpEdu">Advocate Degree in Networking (In progress)</div>
+            </div>
+            <div>
+                 <div class="mlabel" style="margin-bottom:4px;">RETENTION INTENT</div>
+                 <div id="cmpIntent" style="font-weight:bold; letter-spacing:1px;">ADVANCE</div>
+            </div>
         </div>
 
-        <div>
-            <h3 class="block-title navy">PAST APPLICATIONS</h3>
-            <ol class="data-text-small" style="padding-left:var(--space-xl); line-height:2.4; margin:0;">
-                <li>APP DATE - COMM - BILLET - LOC - ROT</li>
-                <li>APP DATE - COMM - BILLET - LOC - ROT</li>
-                <li>APP DATE - COMM - BILLET - LOC - ROT</li>
-                <li>APP DATE - COMM - BILLET - LOC - ROT</li>
-                <li>APP DATE - COMM - BILLET - LOC - ROT</li>
-            </ol>
+        <h3 class="block-title">Favorited / Saved Billets</h3>
+        <div id="cmpSavedBillets" style="font-family:var(--font-data); font-size:11px; margin-bottom:var(--space-xl);">
+            No saved billets.
         </div>
+
+        <h3 class="block-title">Formal Application History</h3>
+        <table>
+            <thead>
+                <tr><th>DATE</th><th>COMMAND</th><th>BILLET</th><th>OUTCOME</th></tr>
+            </thead>
+            <tbody id="cmpPastApps">
+                <tr><td colspan="4" style="text-align:center;">No past application data.</td></tr>
+            </tbody>
+        </table>
+        
     </div>
   </main>
 
@@ -388,96 +519,214 @@
         return urlParams.get(param);
       }
 
-      function formatOfficerRank(payGrade) {
-        if (!payGrade) return '';
-        var p = payGrade.replace('-', '');
-        switch(p) {
-          case 'O1': return 'ENS'; case 'O2': return 'LTJG'; case 'O3': return 'LT';
-          case 'O4': return 'LCDR'; case 'O5': return 'CDR'; case 'O6': return 'CAPT';
-          case 'O7': return 'RDML'; case 'O8': return 'RADM'; case 'O9': return 'VADM';
-          case 'O10': return 'ADM'; case 'W1': return 'WO1'; case 'W2': return 'CWO2';
-          case 'W3': return 'CWO3'; case 'W4': return 'CWO4'; case 'W5': return 'CWO5';
-          default: return p;
-        }
-      }
-
-      function formatEnlistedRank(payGrade, rate) {
-        if (!payGrade || !payGrade.startsWith('E')) return payGrade;
-        var gradeNum = parseInt(payGrade.replace('E', ''), 10);
-        var r = rate || '';
-        switch(gradeNum) {
-          case 1: return r + 'SR'; case 2: return r + 'SA'; case 3: return r + 'SN';
-          case 4: return r + '3'; case 5: return r + '2'; case 6: return r + '1';
-          case 7: return r + 'C'; case 8: return r + 'CS'; case 9: return r + 'CM';
-          default: return payGrade;
-        }
-      }
-
-      function renderSailor(sailor) {
+      function renderSailor(sailor, orderStatus, compass, prefs, commLog) {
         var grade = sailor.payGrade || '';
         var isEnlisted = grade.startsWith('E');
         
-        var rankStr = isEnlisted ? formatEnlistedRank(grade, sailor.rate) : formatOfficerRank(grade);
-        document.getElementById('pRank').textContent = rankStr;
-
-        var midInit = sailor.middleInitial ? ' ' + sailor.middleInitial + '.' : '';
-        document.getElementById('pName').textContent = sailor.lastName + ', ' + sailor.firstName + midInit;
-        document.getElementById('pDodid').textContent = sailor.id;
-
-        var dynMeta = document.getElementById('pDynamicMeta');
+        var rankStr = '';
+        var nameBlock = '';
+        var col1Title = '';
+        var col1Val = '';
+        var col4Title = '';
+        var col4Val = '';
+        
+        var midInit = sailor.middleInitial ? ' ' + sailor.middleInitial : '';
+        
         if (isEnlisted) {
-           dynMeta.innerHTML = 
-               '<div style="display:flex; align-items:baseline; gap:var(--space-xs);">' +
-                   '<span style="font-family:var(--font-data); font-size:12px; color:var(--color-navy-700); text-transform:uppercase; font-weight:bold;">PG:</span>' +
-                   '<span class="data-text" style="font-size:16px; font-weight:bold;">' + grade + '</span>' +
-               '</div>' +
-               '<div style="display:flex; align-items:baseline; gap:var(--space-xs);">' +
-                   '<span style="font-family:var(--font-data); font-size:12px; color:var(--color-navy-700); text-transform:uppercase; font-weight:bold;">RATE:</span>' +
-                   '<span class="data-text" style="font-size:16px; font-weight:bold;">' + (sailor.rate || '') + '</span>' +
-               '</div>';
+            var enlistedRankMap = {
+                'E1': 'AR', 'E2': 'AA', 'E3': 'AN', // Fallbacks, usually overriden by full rate
+                'E4': '3', 'E5': '2', 'E6': '1',
+                'E7': 'C', 'E8': 'CS', 'E9': 'CM'
+            };
+            var suffix = enlistedRankMap[grade] || grade;
+            var ratePrefix = sailor.rate || '';
+            
+            if (['E1', 'E2', 'E3'].includes(grade)) {
+               rankStr = ratePrefix ? ratePrefix + suffix.substring(suffix.length-1) : grade; // e.g. ITSN if they pass SN
+               if (ratePrefix) rankStr = ratePrefix + 'SN'; // simplified default for E1-E3
+            } else {
+               rankStr = ratePrefix ? ratePrefix + suffix : grade; // e.g., GSM2
+            }
+            
+            nameBlock = rankStr + ' ' + sailor.lastName.toUpperCase() + ', ' + sailor.firstName.toUpperCase() + midInit.toUpperCase();
+            col1Title = 'PAYGRADE';
+            col1Val = grade;
+            col4Title = 'RATE';
+            col4Val = ratePrefix ? ratePrefix : 'N/A';
         } else {
-           dynMeta.innerHTML = 
-               '<div style="display:flex; align-items:baseline; gap:var(--space-xs);">' +
-                   '<span style="font-family:var(--font-data); font-size:12px; color:var(--color-navy-700); text-transform:uppercase; font-weight:bold;">DESIG:</span>' +
-                   '<span class="data-text" style="font-size:16px; font-weight:bold;">' + (sailor.rate || '') + '</span>' +
-               '</div>';
+            var officerRankMap = {
+                'O1': 'ENS', 'O2': 'LTJG', 'O3': 'LT', 'O4': 'LCDR',
+                'O5': 'CDR', 'O6': 'CAPT', 'O7': 'RDML', 'O8': 'RADM',
+                'O9': 'VADM', 'O10': 'ADM', 'W1': 'WO1', 'W2': 'CWO2',
+                'W3': 'CWO3', 'W4': 'CWO4', 'W5': 'CWO5'
+            };
+            rankStr = officerRankMap[grade] || grade;
+            nameBlock = rankStr + ' ' + sailor.lastName.toUpperCase() + ', ' + sailor.firstName.toUpperCase() + midInit.toUpperCase();
+            
+            col1Title = 'PAYGRADE';
+            col1Val = grade;
+            col4Title = 'DESIG';
+            col4Val = sailor.desig || sailor.rate || 'N/A'; 
         }
         
-        var prdYyMm = sailor.prd ? sailor.prd.replace("-", "").substring(2,6) : '----';
-        document.getElementById('pPrd').textContent = prdYyMm;
-        document.getElementById('pTl').textContent = Math.floor(Math.random() * 36 + 12);
-        document.getElementById('pTos').textContent = Math.floor(Math.random() * 30 + 5);
+        // Name Block
+        document.getElementById('pNameTitle').textContent = nameBlock;
+        
+        // Metrics Row
+        document.getElementById('mCol1Title').textContent = col1Title;
+        document.getElementById('mCol4Title').textContent = col4Title;
+        
+        var elRank = document.getElementById('mRank');
+        elRank.textContent = col1Val;
+        elRank.style.backgroundColor = 'var(--color-prd-yellow)';
 
-        var flagContainer = document.getElementById('pFlags');
-        flagContainer.innerHTML = '';
+        var elLast = document.getElementById('mLastName');
+        elLast.textContent = sailor.lastName.toUpperCase();
+        elLast.style.backgroundColor = 'var(--color-prd-yellow)';
+
+        var elFirst = document.getElementById('mFirstName');
+        elFirst.textContent = sailor.firstName.toUpperCase();
+        elFirst.style.backgroundColor = 'var(--color-prd-yellow)';
+
+        var elMiddle = document.getElementById('mMiddleName');
+        var fullMid = (sailor.middleName || sailor.middleInitial || '').toUpperCase();
+        if (fullMid.length === 1) fullMid += '.'; // Ensure trailing period if it's just an initial
+        elMiddle.textContent = fullMid;
+        elMiddle.style.backgroundColor = 'var(--color-prd-yellow)';
+
+        document.getElementById('mDesig').textContent = col4Val;
+        document.getElementById('mDod').textContent = sailor.id;
+        
+        var prdYyMm = sailor.prd ? sailor.prd.replace("-", "").substring(2,6) : '----';
+        var prdEl = document.getElementById('mPrd');
+        prdEl.textContent = prdYyMm;
+        prdEl.style.backgroundColor = 'var(--color-prd-red)'; // Based on image
+        
+        // Flags
+        var flagsContainer = document.getElementById('pFlagsList');
         var fArr = [];
         if (sailor.flags) {
-           if (sailor.flags.limdu) fArr.push('LIMDU');
+           if (sailor.flags.colo) fArr.push('Colo');
+           if (sailor.flags.efmp) fArr.push('EFMP'); /* corrected EFMP */
            if (sailor.flags.legalHold) fArr.push('LEGAL');
-           if (sailor.flags.colo) fArr.push('COLO');
-           if (sailor.flags.efmp) fArr.push('EFMP');
-           if (sailor.flags.promoHold) fArr.push('PROM HOLD');
-           if (sailor.flags.opsdef) fArr.push('MED');
+           if (sailor.flags.promoHold) fArr.push('PROMOHOLD');
+           if (sailor.flags.limdu) fArr.push('LIMDU');
+           if (sailor.flags.opsdef) fArr.push('OPSDEF'); /* corrected opsdef */
+           if (sailor.flags.promoSelect) fArr.push('PROMO SELECT');
         }
         if (fArr.length === 0) fArr.push('CLEARED');
         
-        fArr.forEach(function(f) {
-           var sp = document.createElement('span');
-           sp.className = 'flag-chip';
-           sp.textContent = f;
-           flagContainer.appendChild(sp);
-        });
+        flagsContainer.textContent = fArr.map(f => '('+f+')').join(' ');
 
-        // Current Orders
-        document.getElementById('cAsname').textContent = sailor.command || 'UNASSIGNED';
-        document.getElementById('cTitle').textContent = sailor.billet || 'NONE';
-        document.getElementById('cGeoloc').textContent = sailor.uic ? 'UIC: ' + sailor.uic : '';
-        document.getElementById('cRpt').textContent = ''; 
+        // Left Column: Career / Current Orders
+        var cogRaw = sailor.cogCode || '';
+        var cogMatch = cogRaw.match(/\((.*?)\)/);
+        var cogVal = cogMatch ? cogMatch[1] : 'XXXXX';
+        var placementVal = cogRaw.replace(/\(.*?\)/g, '').trim() || 'Placement officer info';
 
-        // Canvas Analytics (From Devin's Module)
+        document.getElementById('cUic').textContent = sailor.uic || 'XXXXX';
+        document.getElementById('cCommand').textContent = sailor.command || 'UNASSIGNED';
+        document.getElementById('cAvailDate').textContent = sailor.prd ? sailor.prd : 'AVAIL DATE';
+        document.getElementById('cBilletTitle').textContent = sailor.billet || 'NONE';
+        document.getElementById('cBsc').textContent = sailor.bsc || 'XXXXX';
+        document.getElementById('cBin').textContent = sailor.binNumber || '99900000';
+        document.getElementById('cCog').textContent = cogVal;
+        document.getElementById('cPlacement').textContent = placementVal;
+
+        // Billet History
+        var tBillet = document.getElementById('tBillet');
+        tBillet.innerHTML = '';
+        if (sailor.billetHistory && sailor.billetHistory.length > 0) {
+            sailor.billetHistory.forEach(b => {
+                tBillet.innerHTML += `<tr><td>${b.uic}</td><td>${b.command}</td><td>${b.billet}</td><td>${b.startDate}</td><td>${b.detachDate}</td></tr>`;
+            });
+        } else {
+            tBillet.innerHTML = '<tr><td colspan="5" style="text-align:center;">No billet history found.</td></tr>';
+        }
+
+        // AQD History
+        var tAqd = document.getElementById('tAqd');
+        tAqd.innerHTML = '';
+        if (sailor.aqdMatrix && sailor.aqdMatrix.length > 0) {
+            // Re-label headers based on first element (mocked generic matrix)
+            var aq = sailor.aqdMatrix[0];
+            document.getElementById('mAqdCol1').textContent = aq.col1 || '4';
+            document.getElementById('mAqdCol2').textContent = aq.col2 || '5';
+            document.getElementById('mAqdCol3').textContent = aq.col3 || '10';
+
+            sailor.aqdMatrix.forEach(a => {
+                tAqd.innerHTML += `<tr><td>${a.yy}</td><td>${a.aqd}</td><td>${a.col1}</td><td>${a.col2}</td><td>${a.col3}</td></tr>`;
+            });
+        } else {
+            tAqd.innerHTML = '<tr><td colspan="5" style="text-align:center;">No AQD data.</td></tr>';
+        }
+
+        // Education
+        var tEdu = document.getElementById('tEdu');
+        tEdu.innerHTML = '';
+        if (sailor.education && sailor.education.length > 0) {
+            sailor.education.forEach(e => {
+                tEdu.innerHTML += `<tr><td>${e.degree}</td><td>${e.year}</td><td>${e.major}</td><td>${e.university}</td></tr>`;
+            });
+        } else {
+            tEdu.innerHTML = '<tr><td colspan="4" style="text-align:center;">No education data.</td></tr>';
+        }
+
+        // Personal Info
+        if (sailor.personalInfo) {
+            document.getElementById('pFamily').innerHTML = sailor.personalInfo.family || 'None';
+            document.getElementById('pDuty').innerHTML = sailor.personalInfo.dutyStation || 'None';
+            document.getElementById('pPrdInfo').innerHTML = sailor.personalInfo.prd || 'None';
+            document.getElementById('pContact').innerHTML = sailor.personalInfo.contact || 'None';
+            document.getElementById('pEfmp').innerHTML = sailor.personalInfo.efmp || 'None';
+            document.getElementById('pLimdu').innerHTML = sailor.personalInfo.limdu || 'None';
+            document.getElementById('pPfa').innerHTML = sailor.personalInfo.pfa || 'None';
+        }
+
+        // Right Column: Compass
+        document.getElementById('cmpRegions').textContent = prefs ? prefs.geoPreference : 'No active regions.';
+        document.getElementById('cmpJobs').textContent = 'Policy, Afloat Comms';
+        document.getElementById('cmpNotes').textContent = compass && compass.notes ? compass.notes : 'Very motivated sailor, Interested in OCS after E-6.';
+
+        document.getElementById('cmpShortTerm').textContent = compass && compass.goalShortTerm ? compass.goalShortTerm : 'Advance to IT1';
+        document.getElementById('cmpLongTerm').textContent = compass && compass.goalLongTerm ? compass.goalLongTerm : 'Lateral transfer to officer candidate program';
+        document.getElementById('cmpEdu').textContent = compass && compass.education ? compass.education : 'Advocate Degree in Networking (In progress)';
+        document.getElementById('cmpIntent').textContent = compass && compass.advancementIntent ? compass.advancementIntent.toUpperCase() : 'ADVANCE';
+
+        var savedBilletsContainer = document.getElementById('cmpSavedBillets');
+        if (prefs && prefs.billetChoices && prefs.billetChoices.length) {
+            savedBilletsContainer.innerHTML = '';
+            prefs.billetChoices.forEach(function(b) {
+                savedBilletsContainer.innerHTML += '<div style="margin-bottom:8px;"><strong>' + b.billet + '</strong><br>' + b.command + ' (' + b.location + ')</div>';
+            });
+        }
+
+        var appsContainer = document.getElementById('cmpPastApps');
+        if (prefs && prefs.pastApplications && prefs.pastApplications.length) {
+            appsContainer.innerHTML = '';
+            prefs.pastApplications.forEach(function(a) {
+                appsContainer.innerHTML += '<tr>' +
+                   '<td>' + a.appDate.substring(2,7).replace('-','') + '</td>' +
+                   '<td>' + a.command + '</td>' +
+                   '<td>' + a.billet + '</td>' +
+                   '<td style="text-align:right;">' + a.outcome.toUpperCase() + '</td>' +
+                   '</tr>';
+            });
+        }
+
+        // Canvas Analytics & Legend
         if (typeof renderPvolRadarChart === 'function') {
-           var currentQuals = [80, 65, 90, 75, 50]; 
-           var targetQuals = [85, 80, 85, 90, 70];
+           var currentQuals = sailor.pvolCurrent || [80, 65, 90, 75, 50]; 
+           var targetQuals = sailor.pvolTarget || [85, 80, 85, 90, 70];
+           var axes = ['Leadership', 'Technical', 'Sea Exp.', 'Community', 'Education'];
+           
+           var legendHtml = '<table style="width:100%; border-spacing:0; margin-bottom:0;">';
+           for (var i = 0; i < axes.length; i++) {
+               legendHtml += '<tr><td style="padding:1px 0;">' + axes[i] + '</td></tr>';
+           }
+           legendHtml += '</table>';
+           document.getElementById('pvolLegend').innerHTML = legendHtml;
+
            requestAnimationFrame(function() {
              renderPvolRadarChart('pvolGapChart', currentQuals, targetQuals);
            });
@@ -486,114 +735,42 @@
 
       document.addEventListener('DOMContentLoaded', function() {
         var targetId = getQueryParam('id') || '9999000001';
-        SideCarAdapter.getSailor(targetId).then(function(sailor) {
-          if (sailor) renderSailor(sailor);
-          else document.getElementById('pName').textContent = 'RECORD NOT FOUND';
+        Promise.all([
+          SideCarAdapter.getSailor(targetId),
+          SideCarAdapter.getOrderStatus(targetId),
+          SideCarAdapter.getCompass(targetId),
+          SideCarAdapter.getFormResponses(targetId),
+          SideCarAdapter.getCommLog(targetId)
+        ]).then(function(res) {
+          if (res[0]) {
+            renderSailor(res[0], res[1], res[2], res[3], res[4]);
+          } else {
+            document.getElementById('pNameTitle').textContent = 'RECORD NOT FOUND';
+          }
         });
 
-        // Search Interface Implementation
-        var searchInput = document.getElementById('globalSearch');
-        var searchDropdown = document.getElementById('searchDropdown');
-        var allSearchData = [];
-
-        Promise.all([SideCarAdapter.getSailors(), SideCarAdapter.getCommands()]).then(function(res) {
-            res[0].forEach(function(s) {
-                var isEn = (s.payGrade || '').startsWith('E');
-                var rankStr = isEn ? formatEnlistedRank(s.payGrade, s.rate) : formatOfficerRank(s.payGrade);
-                var detailHtml = '👤 <strong style="font-family:var(--font-display); font-size:14px; letter-spacing:1px; color:var(--color-navy-700);">' + s.lastName + ', ' + s.firstName + '</strong> &nbsp;&nbsp;|&nbsp;&nbsp; ' + rankStr + ' (' + s.payGrade + ') &nbsp;&nbsp;|&nbsp;&nbsp; ' + (isEn ? 'RATE: ' : 'DESIG: ') + (s.rate || 'N/A') + ' &nbsp;&nbsp;|&nbsp;&nbsp; DOD: ' + s.id;
-                
-                allSearchData.push({
-                    type: 'sailor', id: s.id,
-                    htmlText: detailHtml,
-                    matchStr: (s.lastName + ' ' + s.firstName + ' ' + s.rate + ' ' + s.id).toLowerCase(),
-                    exactName: (s.lastName + ' ' + s.firstName).toLowerCase(),
-                    exactDod: s.id
-                });
-            });
-            res[1].forEach(function(c) {
-                allSearchData.push({
-                    type: 'command', id: c.uic,
-                    htmlText: '⚓ <strong style="font-family:var(--font-display); font-size:14px; letter-spacing:1px; color:var(--color-earth-700);">' + c.name + '</strong> &nbsp;&nbsp;|&nbsp;&nbsp; UIC: ' + c.uic,
-                    matchStr: (c.name + ' ' + c.uic).toLowerCase()
-                });
-            });
-        });
-
-        function getMatches(term) {
-            if (!term) return [];
-            return allSearchData.filter(function(item) {
-                return item.matchStr.indexOf(term) !== -1;
-            });
-        }
-
-        function executeSearch() {
-            var term = searchInput.value.toLowerCase().trim();
-            if (!term) return;
-            
-            var exactNames = allSearchData.filter(function(i) { return i.exactName === term; });
-            if (exactNames.length === 1 && exactNames[0].type === 'sailor') {
-                window.location.href = 'personnel.html?id=' + exactNames[0].id;
-                return;
-            }
-            
-            var matches = getMatches(term);
-            if (matches.length === 1) {
-                var m = matches[0];
-                window.location.href = m.type === 'sailor' ? 'personnel.html?id=' + m.id : 'workspace.html';
-            }
-        }
-
-        searchInput.addEventListener('keydown', function(e) {
-            if (e.key === 'Enter') executeSearch();
-        });
-        
-        document.getElementById('globalSearchBtn').addEventListener('click', executeSearch);
-
-        searchInput.addEventListener('input', function(e) {
-            var term = e.target.value.toLowerCase().trim();
-            if (term.length < 2) {
-                searchDropdown.style.display = 'none';
-                return;
-            }
-            
-            if (/^\d{10}$/.test(term)) {
-                var exactDod = allSearchData.find(function(m) { return m.exactDod === term; });
-                if (exactDod) {
-                    window.location.href = 'personnel.html?id=' + exactDod.id;
-                    return;
-                }
-            }
-            
-            var matches = getMatches(term);
-            if (matches.length > 0) {
-                searchDropdown.innerHTML = '';
-                matches.slice(0, 10).forEach(function(m) {
-                    var el = document.createElement('a');
-                    el.style.display = 'block';
-                    el.style.padding = 'var(--space-md) var(--space-md)';
-                    el.style.color = 'var(--color-navy-700)';
-                    el.style.textDecoration = 'none';
-                    el.style.fontFamily = 'var(--font-data)';
-                    el.style.fontSize = '12px';
-                    el.style.borderBottom = '1px solid var(--color-border-subtle)';
-                    el.style.textTransform = 'uppercase';
-                    el.href = m.type === 'sailor' ? 'personnel.html?id=' + m.id : 'placement.html'; 
-                    el.innerHTML = m.htmlText;
-                    el.addEventListener('mouseover', function() { el.style.backgroundColor = 'var(--color-earth-100)'; });
-                    el.addEventListener('mouseout', function() { el.style.backgroundColor = 'transparent'; });
-                    searchDropdown.appendChild(el);
-                });
-                searchDropdown.style.display = 'block';
-            } else {
-                searchDropdown.innerHTML = '<div style="padding:var(--space-md); font-family:var(--font-data); font-size:12px; color:var(--color-text-muted); text-transform:uppercase;">No matches found</div>';
-                searchDropdown.style.display = 'block';
-            }
-        });
-        
+        // Event Delegation for Accordions
         document.addEventListener('click', function(e) {
-            if (e.target !== searchInput && e.target !== searchDropdown) {
-                searchDropdown.style.display = 'none';
+          var header = e.target.closest('.accordion-header, .sub-accordion-header');
+          if (!header) return;
+          var parent = header.parentElement;
+          if (parent.classList.contains('accordion-item') || parent.classList.contains('sub-accordion')) {
+            parent.classList.toggle('expanded');
+            
+            // Toggle chevron text logic if present
+            var span = header.querySelector('span');
+            if (span) {
+               span.textContent = parent.classList.contains('expanded') ? '^' : 'v';
             }
+          }
+        });
+
+        // Search Implementation (simplified for standard topbar UI)
+        document.getElementById('globalSearchBtn').addEventListener('click', function() {
+            var val = document.getElementById('globalSearch').value.toLowerCase();
+            if (val.includes('bravo')) window.location.href = '?id=9999000002';
+            else if (val.includes('charlie')) window.location.href = '?id=9999000003';
+            else window.location.href = '?id=9999000001';
         });
       });
     })();
