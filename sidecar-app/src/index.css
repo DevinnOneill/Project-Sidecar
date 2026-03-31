@@ -1,0 +1,137 @@
+/* ============================================================
+   SIDECAR — COVENANT DESIGN SYSTEM
+   Premium, institutional-grade token system.
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=DM+Mono:wght@400;500&display=swap');
+
+:root {
+  /* ── Color: Core ────────────────────────────── */
+  --color-bg-primary:     #FAFAF8;
+  --color-bg-elevated:    #FFFFFF;
+  --color-bg-sunken:      #F0EDE6;
+  --color-bg-deep:        #0A0A0F;
+  --color-bg-glass:       rgba(250, 250, 248, 0.72);
+  --color-bg-glass-dark:  rgba(10, 10, 15, 0.85);
+
+  /* ── Color: Brand ────────────────────────────── */
+  --color-gold:           #9A7A0A;
+  --color-gold-bright:    #C9A227;
+  --color-gold-dim:       #6B5507;
+  --color-gold-glow:      rgba(201, 162, 39, 0.15);
+  --color-navy:           #1B2A4A;
+  --color-navy-deep:      #0D1526;
+  --color-navy-light:     #2A3F6B;
+
+  /* ── Color: PRD Tiers (C-14 LOCKED) ─────────── */
+  --color-prd-expired-bg:   #FDE8E8;
+  --color-prd-expired-text: #991B1B;
+  --color-prd-expired-dot:  #DC2626;
+  --color-prd-critical-bg:  #FEF3C7;
+  --color-prd-critical-text:#92400E;
+  --color-prd-critical-dot: #F59E0B;
+  --color-prd-urgent-bg:    #FEF9C3;
+  --color-prd-urgent-text:  #854D0E;
+  --color-prd-urgent-dot:   #EAB308;
+  --color-prd-watch-bg:     #DBEAFE;
+  --color-prd-watch-text:   #1E40AF;
+  --color-prd-watch-dot:    #3B82F6;
+  --color-prd-stable-bg:    #DCFCE7;
+  --color-prd-stable-text:  #166534;
+  --color-prd-stable-dot:   #22C55E;
+
+  /* ── Color: Surfaces ──────────────────────────── */
+  --color-border:           #D4CFC7;
+  --color-border-subtle:    #E8E4DC;
+  --color-border-gold:      rgba(154, 122, 10, 0.25);
+  --color-text-primary:     #1A1A1A;
+  --color-text-secondary:   #555555;
+  --color-text-muted:       #999999;
+  --color-text-inverse:     #FAFAF8;
+
+  /* ── Typography ──────────────────────────────── */
+  --font-display:     'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-body:        'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-data:        'DM Mono', 'SF Mono', 'Consolas', monospace;
+
+  /* ── Spacing ──────────────────────────────────── */
+  --space-xs:  4px;
+  --space-sm:  8px;
+  --space-md:  16px;
+  --space-lg:  24px;
+  --space-xl:  32px;
+  --space-2xl: 48px;
+  --space-3xl: 64px;
+
+  /* ── Radius ───────────────────────────────────── */
+  --radius-sm:  6px;
+  --radius-md:  10px;
+  --radius-lg:  16px;
+  --radius-xl:  24px;
+  --radius-full: 9999px;
+
+  /* ── Shadows ──────────────────────────────────── */
+  --shadow-sm:    0 1px 2px rgba(0,0,0,0.05);
+  --shadow-md:    0 4px 6px -1px rgba(0,0,0,0.07), 0 2px 4px -2px rgba(0,0,0,0.05);
+  --shadow-lg:    0 10px 15px -3px rgba(0,0,0,0.08), 0 4px 6px -4px rgba(0,0,0,0.05);
+  --shadow-xl:    0 20px 25px -5px rgba(0,0,0,0.10), 0 8px 10px -6px rgba(0,0,0,0.05);
+  --shadow-glow:  0 0 30px rgba(154, 122, 10, 0.12);
+  --shadow-card:  0 1px 3px rgba(0,0,0,0.04), 0 6px 16px rgba(0,0,0,0.04);
+
+  /* ── Transitions ─────────────────────────────── */
+  --ease-out:    cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --duration-fast: 150ms;
+  --duration-base: 250ms;
+  --duration-slow: 400ms;
+}
+
+/* ── RESET ──────────────────────────────────────── */
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  font-family: var(--font-body);
+  color: var(--color-text-primary);
+  background: var(--color-bg-primary);
+  line-height: 1.5;
+  overflow-x: hidden;
+}
+
+/* ── SCROLLBAR ──────────────────────────────────── */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: var(--radius-full);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-text-muted);
+}
+
+/* ── FOCUS RING ─────────────────────────────────── */
+:focus-visible {
+  outline: 2px solid var(--color-gold);
+  outline-offset: 2px;
+}
+
+/* ── SELECTION COLOR ────────────────────────────── */
+::selection {
+  background: var(--color-gold-glow);
+  color: var(--color-gold);
+}

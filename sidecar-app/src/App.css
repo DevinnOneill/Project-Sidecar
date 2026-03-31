@@ -1,0 +1,4 @@
+/* App-level layout — minimal, lets pages own their layout */
+#root {
+  min-height: 100vh;
+}

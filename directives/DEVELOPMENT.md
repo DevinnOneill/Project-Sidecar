@@ -88,12 +88,16 @@ See `Gemini.md` Section 8 for the full branch structure. Key rules:
 
 ## 6. File Size Discipline
 
+> **Amended 2026-03-29:** Targets updated to reflect workspace.html consolidation. The primary work surface is a single-file SPA that replaced what were previously 3 separate pages.
+
 Phase 1A ships as a flat file bundle transferred via USB or SharePoint. Keep it lean.
 
-- `style.css`: Target < 15KB
-- `app.js`: Target < 50KB (including embedded data)
-- Individual page HTML: Target < 20KB each
-- Total bundle (excluding fonts): Target < 200KB
+- `style.css`: Target < 50KB (Covenant token system + all component styles)
+- `app.js`: Target < 60KB (including embedded synthetic data and SideCarAdapter)
+- `workspace.html`: Target < 80KB (consolidated primary work surface — exception to page target)
+- `landing.html`: Target < 50KB (Intelligence Bar + Smart Pill)
+- Other page HTML: Target < 20KB each (drilldown views)
+- Total bundle (excluding fonts): Target < 400KB
 
 ---
 

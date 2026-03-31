@@ -9,7 +9,7 @@ Navy Personnel Command · NPC Agentic Lab · March 2026
 ## 🚀 New Here? One Command and You're In.
 
 ```bash
-git clone https://github.com/DevinnOneill/Project-Sidecar.git && cd Project-Sidecar && bash scripts/onboard.sh
+git clone https://github.com/matthewcla/SideCar-Concept.git && cd SideCar-Concept && bash scripts/onboard.sh
 ```
 
 **That's it.** Copy-paste the command above, hit Enter, and the onboarding agent walks you through everything:
@@ -103,7 +103,7 @@ These are enforced automatically by git hooks and AI. You don't need to memorize
 ## File Map
 
 ```
-Project-Sidecar/
+SideCar-Concept/
 ├── START_HERE.md ............. 👋 New? Start here
 ├── README.md ................. You are reading this
 ├── ONBOARDING.md ............. The rules + onboarding guide
@@ -188,8 +188,9 @@ Project-Sidecar/
 
 | Content Type | Token | Fallback |
 |---|---|---|
-| Page titles, nav | `var(--font-display)` | Impact |
-| Body text | `var(--font-body)` | Georgia |
+| Main logotype | `var(--font-brand)` | Impact |
+| Page titles, nav | `var(--font-display)` | system-ui, sans-serif |
+| Body text | `var(--font-body)` | system-ui, sans-serif |
 | Numbers, dates, codes | `var(--font-data)` | Consolas |
 
 ---

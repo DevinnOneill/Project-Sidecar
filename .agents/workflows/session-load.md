@@ -1,82 +1,80 @@
 ---
-description: SideCar Session Load Protocol — auto-loads governance directives on session open
+description: SideCar Session Load Protocol — lightweight governance load on session open
 ---
 
-# SideCar — Session Load Protocol
+# SideCar — Session Load Protocol (Pragmatic)
 
-This workflow fires at the start of every development session. It ensures the full Directive Library is loaded and confirmed before any code is written.
+This workflow fires at the start of every development session. It ensures the Directive Library is internalized and constitutional constraints are active before any code is written.
 
-## Step 1: Load Governance Documents (In Order)
+> **Amended 2026-03-29:** Streamlined from full-ceremony model to pragmatic protocol. Constitutional constraints and code standards remain non-negotiable. Ceremony reduced.
 
-Read the following documents in this exact sequence:
+## Step 1: Governance Quick-Load
 
 // turbo-all
 
-1. `WHITE_PAPER.md` — Canonical governance framework
-2. `directives/Gemini.md` — Master Session Brief (your primary authority)
-3. `directives/DEVELOPMENT.md` — Code standards, branch workflow, commit format
-4. `directives/SECURITY.md` — Data boundary law, PII/CUI constraints
-5. `directives/UI-UX.md` — Covenant design system, component specs
-6. `directives/INTEGRATIONS.md` — Adapter layer contracts, data source interfaces
-7. `directives/AUDIT.md` — Verification protocol, halt conditions
-8. `directives/TESTING.md` — Quality gate thresholds, four-dimension scoring
-9. `directives/ONBOARDING.md` — Developer onboarding protocol
-10. `workflow/MODULE-MAP.md` — Module routing table
-11. `lessons/halts.md` — Past halt events
-12. `lessons/patterns.md` — Recurring failure patterns
-13. `lessons/exemplars.md` — High-scoring reference outputs
+On session open, internalize the following governance documents. You do NOT need to read every document on every session — but you must have read them at least once in context and confirm they are loaded.
 
-## Step 2: Confirm Load
+**Always read on first session:**
+1. `docs/VISION.md` — Strategic Concept (AI-Enabled Coaching, Pvol, Legacy Divestment)
+2. `directives/Gemini.md` — Master Session Brief (primary authority)
+3. `directives/UI-UX.md` — Covenant design system
+4. `workflow/MODULE-MAP.md` — Module routing table
 
-After reading all documents, explicitly confirm what was loaded:
+**Internalized as background guardrails (read at least once, then referenced as needed):**
+5. `directives/DEVELOPMENT.md` — Code standards
+6. `directives/SECURITY.md` — Data boundary law
+7. `directives/UX-PATTERNS.md` — Interaction patterns
+8. `directives/INTEGRATIONS.md` — Adapter contracts
+9. `directives/AUDIT.md` — Verification protocol
+10. `directives/TESTING.md` — Quality gate
+11. `directives/ONBOARDING.md` — Developer onboarding
+12. `.agents/workflows/detailer-validation.md` — Holistic UX/CRM Audit Agent
+13. `lessons/halts.md`, `lessons/patterns.md`, `lessons/exemplars.md`
 
-```
-Loaded: WHITE_PAPER.md, Gemini.md, DEVELOPMENT.md, SECURITY.md,
-        UI-UX.md, INTEGRATIONS.md, AUDIT.md, TESTING.md, ONBOARDING.md,
-        MODULE-MAP.md, [N] halts, [N] patterns, [N] exemplars. Ready.
-```
+## Step 2: Confirm Load (One Line)
 
-Do NOT skip this confirmation. It mirrors Governed Development Cycle Step 1.
-
-## Step 3: Conduct Scoping Conversation
-
-Ask the developer all 6 required questions before writing any code:
-
-1. **What is your name?**
-2. **Which module are you working on?** (MOD-LAND, MOD-DET, MOD-PLAC, MOD-ANLYT, MOD-CSS, MOD-JS)
-3. **What is your branch?** (Should follow `dev/[name]/[module-id]-[description]` format)
-4. **What are you working on this session?** (One sentence)
-5. **What type of changes?** (Functionality / UI/UX / Bug Fix / Refactor)
-6. **List the specific changes you plan to make.**
-
-## Step 4: Summarize and Confirm Scope
-
-Summarize the session scope back to the developer:
+After loading, confirm in one line:
 
 ```
-Session Scope Confirmation:
-  Developer:  [Name]
-  Branch:     [Branch name]
-  Module:     [Module ID] → [File]
-  Goal:       [One-sentence task]
-  Change Type: [Type]
-  Planned Changes:
-    1. [Change 1]
-    2. [Change 2]
-    3. [Change 3]
-
-  Edits outside this scope will be flagged. Proceed? (y/n)
+Governance loaded: VISION.md, Gemini.md, UI-UX.md, MODULE-MAP.md + 9 guardrails. [N] halts, [N] patterns, [N] exemplars. Ready.
 ```
 
-Only begin coding after the developer confirms.
+## Step 3: Scope from Context
 
-## Step 5: Route Directives
+Instead of asking 6 formal scoping questions, infer scope from context:
 
-After scope is confirmed, bring the module-specific directives into primary focus per `workflow/MODULE-MAP.md`. All other directives remain loaded as background guardrails.
+1. **Module:** Determine from the user's request and active files which module(s) are in play
+2. **Boundary:** Confirm which files you intend to modify before writing code
+3. **Constraints:** Note which constitutional constraints apply based on MODULE-MAP.md
 
-## Enforcement (Hard Blocks)
+If the scope is ambiguous, ask for clarification. If the user's request would cross module boundaries, confirm the expanded scope.
 
-- **DENY** any write to a file outside the declared module boundary. This is a halt.
-- **Cross-module work** requires closing the current session and opening a new one.
-- **On ambiguity:** halt and ask the developer for clarification. Never interpret.
-- **On completion:** produce a boundary confirmation listing every file touched, and generate a session log entry per Gemini.md Section 9 format.
+## Step 4: Execute
+
+- Work within the declared module boundary
+- Reference specific constraint IDs when making design decisions
+- Use Navy terminology naturally (PRD, EAOS, PCS, etc.)
+- Flag scope creep if the user asks to "also fix" something unrelated
+
+## Step 5: Close (For Code-Producing Sessions Only)
+
+After substantive code changes, produce a brief boundary confirmation:
+
+```
+Session close:
+  Files modified: [list]
+  Constraints verified: [relevant C-xx IDs]
+  Cross-module: [yes/no — if yes, which modules]
+```
+
+Session logs in `sessions/` are produced for milestone work (new features, architectural changes). Minor fixes and adjustments do not require formal session logs.
+
+## Enforcement (Still Hard Blocks)
+
+These rules are never relaxed:
+
+- **C-01 through C-14** remain constitutional. Violations halt work.
+- **On ambiguity:** halt and ask. Never interpret.
+- **Adapter pattern (C-09):** All data through SideCarAdapter. No exceptions.
+- **No PII/CUI (C-03):** Synthetic data only in Phase 1A. No exceptions.
+- **PRD semantic lock (C-14):** 5 tier colors used ONLY for PRD urgency. No exceptions.

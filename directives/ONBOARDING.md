@@ -17,7 +17,7 @@ No developer begins production work until three gates are cleared:
 ### Gate 0: Onboarding Agent
 One command — clone and onboard in one shot:
 ```bash
-git clone https://github.com/DevinnOneill/Project-Sidecar.git && cd Project-Sidecar && bash scripts/onboard.sh
+git clone https://github.com/matthewcla/SideCar-Concept.git && cd SideCar-Concept && bash scripts/onboard.sh
 ```
 The onboarding agent walks you through everything: git hooks, branch creation, dependency verification, the 7 rules, and first-run orientation. One-time per clone. If you've already onboarded, it detects the `.onboarded` sentinel and skips.
 

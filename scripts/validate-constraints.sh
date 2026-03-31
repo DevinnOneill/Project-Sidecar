@@ -21,7 +21,7 @@ for FILE in $STAGED_FILES; do
   case "$FILE" in
     *.html|*.js)
       # Check staged content (not working copy) for fetch(
-      MATCHES=$(git diff --cached -U0 "$FILE" 2>/dev/null | grep -n '^\+.*fetch(' | grep -v '^\+\+\+' || true)
+      MATCHES=$(git diff --cached -U0 "$FILE" 2>/dev/null | grep -E -n '^\+.*fetch\(' | grep -v '^\+\+\+' || true)
       if [ -n "$MATCHES" ]; then
         echo ""
         echo "  HALT: C-02 violation in $FILE"
@@ -41,7 +41,7 @@ done
 for FILE in $STAGED_FILES; do
   case "$FILE" in
     *.html|*.js)
-      MATCHES=$(git diff --cached -U0 "$FILE" 2>/dev/null | grep -n '^\+.*\(^import \|^export \)' | grep -v '^\+\+\+' || true)
+      MATCHES=$(git diff --cached -U0 "$FILE" 2>/dev/null | grep -E -n '^\+.*(^import |^export )' | grep -v '^\+\+\+' || true)
       if [ -n "$MATCHES" ]; then
         echo ""
         echo "  HALT: C-01 violation in $FILE"
@@ -61,7 +61,7 @@ for FILE in $STAGED_FILES; do
   case "$FILE" in
     *.css)
       # Check for hex color values in added lines (not in :root context)
-      MATCHES=$(git diff --cached -U0 "$FILE" 2>/dev/null | grep -n '^\+.*#[0-9a-fA-F]\{3,8\}' | grep -v '^\+\+\+' | grep -v ':root' || true)
+      MATCHES=$(git diff --cached -U0 "$FILE" 2>/dev/null | grep -E -n '^\+.*#[0-9a-fA-F]{3,8}' | grep -v '^\+\+\+' | grep -v ':root' || true)
       if [ -n "$MATCHES" ]; then
         echo ""
         echo "  HALT: C-11 violation in $FILE"
@@ -81,7 +81,7 @@ done
 for FILE in $STAGED_FILES; do
   case "$FILE" in
     *.css)
-      MATCHES=$(git diff --cached -U0 "$FILE" 2>/dev/null | grep -n '^\+.*\(@layer\|@container\)' | grep -v '^\+\+\+' || true)
+      MATCHES=$(git diff --cached -U0 "$FILE" 2>/dev/null | grep -E -n '^\+.*(@layer|@container)' | grep -v '^\+\+\+' || true)
       if [ -n "$MATCHES" ]; then
         echo ""
         echo "  HALT: C-04 violation in $FILE"

@@ -76,7 +76,6 @@ function computePRDTier(sailor) {
   const prdDate = typeof sailor.prd === 'string' ? parseDate(sailor.prd) : sailor.prd;
   const monthsRemaining = monthsBetween(today(), prdDate);
 
-  if (monthsRemaining <= 0) return { tier: 'EXPIRED',  color: 'var(--color-prd-escalated)', textColor: 'var(--color-prd-escalated-text)', priority: 0 };
   if (monthsRemaining <= 3) return { tier: 'CRITICAL', color: 'var(--color-prd-red)',       textColor: 'var(--color-prd-red-text)',       priority: 1 };
   if (monthsRemaining <= 6) return { tier: 'URGENT',   color: 'var(--color-prd-yellow)',    textColor: 'var(--color-prd-yellow-text)',    priority: 2 };
   if (monthsRemaining <= 9) return { tier: 'WATCH',    color: 'var(--color-prd-green)',     textColor: 'var(--color-prd-green-text)',     priority: 3 };
@@ -90,7 +89,6 @@ function computePRDTier(sailor) {
  */
 function prdBadgeClass(tier) {
   const map = {
-    'EXPIRED':  'expired',
     'CRITICAL': 'critical',
     'URGENT':   'urgent',
     'WATCH':    'watch',
@@ -123,16 +121,56 @@ var SYNTHETIC_SAILORS = [
 ];
 
 var SYNTHETIC_COMM_LOG = [
+  // Alpha, Aaron — EXPIRED, multiple contacts
   { sailorId: '9999000001', date: '2026-01-10', type: 'phone',  summary: 'Discussed upcoming PCS options. Sailor prefers East Coast.' },
   { sailorId: '9999000001', date: '2025-12-05', type: 'email',  summary: 'Sent assignment cycle timeline and MNA instructions.' },
+  { sailorId: '9999000001', date: '2025-11-15', type: 'phone',  summary: 'Initial PRD counseling. Sailor acknowledged 90-day window.' },
+  { sailorId: '9999000001', date: '2025-10-20', type: 'email',  summary: 'Sent welcome aboard email with detailer contact info and PRD timeline.' },
+
+  // Bravo, Beth — CRITICAL
   { sailorId: '9999000002', date: '2026-03-01', type: 'phone',  summary: 'PRD approaching. Reviewed available billets at NIOC locations.' },
+  { sailorId: '9999000002', date: '2026-02-10', type: 'email',  summary: 'Sent billet listing for E-6 IT positions at shore commands.' },
+  { sailorId: '9999000002', date: '2026-01-15', type: 'note',   summary: 'Sailor submitted MNA preferences — top 3: NIOC MD, NAVSTA Norfolk, SPAWAR SD.' },
+
+  // Charlie, Carlos — URGENT
   { sailorId: '9999000003', date: '2026-02-20', type: 'email',  summary: 'Sailor requested CONUS shore duty. Noted COLO request pending.' },
+  { sailorId: '9999000003', date: '2026-01-28', type: 'phone',  summary: 'Discussed COLO options with spouse at JBAB. Evaluating E-5 CTN billets.' },
+
+  // Delta, Diana — WATCH
+  { sailorId: '9999000004', date: '2026-03-20', type: 'phone',  summary: 'Routine check-in. Sailor satisfied with current assignment.' },
+  { sailorId: '9999000004', date: '2026-02-05', type: 'email',  summary: 'Sailor confirmed intent to reenlist. EAOS extension submitted.' },
+
+  // Echo, Edwin — STABLE
+  { sailorId: '9999000005', date: '2026-02-01', type: 'email',  summary: 'Annual PRD counseling. No action required — PRD 15+ months out.' },
+
+  // Foxtrot, Faye — CRITICAL, multiple contacts
   { sailorId: '9999000006', date: '2026-03-15', type: 'phone',  summary: 'PRD critical. Sailor aware. Awaiting billet match.' },
+  { sailorId: '9999000006', date: '2026-02-28', type: 'email',  summary: 'Sent E-6 CTN billet options: NIOC HI, NIOC GA, NSA TX.' },
+  { sailorId: '9999000006', date: '2026-02-10', type: 'note',   summary: 'Branch head flagged: high-value operator. Prioritize NIOC placement.' },
+
+  // Golf, George — EXPIRED, stale contact
   { sailorId: '9999000007', date: '2025-12-20', type: 'email',  summary: 'PRD expired. Multiple contact attempts. No response.' },
   { sailorId: '9999000007', date: '2026-01-05', type: 'phone',  summary: 'Reached Sailor. Discussed immediate reassignment options.' },
+  { sailorId: '9999000007', date: '2026-01-15', type: 'note',   summary: 'Sailor unresponsive to follow-up. Escalating to command triad.' },
+
+  // Hotel, Helen — CRITICAL
+  { sailorId: '9999000008', date: '2026-03-10', type: 'email',  summary: 'Sent YN E-5 billet options at CONUS shore commands.' },
+  { sailorId: '9999000008', date: '2026-02-22', type: 'phone',  summary: 'Sailor has EFMP dependent — requires Category 4 location.' },
+
+  // India, Ivan — URGENT
+  { sailorId: '9999000009', date: '2026-01-25', type: 'email',  summary: 'Chief requesting shore duty for family reasons. Evaluating.' },
+  { sailorId: '9999000009', date: '2026-02-15', type: 'phone',  summary: 'Discussed E-7 shore billets. Chief prefers mid-Atlantic region.' },
+
+  // Juliet, Jane — EXPIRED
   { sailorId: '9999000010', date: '2026-02-28', type: 'email',  summary: 'PRD next month. Sailor submitted preferences via MNA.' },
-  { sailorId: '9999000004', date: '2026-03-20', type: 'phone',  summary: 'Routine check-in. Sailor satisfied with current assignment.' },
-  { sailorId: '9999000009', date: '2026-01-25', type: 'email',  summary: 'Chief requesting shore duty for family reasons. Evaluating.' }
+  { sailorId: '9999000010', date: '2026-03-05', type: 'phone',  summary: 'Confirmed billet match at NAVSTA Norfolk. Orders pending branch approval.' },
+
+  // Kilo, Kevin — STABLE
+  { sailorId: '9999000011', date: '2026-03-22', type: 'email',  summary: 'Annual counseling email sent. PRD 14 months out. No action needed.' },
+
+  // Lima, Laura — URGENT
+  { sailorId: '9999000012', date: '2026-03-05', type: 'phone',  summary: 'Sailor inquired about cross-rate to IT. Referred to career counselor.' },
+  { sailorId: '9999000012', date: '2026-02-18', type: 'email',  summary: 'Sent CTN E-4 billet listing. Sailor prefers West Coast.' }
 ];
 
 var SYNTHETIC_BILLETS = [
@@ -153,12 +191,194 @@ var SYNTHETIC_BILLETS = [
   { id: 'B015', commandId: 'XXXX4', commandName: 'USS PLACEHOLDER (DDG-00)', rate: 'IT',  payGrade: 'E4', title: 'Network Tech',         filled: false, sailorId: null }
 ];
 
+var SYNTHETIC_FORM_STATUS = [
+  { sailorId: '9999000001', status: 'overdue',  sentDate: '2025-11-01', dueDate: '2025-12-01', receivedDate: null },
+  { sailorId: '9999000002', status: 'received', sentDate: '2026-01-10', dueDate: '2026-02-10', receivedDate: '2026-01-20' },
+  { sailorId: '9999000003', status: 'sent',     sentDate: '2026-02-15', dueDate: '2026-03-15', receivedDate: null },
+  { sailorId: '9999000004', status: 'not_sent', sentDate: null,         dueDate: null,         receivedDate: null },
+  { sailorId: '9999000005', status: 'not_sent', sentDate: null,         dueDate: null,         receivedDate: null },
+  { sailorId: '9999000006', status: 'overdue',  sentDate: '2026-01-15', dueDate: '2026-02-15', receivedDate: null },
+  { sailorId: '9999000007', status: 'overdue',  sentDate: '2025-10-01', dueDate: '2025-11-01', receivedDate: null },
+  { sailorId: '9999000008', status: 'sent',     sentDate: '2026-03-01', dueDate: '2026-04-01', receivedDate: null },
+  { sailorId: '9999000009', status: 'received', sentDate: '2026-01-20', dueDate: '2026-02-20', receivedDate: '2026-02-10' },
+  { sailorId: '9999000010', status: 'received', sentDate: '2026-02-01', dueDate: '2026-03-01', receivedDate: '2026-02-25' },
+  { sailorId: '9999000011', status: 'not_sent', sentDate: null,         dueDate: null,         receivedDate: null },
+  { sailorId: '9999000012', status: 'sent',     sentDate: '2026-02-25', dueDate: '2026-03-25', receivedDate: null }
+];
+
+var DISMISSED_NOTIFICATION_IDS = [];
+
+/**
+ * Generate current-week appointment data dynamically.
+ * Appointments are always relative to "today" so the calendar always has data.
+ */
+var SYNTHETIC_APPOINTMENTS = (function() {
+  var now = today();
+  var dayOfWeek = now.getDay(); // 0=Sun, 1=Mon, ..., 5=Fri, 6=Sat
+  // Find Monday of this week
+  var monday = new Date(now);
+  monday.setDate(now.getDate() - (dayOfWeek === 0 ? 6 : dayOfWeek - 1));
+
+  function weekday(offset) {
+    var d = new Date(monday);
+    d.setDate(monday.getDate() + offset);
+    return formatDate(d);
+  }
+
+  return [
+    // Monday (offset 0) — 3 appointments
+    { id: 'APT-001', sailorId: '9999000001', date: weekday(0), time: '0830', duration: 30, type: 'phone',     reason: 'PRD expired — discuss immediate reassignment options' },
+    { id: 'APT-002', sailorId: '9999000007', date: weekday(0), time: '1000', duration: 30, type: 'phone',     reason: 'Follow-up on escalation to command triad' },
+    { id: 'APT-003', sailorId: '9999000002', date: weekday(0), time: '1400', duration: 45, type: 'video',     reason: 'Review E-6 IT billet options at NIOC locations' },
+
+    // Tuesday (offset 1) — 4 appointments
+    { id: 'APT-004', sailorId: '9999000003', date: weekday(1), time: '0900', duration: 30, type: 'phone',     reason: 'COLO request update — spouse orders to JBAB confirmed' },
+    { id: 'APT-005', sailorId: '9999000006', date: weekday(1), time: '1030', duration: 45, type: 'video',     reason: 'PRD critical — finalize billet selection (NIOC HI vs GA)' },
+    { id: 'APT-006', sailorId: '9999000008', date: weekday(1), time: '1300', duration: 30, type: 'phone',     reason: 'EFMP Category 4 location verification' },
+    { id: 'APT-007', sailorId: '9999000012', date: weekday(1), time: '1500', duration: 30, type: 'in-person', reason: 'Walk-in: cross-rate to IT inquiry follow-up' },
+
+    // Wednesday (offset 2) — 4 appointments
+    { id: 'APT-008', sailorId: '9999000010', date: weekday(2), time: '0900', duration: 30, type: 'phone',     reason: 'Confirm NAVSTA Norfolk billet match — orders pending' },
+    { id: 'APT-009', sailorId: '9999000009', date: weekday(2), time: '1100', duration: 45, type: 'video',     reason: 'E-7 shore duty review — mid-Atlantic region billets' },
+    { id: 'APT-010', sailorId: '9999000004', date: weekday(2), time: '1330', duration: 30, type: 'phone',     reason: 'Routine check-in — reenlistment extension status' },
+    { id: 'APT-011', sailorId: '9999000001', date: weekday(2), time: '1500', duration: 30, type: 'phone',     reason: 'Second contact attempt — PCS timeline coordination' },
+
+    // Thursday (offset 3) — 4 appointments
+    { id: 'APT-012', sailorId: '9999000005', date: weekday(3), time: '0830', duration: 30, type: 'phone',     reason: 'Annual PRD counseling — stable, no action needed' },
+    { id: 'APT-013', sailorId: '9999000006', date: weekday(3), time: '1000', duration: 30, type: 'video',     reason: 'Branch head coordination — high-value operator placement' },
+    { id: 'APT-014', sailorId: '9999000011', date: weekday(3), time: '1300', duration: 30, type: 'phone',     reason: 'Annual counseling follow-up — PRD window briefing' },
+    { id: 'APT-015', sailorId: '9999000003', date: weekday(3), time: '1530', duration: 45, type: 'in-person', reason: 'In-person COLO coordination with spouse detailer' },
+
+    // Friday (offset 4) — 3 appointments
+    { id: 'APT-016', sailorId: '9999000002', date: weekday(4), time: '0900', duration: 30, type: 'phone',     reason: 'PRD window final review — orders submission deadline' },
+    { id: 'APT-017', sailorId: '9999000009', date: weekday(4), time: '1100', duration: 45, type: 'video',     reason: 'Chief community manager coordination call' },
+    { id: 'APT-018', sailorId: '9999000007', date: weekday(4), time: '1400', duration: 30, type: 'phone',     reason: 'Escalation resolution — Sailor response received' }
+  ];
+})();
+
+var SYNTHETIC_TEMPLATES = [
+  {
+    id: 'TPL-001',
+    name: 'PRD Window Opening',
+    description: '90-day notice — PRD window is now open',
+    subject: 'PRD Window Opening — {{sailorName}}, {{rate}} {{payGrade}}',
+    body: 'Good morning {{sailorName}},\n\nThis email is to notify you that your Projected Rotation Date (PRD) of {{prd}} is now within the 90-day assignment window. Please be advised:\n\n• Your current command: {{command}}\n• Your rate/grade: {{rate}} {{payGrade}}\n\nI am your assigned detailer and am available to discuss billet options and assignment preferences. Please submit your preference worksheet at your earliest convenience.\n\nI can be reached via phone or email. Please reference your PRD when contacting me.\n\nVery Respectfully,\nPERS-401 Detailer'
+  },
+  {
+    id: 'TPL-002',
+    name: 'PRD Approaching — Action Required',
+    description: '30-day notice — immediate action needed',
+    subject: 'ACTION REQUIRED: PRD Approaching — {{sailorName}}, {{rate}} {{payGrade}}',
+    body: '{{sailorName}},\n\nYour Projected Rotation Date (PRD) of {{prd}} is within 30 days. Orders must be released imminently to ensure a smooth PCS transition.\n\nIf you have not already done so, please:\n1. Submit your billet preference worksheet\n2. Update your contact information\n3. Confirm any COLO/EFMP requirements\n\nCurrent assignment: {{command}}\n\nPlease contact me immediately to finalize your assignment.\n\nVery Respectfully,\nPERS-401 Detailer'
+  },
+  {
+    id: 'TPL-003',
+    name: 'Billet Options Available',
+    description: 'Billet listing for sailor review',
+    subject: 'Billet Options for Review — {{sailorName}}, {{rate}} {{payGrade}}',
+    body: '{{sailorName}},\n\nBased on your rate ({{rate}}) and pay grade ({{payGrade}}), the following billet options are available for your upcoming PCS cycle:\n\n[BILLET LIST - See SideCar workspace for current listings]\n\nPlease review these options and rank your top 3 preferences. Consider the following factors:\n• Sea/Shore rotation requirements\n• Geographic preferences\n• COLO/EFMP requirements (if applicable)\n\nCurrent PRD: {{prd}}\nCurrent Command: {{command}}\n\nPlease respond with your ranked preferences at your earliest convenience.\n\nVery Respectfully,\nPERS-401 Detailer'
+  },
+  {
+    id: 'TPL-004',
+    name: 'COLO/EFMP Request Acknowledgment',
+    description: 'Acknowledge receipt of co-location or EFMP request',
+    subject: 'COLO/EFMP Request Received — {{sailorName}}, {{rate}} {{payGrade}}',
+    body: '{{sailorName}},\n\nThis email confirms receipt of your co-location (COLO) and/or Exceptional Family Member Program (EFMP) request.\n\nI am reviewing your request against available billets that meet the specified requirements. Please ensure your EFMP documentation is current in NSIPS.\n\nSailor: {{sailorName}}\nRate/Grade: {{rate}} {{payGrade}}\nCurrent Command: {{command}}\nPRD: {{prd}}\n\nI will follow up within 5 business days with available options that accommodate your request.\n\nVery Respectfully,\nPERS-401 Detailer'
+  },
+  {
+    id: 'TPL-005',
+    name: 'Order Modification Status Update',
+    description: 'Status update on pending order modifications',
+    subject: 'Order Modification Status — {{sailorName}}, {{rate}} {{payGrade}}',
+    body: '{{sailorName}},\n\nThis email is to provide a status update regarding your pending order modification request.\n\nSailor: {{sailorName}}\nRate/Grade: {{rate}} {{payGrade}}\nCurrent Command: {{command}}\nPRD: {{prd}}\n\n[STATUS UPDATE]\n\nPlease contact me if you have any questions regarding this modification.\n\nVery Respectfully,\nPERS-401 Detailer'
+  }
+];
+
+var SYNTHETIC_FORM_RESPONSES = [
+  {
+    sailorId: '9999000002',
+    formType: 'prd_preferences',
+    submittedDate: '2026-01-20',
+    billetChoices: [
+      { rank: 1, billet: 'ISSM', command: 'NIOC Maryland', location: 'Fort Meade, MD' },
+      { rank: 2, billet: 'Network Chief', command: 'NAVSTA Norfolk', location: 'Norfolk, VA' },
+      { rank: 3, billet: 'ISSM', command: 'SPAWAR San Diego', location: 'San Diego, CA' }
+    ],
+    geoPreference: 'East Coast preferred, will accept West Coast',
+    seaShore: 'Shore duty requested (completing sea tour)',
+    coloStatus: { requested: false, spouseInfo: null },
+    efmpStatus: { enrolled: false, category: null },
+    specialCircumstances: 'None'
+  },
+  {
+    sailorId: '9999000009',
+    formType: 'prd_preferences',
+    submittedDate: '2026-02-10',
+    billetChoices: [
+      { rank: 1, billet: 'Senior Enlisted Advisor', command: 'NSA Washington', location: 'Washington, DC' },
+      { rank: 2, billet: 'Division Chief', command: 'NIOC Georgia', location: 'Fort Gordon, GA' },
+      { rank: 3, billet: 'CND Department Chief', command: 'NIOC Hawaii', location: 'Pearl Harbor, HI' }
+    ],
+    geoPreference: 'Mid-Atlantic strongly preferred for family stability',
+    seaShore: 'Shore duty (completing second sea tour)',
+    coloStatus: { requested: true, spouseInfo: 'Spouse AD Navy YN1, currently JBAB' },
+    efmpStatus: { enrolled: true, category: 'Category 3 — dependent requires specialty care' },
+    specialCircumstances: 'Request proximity to Walter Reed for dependent medical care'
+  },
+  {
+    sailorId: '9999000010',
+    formType: 'prd_preferences',
+    submittedDate: '2026-02-25',
+    billetChoices: [
+      { rank: 1, billet: 'Systems Admin', command: 'NAVSTA Norfolk', location: 'Norfolk, VA' },
+      { rank: 2, billet: 'LAN Admin', command: 'NAVSTA Mayport', location: 'Mayport, FL' },
+      { rank: 3, billet: 'IT Helpdesk Lead', command: 'NAVSTA Rota', location: 'Rota, Spain' }
+    ],
+    geoPreference: 'Southeast US, open to OCONUS',
+    seaShore: 'Shore duty requested',
+    coloStatus: { requested: false, spouseInfo: null },
+    efmpStatus: { enrolled: false, category: null },
+    specialCircumstances: 'Interested in overseas accompanied tour'
+  }
+];
+
+
 var SYNTHETIC_COMMANDS = [
   { id: 'XXXXX', name: 'USS EXAMPLE (CVN-00)',     type: 'Sea',   homeport: 'Testport, VA',  billetCount: 3 },
   { id: 'XXXX1', name: 'NAVSTA TESTPORT',          type: 'Shore', homeport: 'Testport, VA',  billetCount: 3 },
   { id: 'XXXX2', name: 'NIOC DEMO',                type: 'Shore', homeport: 'Demoville, MD', billetCount: 4 },
   { id: 'XXXX3', name: 'COMNAVPERSCOM HQ',         type: 'Shore', homeport: 'Millington, TN', billetCount: 2 },
   { id: 'XXXX4', name: 'USS PLACEHOLDER (DDG-00)', type: 'Sea',   homeport: 'Testport, VA',  billetCount: 3 }
+];
+
+/* -----------------------------------------------------------
+   SYNTHETIC ORDER STATUS (WFL-003)
+   6-stage pipeline: Preference Collection → Billet Matching →
+   Slate Review → Order Drafted → Order Approved → Orders Issued
+   ----------------------------------------------------------- */
+
+var PIPELINE_STAGES = [
+  { key: 'pref_collection', label: 'Prefs', fullLabel: 'Preference Collection' },
+  { key: 'billet_matching', label: 'Match', fullLabel: 'Billet Matching' },
+  { key: 'slate_review',    label: 'Slate', fullLabel: 'Slate Review' },
+  { key: 'order_drafted',   label: 'Draft', fullLabel: 'Order Drafted' },
+  { key: 'order_approved',  label: 'Appvd', fullLabel: 'Order Approved' },
+  { key: 'orders_issued',   label: 'Issued', fullLabel: 'Orders Issued' }
+];
+
+var SYNTHETIC_ORDER_STATUS = [
+  { sailorId: '9999000001', currentStage: 'billet_matching', stageDate: '2026-02-01', blockers: 'Awaiting sailor preference update' },
+  { sailorId: '9999000002', currentStage: 'slate_review',    stageDate: '2026-03-10', blockers: null },
+  { sailorId: '9999000003', currentStage: 'pref_collection', stageDate: '2026-02-20', blockers: 'COLO request pending spouse orders' },
+  { sailorId: '9999000004', currentStage: 'pref_collection', stageDate: '2026-03-15', blockers: null },
+  { sailorId: '9999000005', currentStage: 'pref_collection', stageDate: '2026-03-01', blockers: null },
+  { sailorId: '9999000006', currentStage: 'order_drafted',   stageDate: '2026-03-20', blockers: null },
+  { sailorId: '9999000007', currentStage: 'billet_matching', stageDate: '2026-01-20', blockers: 'No available E-4 IT billets' },
+  { sailorId: '9999000008', currentStage: 'pref_collection', stageDate: '2026-03-05', blockers: 'EFMP location restriction' },
+  { sailorId: '9999000009', currentStage: 'order_approved',  stageDate: '2026-03-18', blockers: null },
+  { sailorId: '9999000010', currentStage: 'orders_issued',   stageDate: '2026-03-22', blockers: null },
+  { sailorId: '9999000011', currentStage: 'pref_collection', stageDate: '2026-03-25', blockers: null },
+  { sailorId: '9999000012', currentStage: 'billet_matching', stageDate: '2026-03-08', blockers: null }
 ];
 
 /* -----------------------------------------------------------
@@ -258,6 +478,271 @@ var SideCarAdapter = {
   },
 
   /**
+   * Get form/preference intake status for a Sailor.
+   * @param {string} sailorId
+   * @returns {Promise<Object|null>}
+   */
+  getFormStatus: function(sailorId) {
+    var record = SYNTHETIC_FORM_STATUS.find(function(f) { return f.sailorId === sailorId; });
+    return Promise.resolve(record || null);
+  },
+
+  /**
+   * Get all form statuses.
+   * @returns {Promise<Array>}
+   */
+  getAllFormStatuses: function() {
+    return Promise.resolve(SYNTHETIC_FORM_STATUS.slice());
+  },
+
+  /**
+   * Get computed notifications for the Action Center.
+   * Notifications are generated dynamically from current data state.
+   * @returns {Promise<Array>}
+   */
+  getNotifications: function() {
+    var notifications = [];
+    var now = today();
+    var idCounter = 0;
+
+    for (var i = 0; i < SYNTHETIC_SAILORS.length; i++) {
+      var s = SYNTHETIC_SAILORS[i];
+      var prd = computePRDTier(s);
+      var prdDate = parseDate(s.prd);
+      var mo = monthsBetween(now, prdDate);
+      var contactDays = Math.floor((now.getTime() - parseDate(s.lastContact).getTime()) / (1000 * 60 * 60 * 24));
+
+      // PRD-based notifications
+      if (prd.tier === 'CRITICAL') {
+        notifications.push({
+          id: 'n-' + (idCounter++),
+          type: 'prd_critical',
+          priority: 1,
+          icon: '<svg class="svg-icon svg-icon--md svg-icon--critical"><use href="#icon-alert"></use></svg>',
+          title: 'PRD CRITICAL',
+          message: s.lastName + ', ' + s.firstName + ' (' + s.rate + ' ' + s.payGrade + ') — PRD in ' + mo + ' month(s). Orders required.',
+          sailorId: s.id,
+          date: s.prd
+        });
+      }
+
+      // Stale contact notifications (> 30 days)
+      if (contactDays > 30) {
+        notifications.push({
+          id: 'n-' + (idCounter++),
+          type: 'stale_contact',
+          priority: 2,
+          icon: '<svg class="svg-icon svg-icon--md svg-icon--critical"><use href="#icon-phone-stale"></use></svg>',
+          title: 'CONTACT STALE',
+          message: s.lastName + ', ' + s.firstName + ' — Last contact ' + contactDays + ' days ago. Follow-up recommended.',
+          sailorId: s.id,
+          date: s.lastContact
+        });
+      }
+
+      // Form overdue notifications
+      var form = SYNTHETIC_FORM_STATUS.find(function(f) { return f.sailorId === s.id; });
+      if (form && form.status === 'overdue') {
+        notifications.push({
+          id: 'n-' + (idCounter++),
+          type: 'form_overdue',
+          priority: 1,
+          icon: '<svg class="svg-icon svg-icon--md svg-icon--urgent"><use href="#icon-warning"></use></svg>',
+          title: 'PREFS OVERDUE',
+          message: s.lastName + ', ' + s.firstName + ' — Preference form sent ' + form.sentDate + ', due ' + form.dueDate + '. No response received.',
+          sailorId: s.id,
+          date: form.dueDate
+        });
+      }
+    }
+
+    // Sort by priority then date
+    notifications.sort(function(a, b) {
+      if (a.priority !== b.priority) return a.priority - b.priority;
+      return new Date(a.date) - new Date(b.date);
+    });
+
+    // Filter out dismissed
+    notifications = notifications.filter(function(n) {
+      return DISMISSED_NOTIFICATION_IDS.indexOf(n.id) === -1;
+    });
+
+    return Promise.resolve(notifications);
+  },
+
+  /**
+   * Dismiss a notification by ID.
+   * @param {string} notificationId
+   * @returns {Promise<void>}
+   */
+  dismissNotification: function(notificationId) {
+    if (DISMISSED_NOTIFICATION_IDS.indexOf(notificationId) === -1) {
+      DISMISSED_NOTIFICATION_IDS.push(notificationId);
+    }
+    return Promise.resolve();
+  },
+
+  /**
+   * Get appointments within a date range, enriched with sailor data.
+   * @param {Object} dateRange - { start: 'YYYY-MM-DD', end: 'YYYY-MM-DD' }
+   * @returns {Promise<Array>}
+   */
+  getAppointments: function(dateRange) {
+    var results = SYNTHETIC_APPOINTMENTS.filter(function(a) {
+      return a.date >= dateRange.start && a.date <= dateRange.end;
+    });
+    // Enrich with sailor info
+    var enriched = results.map(function(a) {
+      var sailor = SYNTHETIC_SAILORS.find(function(s) { return s.id === a.sailorId; });
+      return {
+        id: a.id,
+        sailorId: a.sailorId,
+        date: a.date,
+        time: a.time,
+        duration: a.duration,
+        type: a.type,
+        reason: a.reason,
+        sailor: sailor ? {
+          lastName: sailor.lastName,
+          firstName: sailor.firstName,
+          rate: sailor.rate,
+          payGrade: sailor.payGrade,
+          command: sailor.command,
+          prd: sailor.prd,
+          eaos: sailor.eaos
+        } : null
+      };
+    });
+    return Promise.resolve(enriched);
+  },
+
+  /**
+   * Get the detailer's booking link (Phase 1B: Microsoft Bookings).
+   * @returns {Promise<Object>}
+   */
+  getBookingLink: function() {
+    return Promise.resolve({
+      url: 'https://outlook.office365.com/bes2/bookings/s/PERS401-Detailer/schedule',
+      label: 'PERS-401 Detailer Booking Page'
+    });
+  },
+
+  /**
+   * Get all email templates.
+   * @returns {Promise<Array>}
+   */
+  getTemplates: function() {
+    return Promise.resolve(SYNTHETIC_TEMPLATES.slice());
+  },
+
+  /**
+   * Send a form link to a Sailor. Updates synthetic status.
+   * @param {string} sailorId
+   * @param {string} formType - 'prd_preferences' | 'colo_request' | 'efmp_intake' | 'special_circumstances'
+   * @returns {Promise<Object>}
+   */
+  sendFormLink: function(sailorId, formType) {
+    var todayStr = formatDate(today());
+    var dueStr = formatDate(new Date(today().getTime() + 14 * 24 * 60 * 60 * 1000));
+    // Update or create form status entry
+    var existing = SYNTHETIC_FORM_STATUS.find(function(f) { return f.sailorId === sailorId; });
+    if (existing) {
+      existing.status = 'sent';
+      existing.sentDate = todayStr;
+      existing.dueDate = dueStr;
+      existing.receivedDate = null;
+    } else {
+      SYNTHETIC_FORM_STATUS.push({
+        sailorId: sailorId,
+        status: 'sent',
+        sentDate: todayStr,
+        dueDate: dueStr,
+        receivedDate: null
+      });
+    }
+    return Promise.resolve({
+      sent: true,
+      formType: formType,
+      formUrl: 'https://forms.office.com/Pages/ResponsePage.aspx?id=PERS401_' + formType
+    });
+  },
+
+  /**
+   * Get form responses / preference data for a Sailor.
+   * @param {string} sailorId
+   * @returns {Promise<Object|null>}
+   */
+  getFormResponses: function(sailorId) {
+    var response = SYNTHETIC_FORM_RESPONSES.find(function(r) { return r.sailorId === sailorId; });
+    return Promise.resolve(response || null);
+  },
+
+  /**
+   * Compute escalations from compound risk factors.
+   * Escalation triggers:
+   *   - PRD CRITICAL + no contact >30d
+   *   - PRD CRITICAL + form overdue
+   * @returns {Promise<Array>}
+   */
+  getEscalations: function() {
+    var now = today();
+    var escalations = [];
+    for (var i = 0; i < SYNTHETIC_SAILORS.length; i++) {
+      var sailor = SYNTHETIC_SAILORS[i];
+      var prd = computePRDTier(sailor);
+      var contactDate = parseDate(sailor.lastContact);
+      var daysSinceContact = Math.floor((now.getTime() - contactDate.getTime()) / (1000 * 60 * 60 * 24));
+      var formEntry = SYNTHETIC_FORM_STATUS.find(function(f) { return f.sailorId === sailor.id; });
+      var formOverdue = formEntry && formEntry.status === 'overdue';
+      var reasons = [];
+
+      if (prd.tier === 'CRITICAL' && daysSinceContact > 30) {
+        reasons.push('PRD critical + no contact >' + daysSinceContact + 'd');
+      }
+      if (prd.tier === 'CRITICAL' && formOverdue) {
+        reasons.push('PRD critical + preference form overdue');
+      }
+
+      if (reasons.length > 0) {
+        escalations.push({
+          sailorId: sailor.id,
+          sailor: sailor,
+          prdTier: prd.tier,
+          daysSinceContact: daysSinceContact,
+          formStatus: formEntry ? formEntry.status : 'not_sent',
+          reasons: reasons,
+          severity: 'critical'
+        });
+      }
+    }
+    // Sort by severity (critical first)
+    escalations.sort(function(a, b) {
+      if (a.severity === 'critical' && b.severity !== 'critical') return -1;
+      if (a.severity !== 'critical' && b.severity === 'critical') return 1;
+      return b.daysSinceContact - a.daysSinceContact;
+    });
+    return Promise.resolve(escalations);
+  },
+
+  /**
+   * Get the assignment workflow status for a Sailor.
+   * @param {string} sailorId
+   * @returns {Promise<Object|null>}
+   */
+  getOrderStatus: function(sailorId) {
+    var status = SYNTHETIC_ORDER_STATUS.find(function(s) { return s.sailorId === sailorId; });
+    return Promise.resolve(status || null);
+  },
+
+  /**
+   * Get all order statuses (batch).
+   * @returns {Promise<Array>}
+   */
+  getAllOrderStatuses: function() {
+    return Promise.resolve(SYNTHETIC_ORDER_STATUS.slice());
+  },
+
+  /**
    * Get the current data mode.
    * @returns {string} 'embedded' | 'csv' | 'api'
    */
@@ -275,7 +760,121 @@ var SideCarAdapter = {
 };
 
 /* -----------------------------------------------------------
-   SECTION 5: NAVIGATION HELPER
+   SECTION 5: HIGH-FIDELITY GRAPHICS ENGINE
+   Pure DOM and Canvas visualizations (Zero Dependencies)
+   ----------------------------------------------------------- */
+
+/**
+ * Render a DOM-based competitiveness bar.
+ * @param {string} containerId - The ID of the container element
+ * @param {number} sailorScore - Current Sailor's score
+ * @param {number} peerAverage - The average score for the peer group
+ */
+function renderCompetitivenessBar(containerId, sailorScore, peerAverage) {
+  var container = document.getElementById(containerId);
+  if (!container) return;
+
+  var maxScore = 100;
+  var sailorPct = Math.min((sailorScore / maxScore) * 100, 100);
+  var peerPct = Math.min((peerAverage / maxScore) * 100, 100);
+
+  // Determine color based on standing
+  var isCompetitive = sailorScore >= peerAverage;
+  var barColor = isCompetitive ? 'var(--color-prd-green-text)' : 'var(--color-prd-yellow-text)';
+
+  var html = '<div style="position: relative; width: 100%; height: 24px; background: var(--color-bg-sunken); border-radius: var(--radius-sm); margin-top: 8px;">';
+  
+  // Peer Average Marker
+  html += '<div style="position: absolute; left: ' + peerPct + '%; top: -4px; bottom: -4px; width: 2px; background: var(--color-text-muted); z-index: 10;" title="Peer Average: ' + peerAverage + '"></div>';
+  
+  // Sailor Bar
+  html += '<div style="position: absolute; left: 0; top: 0; bottom: 0; width: ' + sailorPct + '%; background: ' + barColor + '; border-radius: var(--radius-sm); transition: width 0.5s ease-out;" title="Sailor Score: ' + sailorScore + '"></div>';
+
+  html += '</div>';
+  
+  // Labels
+  html += '<div style="display: flex; justify-content: space-between; margin-top: 4px; font-family: var(--font-data); font-size: 0.75rem; color: var(--color-text-muted);">';
+  html += '<span>Score: <strong style="color: var(--color-text-primary);">' + sailorScore + '</strong></span>';
+  html += '<span>Peer Avg: ' + peerAverage + '</span>';
+  html += '</div>';
+
+  container.innerHTML = html;
+}
+
+/**
+ * Render a Canvas-based Pvol Radar Chart.
+ * @param {string} canvasId
+ * @param {Array<number>} currentQuals - Array of 5 values (0-100)
+ * @param {Array<number>} targetQuals - Array of 5 target values (0-100)
+ */
+function renderPvolRadarChart(canvasId, currentQuals, targetQuals) {
+  var canvas = document.getElementById(canvasId);
+  if (!canvas) return;
+  var ctx = canvas.getContext('2d');
+  var width = canvas.width;
+  var height = canvas.height;
+  var centerX = width / 2;
+  var centerY = height / 2;
+  var radius = Math.min(centerX, centerY) - 20;
+
+  ctx.clearRect(0, 0, width, height);
+
+  var numPoints = 5;
+  var angleStep = (Math.PI * 2) / numPoints;
+
+  // Draw background grid
+  ctx.strokeStyle = '#D4CFC7'; // var(--color-border-subtle)
+  ctx.lineWidth = 1;
+  for (var i = 1; i <= 4; i++) {
+    var r = (radius / 4) * i;
+    ctx.beginPath();
+    for (var j = 0; j < numPoints; j++) {
+      var angle = (Math.PI / 2) - (j * angleStep);
+      var x = centerX + r * Math.cos(angle);
+      var y = centerY - r * Math.sin(angle);
+      if (j === 0) ctx.moveTo(x, y);
+      else ctx.lineTo(x, y);
+    }
+    ctx.closePath();
+    ctx.stroke();
+  }
+
+  // Draw axes
+  ctx.beginPath();
+  for (var j = 0; j < numPoints; j++) {
+    var angle = (Math.PI / 2) - (j * angleStep);
+    ctx.moveTo(centerX, centerY);
+    ctx.lineTo(centerX + radius * Math.cos(angle), centerY - radius * Math.sin(angle));
+  }
+  ctx.stroke();
+
+  function drawPoly(data, fillColor, strokeColor) {
+    ctx.beginPath();
+    for (var j = 0; j < numPoints; j++) {
+      var angle = (Math.PI / 2) - (j * angleStep);
+      var r = radius * (data[j] / 100);
+      var x = centerX + r * Math.cos(angle);
+      var y = centerY - r * Math.sin(angle);
+      if (j === 0) ctx.moveTo(x, y);
+      else ctx.lineTo(x, y);
+    }
+    ctx.closePath();
+    ctx.fillStyle = fillColor;
+    ctx.fill();
+    ctx.strokeStyle = strokeColor;
+    ctx.lineWidth = 2;
+    ctx.stroke();
+  }
+
+  // Target Quals Poly
+  drawPoly(targetQuals, 'rgba(154, 122, 10, 0.1)', '#9A7A0A'); // Yellow (Pvol Target)
+
+  // Current Quals Poly
+  drawPoly(currentQuals, 'rgba(26, 122, 62, 0.2)', '#1A7A3E'); // Green (Current)
+}
+
+/* -----------------------------------------------------------
+   SECTION 6: NAVIGATION HELPER
    ----------------------------------------------------------- */
 
 /**

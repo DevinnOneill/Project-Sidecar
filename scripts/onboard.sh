@@ -87,7 +87,7 @@ if [ ! -d .git ]; then
   echo ""
   echo -e "  ${RED}ERROR:${RESET} This doesn't appear to be a git repository."
   echo "  Make sure you've cloned the repo first:"
-  echo -e "    ${DIM}git clone https://github.com/DevinnOneill/Project-Sidecar.git${RESET}"
+  echo -e "    ${DIM}git clone https://github.com/matthewcla/SideCar-Concept.git${RESET}"
   echo ""
   exit 1
 fi
@@ -97,7 +97,7 @@ if [ ! -f WHITE_PAPER.md ] || [ ! -d directives ] || [ ! -d app ]; then
   echo ""
   echo -e "  ${RED}ERROR:${RESET} Project structure doesn't look right."
   echo "  Expected WHITE_PAPER.md, directives/, and app/ in the project root."
-  echo "  Make sure you're in the Project-Sidecar directory."
+  echo "  Make sure you're in the SideCar-Concept directory."
   echo ""
   exit 1
 fi
@@ -249,7 +249,7 @@ fi
 
 # ── Step 3: Verify font files ─────────────────────────────────
 FONTS_OK=true
-REQUIRED_FONTS=("BebasNeue" "LibreBaskerville" "DMMono")
+REQUIRED_FONTS=("Verdana" "DMMono")
 MISSING_FONTS=""
 
 for FONT in "${REQUIRED_FONTS[@]}"; do
@@ -260,7 +260,7 @@ for FONT in "${REQUIRED_FONTS[@]}"; do
 done
 
 if [ "$FONTS_OK" = true ]; then
-  print_check "Verified fonts: Bebas Neue, Libre Baskerville, DM Mono" "These are the official SideCar typefaces"
+  print_check "Verified fonts: Verdana, DM Mono" "These are the official SideCar typefaces"
 else
   print_fail "Font files not found:${MISSING_FONTS}" "Non-blocking — SideCar uses system fallback fonts"
 fi

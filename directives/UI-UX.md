@@ -89,38 +89,40 @@ SideCar uses exactly three fonts. Each has a single defined role. Using the wron
 
 | Font | Token | Role | Used For | NEVER Used For |
 |---|---|---|---|---|
-| Bebas Neue | `--font-display` | Display | Page titles, section headers, stat callout numbers | Dropdown options, form fields, body copy, anything below 18px |
-| Libre Baskerville | `--font-body` | Body / Narrative | Problem statement copy, comm log summaries, notes, paragraphs | Data table cells, numeric fields, code, labels, navigation |
-| DM Mono | `--font-data` | Data / UI | All table cells, filter inputs, chip labels, nav links, badge text, timestamps | Long-form narrative paragraphs |
+| Verdana | `--font-brand`, `--font-display`, `--font-body` | Primary UI & Branding | All page titles, headers, narrative copy, UI inputs, sub-text, brand logotypes | Numeric stat lockups |
+| DM Mono | `--font-data` | Data / Meta | All table cells, filter inputs, chip labels, nav links, badge text, timestamps | Long-form narrative paragraphs |
 
 ### Type Scale Tokens
 
 ```css
 :root {
-  /* ── DISPLAY (Bebas Neue) ────────── */
+  /* ── BRANDING (Verdana) ──────── */
+  --type-brand-logotype: 80px;  /* SIDECAR logo */
+
+  /* ── DISPLAY (Verdana) ────────────── */
   --type-display-xl:  48px;   /* Hero stat numbers, page heroes */
   --type-display-lg:  36px;   /* Page section titles */
   --type-display-md:  28px;   /* Card titles, sub-section heads */
-  --type-display-sm:  22px;   /* Widget labels */
+  --type-display-sm:  24px;   /* Mixed-case Hero Cards */
 
-  /* ── BODY (Libre Baskerville) ───── */
-  --type-body-lg:     18px;   /* Lead paragraphs */
-  --type-body-md:     15px;   /* Standard body copy */
-  --type-body-sm:     13px;   /* Captions, footnotes */
+  /* ── BODY (Verdana) ───────────────── */
+  --type-body-lg:     20px;   /* Lead paragraphs */
+  --type-body-md:     18px;   /* Primary inputs, search text, labels */
+  --type-body-sm:     16px;   /* Minimum readable body copy */
 
   /* ── DATA (DM Mono) ─────────────── */
-  --type-data-xl:     16px;   /* Large callout values */
-  --type-data-md:     14px;   /* Table cells, field values */
-  --type-data-sm:     12px;   /* Metadata, timestamps */
-  --type-data-xs:     11px;   /* Chip labels, badge text, nav */
+  --type-data-xl:     20px;   /* Large callout values */
+  --type-data-md:     18px;   /* Target interactive text size */
+  --type-data-sm:     16px;   /* Standard table values */
+  --type-data-xs:     16px;   /* ABSOLUTE DATA FLOOR: badges, metadata */
 
   /* ── LINE HEIGHTS ───────────────── */
   --leading-tight:    1.1;    /* Display only */
   --leading-normal:   1.5;    /* Body copy */
-  --leading-data:     1.4;    /* Table rows */
+  --leading-data:     1.5;    /* Table rows */
 
   /* ── LETTER SPACING ─────────────── */
-  --tracking-display: 0.04em; /* Bebas Neue */
+  --tracking-display: 0.04em; /* Display headers */
   --tracking-caps:    0.12em; /* Uppercase data labels */
   --tracking-data:    0.06em; /* DM Mono table cells */
 }
@@ -130,16 +132,15 @@ SideCar uses exactly three fonts. Each has a single defined role. Using the wron
 
 | Rule | Specification |
 |---|---|
-| Bebas Neue minimum size | 18px rendered. Never below this threshold. |
-| Dropdown option text | DM Mono at `--type-data-md` (14px). Never Bebas Neue. |
-| Navigation link labels | DM Mono at `--type-data-xs` (11px), uppercase, `--tracking-caps`. |
-| Table column headers | DM Mono at `--type-data-xs` (11px), uppercase, `--tracking-caps`. |
-| Table cell values | DM Mono at `--type-data-md` (14px), `--tracking-data`. |
-| Comm log entries / notes | Libre Baskerville at `--type-body-md` (15px). |
-| PRD badge labels | DM Mono at `--type-data-xs` (11px), uppercase. |
-| Summary card stat numbers | Bebas Neue at `--type-display-xl` (48px). |
-| Form placeholder text | DM Mono at `--type-data-md`, color `--color-text-dim`. |
-| Data freshness timestamp | DM Mono at `--type-data-xs`, color `--color-text-dim`. |
+| Top-level Hero Titles | Verdana at `--type-display-sm` (24px), `font-weight: 600`, mixed-case. No forced caps. |
+| Dropdown option text | Verdana at `--type-data-md` (18px). |
+| Navigation link labels | DM Mono at `--type-data-xs` (16px), uppercase, `--tracking-caps`. |
+| Table column headers | DM Mono at `--type-data-xs` (16px), uppercase, `--tracking-caps`. |
+| Table cell values | DM Mono at `--type-data-sm` (16px), `--tracking-data`. |
+| Comm log / narrative | Verdana at `--type-body-md` (18px). |
+| PRD badge labels | DM Mono at `--type-data-xs` (16px), uppercase. |
+| Form placeholder text | Verdana at `--type-body-md` (18px), sans-italic. |
+| Data freshness | DM Mono at `--type-data-xs` (16px), color `--color-text-dim`. |
 
 ### Font Loading — Three-Layer Fallback Protocol (C-05)
 
@@ -150,15 +151,17 @@ SideCar uses exactly three fonts. Each has a single defined role. Using the wron
 **Layer 3 — System Font Stack:**
 ```css
 :root {
-  --font-display: 'Bebas Neue', Impact, sans-serif;
-  --font-body:    'Libre Baskerville', Georgia, serif;
+  --font-brand:   'Verdana', sans-serif;
+  --font-display: 'Verdana', sans-serif;
+  --font-body:    'Verdana', sans-serif;
   --font-data:    'DM Mono', 'Courier New', monospace;
 }
 
 /* Activated by .font-fallback class */
 .font-fallback {
-  --font-display: 'Arial Black', Impact, sans-serif;
-  --font-body:    Georgia, 'Times New Roman', serif;
+  --font-brand:   'Arial', sans-serif;
+  --font-display: 'Arial', sans-serif;
+  --font-body:    'Arial', sans-serif;
   --font-data:    'Courier New', Courier, monospace;
 }
 ```
@@ -185,8 +188,7 @@ SideCar uses exactly three fonts. Each has a single defined role. Using the wron
   });
 
   Promise.race([document.fonts.ready, timeout]).then(function () {
-    var ok = document.fonts.check('1em "Bebas Neue"') &&
-             document.fonts.check('1em "Libre Baskerville"') &&
+    var ok = document.fonts.check('1em "Verdana"') &&
              document.fonts.check('1em "DM Mono"');
     if (!ok) fallback('One or more primary fonts failed to load');
   });
@@ -216,7 +218,7 @@ SideCar uses exactly three fonts. Each has a single defined role. Using the wron
   --radius-md:   6px;    /* Cards, panels, dropdowns */
   --radius-lg:   8px;    /* Modals */
   --radius-pill: 100px;  /* Toggle chips, filter pills */
-  /* HARD RULE: No component uses border-radius > 10px except landing cards (16px). */
+  /* HARD RULE: No component uses border-radius > 10px except landing cards (16px) and Universal Search (32px). */
 }
 ```
 
@@ -295,7 +297,7 @@ Status dots occupy column 1 of the Sailor Priority Queue. Red and Escalated dots
 
 ### 6.4 Data Tables
 
-**TABLE RULES:** Tables never have outer drop shadows. Tables never have gradient row backgrounds. Row hover must use `var(--color-bg-overlay)`. Escalated rows receive a full-row background treatment. Column headers are DM Mono, uppercase, `--tracking-caps` — never Bebas Neue.
+**TABLE RULES:** Tables never have outer drop shadows. Tables never have gradient row backgrounds. Row hover must use `var(--color-bg-overlay)`. Escalated rows receive a full-row background treatment. Column headers are DM Mono, uppercase, `--tracking-caps` — never logotype or brand display fonts.
 
 ```css
 .data-table { width:100%; border-collapse:collapse; font-family:var(--font-data); font-size:var(--type-data-md); }
@@ -484,9 +486,10 @@ These prohibitions are constitutional. Any of the following in a delivered artif
 
 | Prohibited | Why |
 |---|---|
-| Inter, Roboto, `system-ui` as primary fonts | Generic. Incompatible with Covenant identity. |
-| Bebas Neue below 18px | Illegible at small sizes. WCAG violation. |
-| Bebas Neue in dropdowns or form fields | Lacks legibility for selection interfaces. |
+| Fonts below 16px (16px Floor Law) | Presbyopia accessibility violation. Micro-copy is unacceptable for the 50-70yo demographic. |
+| Inter / Bebas Neue / Libre Baskerville | Explicitly deprecated in favor of Verdana for improved cross-platform consistency. |
+| `font-style: italic` anywhere | Causes massive sub-pixel rendering blur on standard NMCI monitors. |
+| `text-transform: uppercase` on card titles | Destroys 'bouma' / word-shape predictability for dyslexic users. |
 | Animated or counting-up data values | Implies real-time data. Erodes data freshness trust. |
 | Emoji as content or status indicators | Renders inconsistently across NMCI browser configurations. |
 
@@ -505,6 +508,7 @@ These prohibitions are constitutional. Any of the following in a delivered artif
 
 ## 10. Accessibility Floor
 
+- **16px Typography Floor**: Legally required minimum limit for all operational strings.
 - Color contrast: WCAG AA minimum (4.5:1 for body text, 3:1 for large text)
 - All interactive elements keyboard-navigable
 - Focus indicators visible (2px solid `--color-gold-primary`)
@@ -524,7 +528,7 @@ Data Last Refreshed: 2026-03-27 14:30
 
 - **Source:** `SideCarAdapter.getLastUpdated()`
 - **Font:** `--font-data` (DM Mono)
-- **Size:** `--type-data-xs` (11px)
+- **Size:** `--type-data-xs` (16px)
 - **Color:** `--color-text-dim`
 - **Position:** Topbar, right-aligned
 

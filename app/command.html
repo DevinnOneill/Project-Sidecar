@@ -27,7 +27,7 @@
     }
     .placement-stat__label {
       font-family: var(--font-display);
-      font-size: 0.6875rem;
+      font-size: 1rem;
       text-transform: uppercase;
       letter-spacing: 0.08em;
       color: var(--color-text-muted);
@@ -51,7 +51,7 @@
       padding: var(--space-sm) 0;
       border-bottom: 1px solid var(--color-border-subtle);
       font-family: var(--font-data);
-      font-size: 0.8125rem;
+      font-size: 1rem;
     }
     .rate-row:last-child { border-bottom: none; }
     .rate-row__name { color: var(--color-text-primary); }
@@ -83,18 +83,18 @@
     }
     .action-item__name {
       font-family: var(--font-data);
-      font-size: 0.8125rem;
+      font-size: 1rem;
       color: var(--color-text-primary);
     }
     .action-item__detail {
       font-family: var(--font-body);
-      font-size: 0.75rem;
+      font-size: 1rem;
       color: var(--color-text-muted);
       line-height: 1.5;
     }
     .action-item__command {
       font-family: var(--font-data);
-      font-size: 0.75rem;
+      font-size: 1rem;
       color: var(--color-text-muted);
     }
 
@@ -108,19 +108,19 @@
     .command-risk-row:last-child { border-bottom: none; }
     .command-risk-row__name {
       font-family: var(--font-data);
-      font-size: 0.8125rem;
+      font-size: 1rem;
       color: var(--color-text-primary);
       flex: 1;
     }
     .command-risk-row__pct {
       font-family: var(--font-data);
-      font-size: 0.8125rem;
+      font-size: 1rem;
       min-width: 50px;
       text-align: right;
     }
     .command-risk-row__vacancies {
       font-family: var(--font-data);
-      font-size: 0.75rem;
+      font-size: 1rem;
       color: var(--color-text-muted);
       min-width: 80px;
       text-align: right;
@@ -133,8 +133,8 @@
     <a href="landing.html" class="topbar__brand">SideCar</a>
     <nav class="nav" aria-label="Main navigation">
       <a href="landing.html" class="nav__link">Home</a>
-      <a href="detailer.html" class="nav__link">Dashboard</a>
-      <a href="placement.html" class="nav__link">Placement</a>
+      <a href="workspace.html" class="nav__link">Workspace</a>
+      <a href="command.html" class="nav__link">Command</a>
       <a href="analytics.html" class="nav__link">Analytics</a>
     </nav>
   </header>
@@ -252,7 +252,7 @@
 
         var actionContainer = document.getElementById('actionItems');
         if (actionSailors.length === 0) {
-          actionContainer.innerHTML = '<p style="color:var(--color-text-muted);font-size:0.8125rem;padding:var(--space-sm) 0;">No Sailors in Critical or Expired status.</p>';
+          actionContainer.innerHTML = '<p style="color:var(--color-text-muted);font-size:1rem;padding:var(--space-sm) 0;">No Sailors in Critical or Expired status.</p>';
         } else {
           actionSailors.forEach(function(sailor) {
             var prd = computePRDTier(sailor);

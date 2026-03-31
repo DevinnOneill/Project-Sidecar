@@ -11,7 +11,7 @@
 Copy this, paste it in your terminal, hit Enter:
 
 ```bash
-git clone https://github.com/DevinnOneill/Project-Sidecar.git && cd Project-Sidecar && bash scripts/onboard.sh
+git clone https://github.com/matthewcla/SideCar-Concept.git && cd SideCar-Concept && bash scripts/onboard.sh
 ```
 
 The onboarding agent walks you through everything automatically. It takes about 5 minutes, no experience needed. If you've already onboarded, it detects the `.onboarded` sentinel and skips.

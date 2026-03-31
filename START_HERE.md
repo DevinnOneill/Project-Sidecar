@@ -9,7 +9,7 @@
 Copy this, paste it in your terminal, and hit Enter:
 
 ```bash
-git clone https://github.com/DevinnOneill/Project-Sidecar.git && cd Project-Sidecar && bash scripts/onboard.sh
+git clone https://github.com/matthewcla/SideCar-Concept.git && cd SideCar-Concept && bash scripts/onboard.sh
 ```
 
 **Everything else is automatic.** The onboarding agent walks you through the entire setup — what SideCar is, how the project works, the rules, your workspace, everything. No experience needed. Takes about 5 minutes.

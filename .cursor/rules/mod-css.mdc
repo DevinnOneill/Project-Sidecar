@@ -14,6 +14,6 @@ alwaysApply: false
 Single CSS file with token system. Dark mode only (C-13).
 - All colors via CSS custom properties in :root (C-11)
 - No CSS nesting, @layer, @container (C-04 — NMCI baseline)
-- Typography: Bebas Neue (display), Libre Baskerville (body), DM Mono (data) (C-12)
+- Typography: Verdana (display, body), DM Mono (data) (C-12)
 - PRD colors are semantically locked to urgency tiers (C-14)
 Do NOT modify any app/*.html files or app/app.js from this module.

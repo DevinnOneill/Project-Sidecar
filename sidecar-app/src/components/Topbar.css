@@ -1,0 +1,86 @@
+/* ============================================================
+   TOPBAR — Shared Navigation Bar
+   ============================================================ */
+
+.topbar {
+  display: flex;
+  align-items: center;
+  padding: var(--space-sm) var(--space-xl);
+  background: var(--color-bg-elevated);
+  border-bottom: 1px solid var(--color-border);
+  gap: var(--space-xl);
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+
+.topbar__brand {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 1.125rem;
+  letter-spacing: 0.1em;
+  color: var(--color-text-primary);
+  text-decoration: none;
+  transition: color var(--duration-fast);
+}
+
+.topbar__brand:hover {
+  color: var(--color-gold);
+}
+
+.topbar__bracket {
+  color: var(--color-gold);
+  font-weight: 300;
+}
+
+.topbar__car {
+  color: var(--color-gold);
+}
+
+.topbar__nav {
+  display: flex;
+  gap: var(--space-lg);
+  flex: 1;
+}
+
+.topbar__link {
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--color-text-muted);
+  text-decoration: none;
+  padding: var(--space-sm) 0;
+  border-bottom: 2px solid transparent;
+  transition: all var(--duration-fast);
+}
+
+.topbar__link:hover {
+  color: var(--color-text-primary);
+}
+
+.topbar__link--active {
+  color: var(--color-gold);
+  border-bottom-color: var(--color-gold);
+}
+
+.topbar__meta {
+  display: flex;
+  gap: var(--space-sm);
+  align-items: center;
+}
+
+.topbar__data-mode {
+  font-family: var(--font-data);
+  font-size: 0.625rem;
+  font-weight: 600;
+  color: var(--color-gold);
+  background: var(--color-gold-glow);
+  padding: 2px 8px;
+  border-radius: var(--radius-full);
+  letter-spacing: 0.1em;
+}
+
+.topbar__user {
+  font-family: var(--font-data);
+  font-size: 0.75rem;
+  color: var(--color-text-secondary);
+}

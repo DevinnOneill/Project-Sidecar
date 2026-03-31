@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SideCar — Sailor Record</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .profile-header {
+      background-color: var(--color-bg-surface);
+      border: 1px solid var(--color-border-subtle);
+      border-radius: var(--radius-md);
+      padding: var(--space-xl);
+      margin-bottom: var(--space-xl);
+      display: flex;
+      gap: var(--space-xl);
+      align-items: center;
+    }
+
+    .profile-identity {
+      flex: 1;
+    }
+
+    .profile-identity__name {
+      font-family: var(--font-display);
+      font-size: 2.5rem;
+      font-weight: 600;
+      color: var(--color-text-primary);
+      margin-bottom: var(--space-xs);
+    }
+
+    .profile-identity__meta {
+      font-family: var(--font-data);
+      font-size: 1.125rem;
+      color: var(--color-text-muted);
+    }
+
+    .predictive-coaching-zone {
+      display: flex;
+      gap: var(--space-lg);
+      align-items: center;
+      background-color: var(--color-bg-base);
+      padding: var(--space-lg);
+      border-radius: var(--radius-md);
+      border: 1px solid var(--color-border-default);
+    }
+
+    .predictive-coaching-zone__text {
+      max-width: 280px;
+    }
+
+    .predictive-coaching-zone__title {
+      font-family: var(--font-display);
+      font-size: 1rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--color-earth-500);
+      margin-bottom: var(--space-sm);
+    }
+  </style>
+</head>
+<body>
+  <!-- Topbar -->
+  <header class="topbar">
+    <a href="landing.html" class="topbar__brand">SideCar</a>
+    <nav class="nav" aria-label="Main navigation">
+      <a href="landing.html" class="nav__link">Home</a>
+      <a href="workspace.html" class="nav__link">Workspace</a>
+      <a href="command.html" class="nav__link">Command</a>
+      <a href="analytics.html" class="nav__link">Analytics</a>
+    </nav>
+  </header>
+
+  <main class="page-container">
+    <section class="profile-header">
+      <div class="profile-identity">
+        <div class="profile-identity__name" id="sailorName">Sailor Name</div>
+        <div class="profile-identity__meta" id="sailorMeta">Rate/Grade · Command</div>
+        <div style="margin-top: var(--space-md);">
+          <span class="prd-badge prd-badge--stable" id="sailorPrd">PRD Date</span>
+        </div>
+      </div>
+      
+      <!-- Predictive Coaching Header Zone -->
+      <div class="predictive-coaching-zone">
+        <div class="predictive-coaching-zone__text">
+          <div class="predictive-coaching-zone__title">Pvol Gap Analysis</div>
+          <p class="font-body text-secondary" style="font-size: 0.875rem;">
+            Comparing current active qualifications against structural target requirements for high-priority billets.
+          </p>
+        </div>
+        <!-- High-Fidelity Canvas Target -->
+        <canvas id="pvolGapChart" width="240" height="240"></canvas>
+      </div>
+    </section>
+
+    <!-- Remainder of member profile to be built in subsequent phases -->
+    <section class="card">
+      <div class="ws-empty-state">
+        <h3 class="ws-empty-state__title">Comprehensive Record Loading</h3>
+        <p class="ws-empty-state__desc">Legacy EAIS/OAIS data integration pending Phase 1B adapter connection.</p>
+      </div>
+    </section>
+  </main>
+
+  <script src="app.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Parse URL params for a sailor ID, default to our first synthetic sailor
+      var urlParams = new URLSearchParams(window.location.search);
+      var sailorId = urlParams.get('id') || '9999000001';
+
+      SideCarAdapter.getSailor(sailorId).then(function(sailor) {
+        if (!sailor) return;
+
+        document.getElementById('sailorName').textContent = sailor.lastName + ', ' + sailor.firstName;
+        document.getElementById('sailorMeta').textContent = sailor.rate + ' ' + sailor.payGrade + ' · ' + sailor.command;
+        
+        var prd = computePRDTier(sailor);
+        var prdBadge = document.getElementById('sailorPrd');
+        prdBadge.textContent = prd.tier;
+        prdBadge.className = 'prd-badge prd-badge--' + prdBadgeClass(prd.tier);
+
+        // Render Canvas Analytics
+        // Injecting synthetic mock data to generate the Pvol radar. 
+        // Current vs Target (e.g. Leadership, Tech, Security, Eval, Sea/Shore)
+        var currentQuals = [80, 65, 90, 75, 50]; 
+        var targetQuals = [85, 80, 85, 90, 70];
+        
+        requestAnimationFrame(function() {
+          renderPvolRadarChart('pvolGapChart', currentQuals, targetQuals);
+        });
+      });
+    });
+  </script>
+</body>
+</html>

@@ -174,7 +174,7 @@ Data Last Refreshed: [YYYY-MM-DD HH:MM]
 
 This timestamp must use `SideCarAdapter.getLastUpdated()` and render in:
 - **Font:** `--font-data` (DM Mono)
-- **Size:** `--type-data-xs` (11px)
+- **Size:** `--type-data-xs` (16px)
 - **Color:** `--color-text-dim`
 - **Position:** Topbar, right-aligned
 

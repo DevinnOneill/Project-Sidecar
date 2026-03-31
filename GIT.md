@@ -23,7 +23,7 @@ Nothing skips a stage. Nothing goes backwards.
 One command — clone and onboard in one shot:
 
 ```bash
-git clone https://github.com/DevinnOneill/Project-Sidecar.git && cd Project-Sidecar && bash scripts/onboard.sh
+git clone https://github.com/matthewcla/SideCar-Concept.git && cd SideCar-Concept && bash scripts/onboard.sh
 ```
 
 The onboarding agent automatically:
@@ -155,7 +155,7 @@ A PR is a request to merge your branch into `qa-staging`. Here's how:
 
 ### Option A: GitHub website (easiest)
 
-1. Go to https://github.com/DevinnOneill/Project-Sidecar
+1. Go to https://github.com/matthewcla/SideCar-Concept
 2. You'll see a yellow banner: "dev/abby/mod-det-prd-column had recent pushes"
 3. Click **"Compare & pull request"**
 4. Make sure **base** is set to `qa-staging` (NOT main)
@@ -209,7 +209,7 @@ Once approved, the reviewer clicks "Merge pull request." Your code is now in `qa
 
 ### 4. qa-staging gets merged into main
 
-Only Tier 1 (Devin) can merge from `qa-staging` into `main`. This is the final gate.
+Only Tier 1 (Matthew) can merge from `qa-staging` into `main`. This is the final gate.
 
 ---
 
