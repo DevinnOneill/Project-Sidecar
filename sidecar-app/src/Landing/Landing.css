@@ -368,129 +368,89 @@
   color: var(--color-gold-bright);
 }
 
-/* ── Action Queue ──────────────────────────────── */
-.action-queue {
+/* ── Action List (Inline Queue) ────────────────── */
+.action-list {
   width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
   margin-top: var(--space-md);
 }
 
-.action-queue__header {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  margin-bottom: var(--space-sm);
-  padding: 0 var(--space-xs);
-}
-
-.action-queue__title {
-  font-size: 0.8125rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: var(--color-text-secondary);
-}
-
-.action-queue__count {
-  font-size: 0.6875rem;
-  font-family: var(--font-data);
-  color: var(--color-text-muted);
-}
-
-.action-queue__list {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-
-/* ── Action Card ───────────────────────────────── */
-.action-card {
+.action-tile {
   display: flex;
   align-items: center;
-  gap: var(--space-sm);
-  padding: 10px 14px;
+  justify-content: space-between;
+  padding: 14px 20px;
   background: var(--color-bg-elevated);
   border: 1px solid var(--color-border-subtle);
-  border-radius: var(--radius-sm);
+  border-radius: var(--radius-md);
   cursor: pointer;
-  transition: all var(--duration-fast) var(--ease-out);
-  position: relative;
+  transition: all var(--duration-fast);
+  gap: var(--space-md);
 }
 
-.action-card:hover {
+.action-tile:hover {
   background: var(--color-gold-glow);
   border-color: var(--color-border-gold);
   transform: translateX(2px);
 }
 
-.action-card--urgent {
+.action-tile--urgent {
   border-left: 3px solid var(--color-prd-expired-dot);
 }
 
-.action-card__identity {
+.action-tile__info {
   display: flex;
-  flex-direction: column;
-  gap: 1px;
-  min-width: 120px;
+  align-items: center;
+  gap: 16px;
+  min-width: 250px;
 }
 
-.action-card__name {
-  font-size: 0.8125rem;
+.action-tile__identity {
+  display: flex;
+  flex-direction: column;
+}
+
+.action-tile__name {
+  font-size: 0.9375rem;
   font-weight: 600;
   color: var(--color-text-primary);
   line-height: 1.2;
 }
 
-.action-card__rate {
+.action-tile__rate {
   font-family: var(--font-data);
-  font-size: 0.6875rem;
+  font-size: 0.75rem;
   color: var(--color-text-muted);
+  margin-top: 2px;
 }
 
-.action-card__command {
-  font-size: 0.6875rem;
-  color: var(--color-text-muted);
+.action-tile__command {
   flex: 1;
+  font-size: 0.8125rem;
+  color: var(--color-text-muted);
+  white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  white-space: nowrap;
 }
 
-.action-card__contact {
-  font-family: var(--font-data);
-  font-size: 0.6875rem;
-  font-weight: 600;
-  min-width: 36px;
-  text-align: right;
-}
-
-.contact--healthy  { color: var(--color-prd-stable-text); }
-.contact--aging    { color: var(--color-prd-watch-text); }
-.contact--stale    { color: var(--color-prd-urgent-text); }
-.contact--critical { color: var(--color-prd-expired-text); }
-
-.action-card__pipeline {
-  font-family: var(--font-data);
-  font-size: 0.625rem;
-  color: var(--color-text-muted);
-  background: var(--color-bg-sunken);
-  padding: 2px 6px;
+.action-tile__btn {
+  background: var(--color-bg-primary);
+  border: 1px solid var(--color-border);
   border-radius: var(--radius-sm);
-  min-width: 40px;
-  text-align: center;
+  padding: 6px 12px;
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  white-space: nowrap;
+  transition: all var(--duration-fast);
 }
 
-.action-card__alert {
-  width: 18px;
-  height: 18px;
-  border-radius: 50%;
-  background: var(--color-prd-expired-dot);
-  color: white;
-  font-size: 0.625rem;
-  font-weight: 700;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
+.action-tile:hover .action-tile__btn {
+  color: var(--color-gold);
+  border-color: var(--color-gold);
 }
 
 /* ── PRD Badge ─────────────────────────────────── */
@@ -628,10 +588,6 @@
   .landing__center {
     max-width: 100%;
     padding: 0 var(--space-sm);
-  }
-
-  .action-card__command {
-    display: none;
   }
 
   .hover-card {

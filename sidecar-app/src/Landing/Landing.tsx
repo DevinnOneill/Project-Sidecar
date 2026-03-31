@@ -74,6 +74,14 @@ export default function Landing() {
     setShowResults(true);
   }, []);
 
+  const handleSearchKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      if (results.length > 0) {
+        navigate(`/personnel/${results[0].id}`);
+      }
+    }
+  };
+
   // Hover card
   const handleMouseEnter = (sailor: ISailor, e: React.MouseEvent) => {
     if (hoverTimeout.current) clearTimeout(hoverTimeout.current);
@@ -164,7 +172,10 @@ export default function Landing() {
                 >
                   <button
                     className={`role-selector__option ${role === 'Detailer' ? 'role-selector__option--active' : ''}`}
-                    onClick={() => { setRole('Detailer'); setRoleOpen(false); }}
+                    onClick={() => { 
+                      setRole('Detailer'); 
+                      setRoleOpen(false); 
+                    }}
                   >
                     <div className="role-selector__option-text">
                       <span>Detailer</span>
@@ -204,6 +215,7 @@ export default function Landing() {
             value={query}
             onChange={e => handleSearch(e.target.value)}
             onFocus={() => query.length >= 2 && setShowResults(true)}
+            onKeyDown={handleSearchKeyDown}
           />
 
           {/* Search Results Dropdown */}
@@ -267,65 +279,44 @@ export default function Landing() {
           </Link>
         </motion.div>
 
-        {/* Action Queue — priority work items */}
-        <motion.section
-          className="action-queue"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.4, duration: 0.5 }}
-        >
-          <div className="action-queue__header">
-            <h2 className="action-queue__title">Action Queue</h2>
-            <span className="action-queue__count">{actionItems.length} sailors in portfolio</span>
-          </div>
-
-          <div className="action-queue__list">
+        {/* Detailer Action Queue */}
+        {role === 'Detailer' && (
+          <motion.section 
+            className="action-list"
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.35, duration: 0.5 }}
+          >
             {actionItems.map((item, index) => (
               <motion.div
                 key={item.sailor.id}
-                className={`action-card ${item.prdResult.tier === 'EXPIRED' || item.prdResult.tier === 'CRITICAL' ? 'action-card--urgent' : ''}`}
+                className={`action-tile ${item.prdResult.tier === 'EXPIRED' || item.prdResult.tier === 'CRITICAL' ? 'action-tile--urgent' : ''}`}
                 initial={{ opacity: 0, x: -12 }}
                 animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.45 + index * 0.04, duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+                transition={{ delay: 0.4 + index * 0.05 }}
                 onMouseEnter={(e) => handleMouseEnter(item.sailor, e)}
                 onMouseLeave={handleMouseLeave}
+                onClick={() => navigate(`/personnel/${item.sailor.id}`)}
               >
-                {/* PRD Badge */}
-                <span className={getPrdClass(item.prdResult.tier)}>
-                  {item.prdResult.tier === 'EXPIRED' ? 'EXP' : item.prdResult.label}
-                </span>
-
-                {/* Sailor Identity */}
-                <div className="action-card__identity">
-                  <span className="action-card__name">
-                    {item.sailor.lastName}, {item.sailor.firstName}
+                <div className="action-tile__info">
+                  <span className={getPrdClass(item.prdResult.tier)}>
+                    {item.prdResult.tier === 'EXPIRED' ? 'EXP' : item.prdResult.label}
                   </span>
-                  <span className="action-card__rate">{item.sailor.rate} {item.sailor.payGrade}</span>
+                  <div className="action-tile__identity">
+                    <span className="action-tile__name">{item.sailor.lastName}, {item.sailor.firstName}</span>
+                    <span className="action-tile__rate">{item.sailor.rate} {item.sailor.payGrade}</span>
+                  </div>
                 </div>
+                
+                <span className="action-tile__command">{item.sailor.command}</span>
 
-                {/* Command */}
-                <span className="action-card__command">{item.sailor.command}</span>
-
-                {/* Contact staleness */}
-                <span className={`action-card__contact ${getContactClass(item.contactDays)}`}>
-                  {item.contactDays}d
-                </span>
-
-                {/* Pipeline stage */}
-                <span className="action-card__pipeline">
-                  {item.orderStatus ? getPipelineLabel(item.orderStatus.currentStage) : '—'}
-                </span>
-
-                {/* Alert dot */}
-                {item.notifications.length > 0 && (
-                  <span className="action-card__alert" title={`${item.notifications.length} alert(s)`}>
-                    {item.notifications.length}
-                  </span>
-                )}
+                <button className="action-tile__btn">
+                  View Record
+                </button>
               </motion.div>
             ))}
-          </div>
-        </motion.section>
+          </motion.section>
+        )}
       </main>
 
       {/* Hover Card */}
