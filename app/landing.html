@@ -1792,7 +1792,7 @@
       var sailorId = row.getAttribute('data-sailor-id');
       var uic      = row.getAttribute('data-uic');
       if (sailorId) {
-        window.location.href = 'member.html?sailor=' + encodeURIComponent(sailorId);
+        window.location.href = 'personnel.html?id=' + encodeURIComponent(sailorId);
       } else if (uic) {
         window.location.href = 'command.html?uic=' + encodeURIComponent(uic);
       }
@@ -2357,7 +2357,7 @@
     function getProfileHref(source, row, colKey) {
       if (source === 'sailors') {
         if (colKey === 'lastName' || colKey === 'firstName') {
-          return 'member.html?sailor=' + encodeURIComponent(row._id);
+          return 'personnel.html?id=' + encodeURIComponent(row._id);
         }
         if (colKey === 'command') {
           var uic = row.uic || row._raw && row._raw.uic;
@@ -2375,7 +2375,7 @@
           if (cmdId) return 'command.html?uic=' + encodeURIComponent(cmdId);
         }
         if (colKey === 'title' && row._sailorId) {
-          return 'member.html?sailor=' + encodeURIComponent(row._sailorId);
+          return 'personnel.html?id=' + encodeURIComponent(row._sailorId);
         }
       }
       return null;
@@ -2628,8 +2628,20 @@
 
       /* ── Search execute button (magnifying glass) ── */
       document.getElementById('ib-search-btn').addEventListener('click', function () {
-        var query = document.getElementById('ib-input').value;
-        if (query.trim().length >= MIN_SEARCH_CHARS) {
+        var query = document.getElementById('ib-input').value.trim();
+        
+        /* DOD ID or Exact Name Auto-Router */
+        if (query.length >= MIN_SEARCH_CHARS && state.mode !== 'advanced') {
+          if (/^\d{10}$/.test(query)) {
+             var exactDod = state.sailors.filter(function(s) { return s.id === query; });
+             if (exactDod.length > 0) { window.location.href = 'personnel.html?id=' + exactDod[0].id; return; }
+          }
+          var lowerQuery = query.toLowerCase();
+          var exactNames = state.sailors.filter(function(s) { return (s.lastName + ' ' + s.firstName).toLowerCase() === lowerQuery; });
+          if (exactNames.length === 1) { window.location.href = 'personnel.html?id=' + exactNames[0].id; return; }
+        }
+
+        if (query.length >= MIN_SEARCH_CHARS) {
           if (!state.isActivated) activate();
           renderResults();
         }
@@ -2728,6 +2740,18 @@
         /* Enter → navigate to highlighted or execute search */
         if (e.key === 'Enter' && (document.activeElement === input || state.highlightedIndex >= 0)) {
           e.preventDefault();
+
+          var query = input.value.trim();
+          /* DOD ID or Exact Name Auto-Router */
+          if (query.length >= MIN_SEARCH_CHARS && state.mode !== 'advanced' && state.highlightedIndex < 0) {
+            if (/^\d{10}$/.test(query)) {
+               var exactDod = state.sailors.filter(function(s) { return s.id === query; });
+               if (exactDod.length > 0) { window.location.href = 'personnel.html?id=' + exactDod[0].id; return; }
+            }
+            var lowerQuery = query.toLowerCase();
+            var exactNames = state.sailors.filter(function(s) { return (s.lastName + ' ' + s.firstName).toLowerCase() === lowerQuery; });
+            if (exactNames.length === 1) { window.location.href = 'personnel.html?id=' + exactNames[0].id; return; }
+          }
 
           if (!state.isActivated) {
              activate();
