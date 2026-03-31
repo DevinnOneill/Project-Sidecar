@@ -33,14 +33,15 @@ The top-level summary of the command's operational readiness.
 
 ### B. Billet Pipeline & Gap Forecasting
 A predictive visual model of the command's talent pipeline over time.
-- **Horizon Mapping:** A timeline view showing current onboard talent against Projected Rotation Dates (PRDs) and Estimated Loss Dates (ELDs).
+- **Horizon Mapping:** A timeline view showing current onboard talent against Projected Rotation Dates (PRDs) and Estimated Loss Dates (ELDs). Note that ELDs are enlisted-focused and PRDs stay constant on the enlisted side, whereas for officers, the PRD will change based on officer and command requests.
+- **Manning Waterfall Projection:** A macro-level, time-series visualization forecasting the command's aggregate manning levels (O.BA/E.BA) over the next 12–24 months. It creates a "waterfall" effect by calculating projected losses (expiring PRDs/ELDs) against projected gains (inbound orders with estimated arrival dates), clearly identifying future months where manning drops below operational readiness thresholds.
 - **Critical Vacancies:** A filtered queue of billets that are currently gapped or projected to be gapped within a critical window, sorted by operational impact.
-- **Inbound Tracking:** Visibility on Sailors under orders to the command, their projected arrival dates, and their specific qualification impact on the command's readiness.
+- **Inbound Tracking:** Visibility on Sailors under orders to the command, their projected arrival dates, their specific qualification impact on the command's readiness, and tracking exactly who they are replacing.
 
 ### C. The Authoritative Core (Billet Roster)
 A highly dense, rigorously styled roster of all billets within the command, replacing the legacy Activity Manning Status Listing (AMSL).
 - **Billet Sequence Codes (BSC):** Rendered strictly in `--font-data` DM Mono.
-- **Incumbent Mapping:** Shows the Sailor filling the billet, their PRD, and alignment accuracy (Paygrade, Rate, NEC match).
+- **Incumbent Mapping:** Shows the Sailor filling the billet, their PRD, and alignment accuracy (Paygrade, Rate, NEC match, as well as any specialized officer qualifications required for specific billets across different communities).
 - **Flagged Misalignments:** Instant visual indicators when a Sailor is incorrectly mapped to a billet or lacks the required AQD/NEC.
 
 ### D. The Distribution Action Engine
