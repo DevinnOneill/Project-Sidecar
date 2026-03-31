@@ -1006,8 +1006,14 @@ function renderPvolRadarChart(canvasId, currentQuals, targetQuals) {
   var numPoints = 5;
   var angleStep = (Math.PI * 2) / numPoints;
 
+  // Read design tokens for canvas rendering (C-11)
+  var rootStyles = getComputedStyle(document.documentElement);
+  var borderSubtle = rootStyles.getPropertyValue('--color-border-subtle').trim() || '#D4CFC7';
+  var prdYellowText = rootStyles.getPropertyValue('--color-prd-yellow-text').trim() || '#9A7A0A';
+  var prdGreenText = rootStyles.getPropertyValue('--color-prd-green-text').trim() || '#1A7A3E';
+
   // Draw background grid
-  ctx.strokeStyle = '#D4CFC7'; // var(--color-border-subtle)
+  ctx.strokeStyle = borderSubtle;
   ctx.lineWidth = 1;
   for (var i = 1; i <= 4; i++) {
     var r = (radius / 4) * i;
@@ -1051,10 +1057,10 @@ function renderPvolRadarChart(canvasId, currentQuals, targetQuals) {
   }
 
   // Target Quals Poly
-  drawPoly(targetQuals, 'rgba(154, 122, 10, 0.1)', '#9A7A0A'); // Yellow (Pvol Target)
+  drawPoly(targetQuals, 'rgba(154, 122, 10, 0.1)', prdYellowText);
 
   // Current Quals Poly
-  drawPoly(currentQuals, 'rgba(26, 122, 62, 0.2)', '#1A7A3E'); // Green (Current)
+  drawPoly(currentQuals, 'rgba(26, 122, 62, 0.2)', prdGreenText);
 }
 
 /* -----------------------------------------------------------

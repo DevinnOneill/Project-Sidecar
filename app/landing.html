@@ -5,11 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>SideCar — Intelligence Bar</title>
 
-  <!-- Font Loading — Layer 1: CDN (preferred). Layer 2: local woff2 via style.css @font-face.
-       Layer 3: system stacks in --font-display/body/data declarations. (C-05) -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:ital,wght@0,400&display=swap" rel="stylesheet">
+  <!-- Font Loading — Layer 1: local woff2 via style.css @font-face.
+       Layer 2: system stacks in --font-display/body/data declarations. (C-05, C-07) -->
 
   <!-- Covenant Design System (MOD-CSS — read only) -->
   <link rel="stylesheet" href="style.css?v=3">
@@ -1220,6 +1217,15 @@
     </div>
 
   </div><!-- /ib-composition -->
+
+  <!-- Module Navigation (C-06: every page links to every page) -->
+  <nav class="nav" aria-label="Module navigation" style="justify-content:center; padding:var(--space-sm) 0; gap:var(--space-lg);">
+    <a href="workspace.html" class="nav__link" style="color:var(--color-text-muted);">Workspace</a>
+    <a href="command.html" class="nav__link" style="color:var(--color-text-muted);">Command</a>
+    <a href="detailer.html" class="nav__link" style="color:var(--color-text-muted);">Detailer</a>
+    <a href="placement.html" class="nav__link" style="color:var(--color-text-muted);">Placement</a>
+    <a href="analytics.html" class="nav__link" style="color:var(--color-text-muted);">Analytics</a>
+  </nav>
 
   <!-- ── Results Panel (positioned below composition) ── -->
   <div class="ib-results" id="ib-results" role="region" aria-label="Search results">

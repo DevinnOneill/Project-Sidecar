@@ -9,11 +9,15 @@
 /* --- DESIGN TOKENS --- */
 :root {
   /* --- Backgrounds --- */
+  --color-bg-void:       #FAFAFA;   /* absolute floor — page body background */
   --color-bg-base:       #F4F1EC;   /* warm linen — primary page background */
   --color-bg-surface:    #EDEAE3;   /* warm stone — card/panel surfaces */
   --color-bg-sunken:     #E3DFD7;   /* inset areas, table zebra rows */
   --color-bg-dark:       #1C2B3A;   /* deep navy — header bar, login screen */
   --color-bg-dark-mid:   #243346;   /* slightly lighter navy for panels on dark */
+
+  /* --- Gold Accent --- */
+  --color-gold-primary:  #B39F75;   /* navigation borders, section dividers, key structural labels */
 
   /* --- Navy Primaries --- */
   --color-navy-900:      #0F1B2D;   /* near-black navy */
@@ -90,6 +94,26 @@
 
   /* Topbar */
   --topbar-height: 56px;
+
+  /* Escalation System */
+  --color-escalation:        #dc2626;
+  --color-escalation-light:  #ef4444;
+  --color-text-on-escalation:#FFFFFF;
+
+  /* Staleness Heatmap */
+  --color-stale-fresh-a:     #16a34a;
+  --color-stale-fresh-b:     #22c55e;
+  --color-stale-recent-a:    #65a30d;
+  --color-stale-recent-b:    #84cc16;
+  --color-stale-aging-a:     #ca8a04;
+  --color-stale-aging-b:     #eab308;
+  --color-stale-stale-a:     #ea580c;
+  --color-stale-stale-b:     #f97316;
+  --color-stale-critical-a:  #dc2626;
+  --color-stale-critical-b:  #ef4444;
+
+  /* Misc */
+  --color-video-accent:      #5b8def;
 }
 
 /* --- FONT LOADING (C-05: three-layer fallback) --- */
@@ -1005,7 +1029,7 @@ p {
 }
 
 .cal-nav__btn--today:hover {
-  background-color: var(--color-earth-600, #5a4a3a);
+  background-color: var(--color-earth-700);
 }
 
 /* --- WEEK GRID --- */
@@ -1098,7 +1122,7 @@ p {
 }
 
 .cal-appt--video {
-  border-left-color: #5b8def;
+  border-left-color: var(--color-video-accent);
 }
 
 .cal-appt--in-person {
@@ -1361,7 +1385,7 @@ p {
 }
 
 .cal-prep__action-btn--primary:hover {
-  background-color: var(--color-earth-600, #5a4a3a);
+  background-color: var(--color-earth-700);
 }
 
 /* ============================================================
@@ -1687,7 +1711,7 @@ p {
 
 .escalation-banner {
   margin-bottom: var(--space-lg);
-  border: 2px solid #dc2626;
+  border: 2px solid var(--color-escalation);
   border-radius: var(--radius-md);
   background: linear-gradient(135deg, rgba(220, 38, 38, 0.06) 0%, rgba(220, 38, 38, 0.02) 100%);
   overflow: hidden;
@@ -1713,7 +1737,7 @@ p {
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  color: #dc2626;
+  color: var(--color-escalation);
 }
 
 .escalation-banner__count {
@@ -1753,12 +1777,12 @@ p {
 }
 
 .escalation-card__severity--critical {
-  background: #dc2626;
+  background: var(--color-escalation);
   box-shadow: 0 0 6px rgba(220, 38, 38, 0.5);
 }
 
 .escalation-card__severity--high {
-  background: #ef4444;
+  background: var(--color-escalation-light);
 }
 
 .escalation-card__info {
@@ -1787,9 +1811,9 @@ p {
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  color: #dc2626;
+  color: var(--color-escalation);
   background: transparent;
-  border: 1px solid #dc2626;
+  border: 1px solid var(--color-escalation);
   border-radius: var(--radius-sm);
   padding: var(--space-xs) var(--space-sm);
   cursor: pointer;
@@ -1798,8 +1822,8 @@ p {
 }
 
 .escalation-card__action:hover {
-  background: #dc2626;
-  color: #fff;
+  background: var(--color-escalation);
+  color: var(--color-text-on-escalation);
 }
 
 /* Roster row escalation glow */
@@ -1867,7 +1891,7 @@ p {
   font-family: var(--font-data);
   font-size: 0.875rem;
   font-weight: 700;
-  color: #fff;
+  color: var(--color-text-on-escalation);
   text-shadow: 0 1px 2px rgba(0,0,0,0.3);
 }
 
@@ -1880,11 +1904,11 @@ p {
 }
 
 /* Heatmap band colors */
-.staleness-heatmap__segment--fresh    { background: linear-gradient(135deg, #16a34a, #22c55e); }
-.staleness-heatmap__segment--recent   { background: linear-gradient(135deg, #65a30d, #84cc16); }
-.staleness-heatmap__segment--aging    { background: linear-gradient(135deg, #ca8a04, #eab308); }
-.staleness-heatmap__segment--stale    { background: linear-gradient(135deg, #ea580c, #f97316); }
-.staleness-heatmap__segment--critical { background: linear-gradient(135deg, #dc2626, #ef4444); }
+.staleness-heatmap__segment--fresh    { background: linear-gradient(135deg, var(--color-stale-fresh-a), var(--color-stale-fresh-b)); }
+.staleness-heatmap__segment--recent   { background: linear-gradient(135deg, var(--color-stale-recent-a), var(--color-stale-recent-b)); }
+.staleness-heatmap__segment--aging    { background: linear-gradient(135deg, var(--color-stale-aging-a), var(--color-stale-aging-b)); }
+.staleness-heatmap__segment--stale    { background: linear-gradient(135deg, var(--color-stale-stale-a), var(--color-stale-stale-b)); }
+.staleness-heatmap__segment--critical { background: linear-gradient(135deg, var(--color-stale-critical-a), var(--color-stale-critical-b)); }
 
 .staleness-heatmap__legend {
   display: flex;
@@ -1914,11 +1938,11 @@ p {
   flex-shrink: 0;
 }
 
-.staleness-heatmap__legend-dot--fresh    { background: #22c55e; }
-.staleness-heatmap__legend-dot--recent   { background: #84cc16; }
-.staleness-heatmap__legend-dot--aging    { background: #eab308; }
-.staleness-heatmap__legend-dot--stale    { background: #f97316; }
-.staleness-heatmap__legend-dot--critical { background: #ef4444; }
+.staleness-heatmap__legend-dot--fresh    { background: var(--color-stale-fresh-b); }
+.staleness-heatmap__legend-dot--recent   { background: var(--color-stale-recent-b); }
+.staleness-heatmap__legend-dot--aging    { background: var(--color-stale-aging-b); }
+.staleness-heatmap__legend-dot--stale    { background: var(--color-stale-stale-b); }
+.staleness-heatmap__legend-dot--critical { background: var(--color-stale-critical-b); }
 
 /* ================================================================
    SPRINT 5 — WORKFLOW STATUS PIPELINE (WFL-003)
@@ -2044,7 +2068,7 @@ p {
   padding: var(--space-xs) var(--space-sm);
   font-family: var(--font-body);
   font-size: 0.75rem;
-  color: #ea580c;
+  color: var(--color-stale-stale-a);
   background-color: rgba(234, 88, 12, 0.06);
   border: 1px solid rgba(234, 88, 12, 0.15);
   border-radius: var(--radius-sm);
