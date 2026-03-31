@@ -61,7 +61,8 @@ for FILE in $STAGED_FILES; do
   case "$FILE" in
     *.css)
       # Check for hex color values in added lines (not in :root context)
-      MATCHES=$(git diff --cached -U0 "$FILE" 2>/dev/null | grep -E -n '^\+.*#[0-9a-fA-F]{3,8}' | grep -v '^\+\+\+' | grep -v ':root' || true)
+      # Exclude: diff headers (+++), :root lines, and CSS custom property definitions (--variable: #hex)
+      MATCHES=$(git diff --cached -U0 "$FILE" 2>/dev/null | grep -E -n '^\+.*#[0-9a-fA-F]{3,8}' | grep -v '^\+\+\+' | grep -v ':root' | grep -v '^\+[[:space:]]*--' || true)
       if [ -n "$MATCHES" ]; then
         echo ""
         echo "  HALT: C-11 violation in $FILE"
