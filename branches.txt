@@ -1,0 +1,8 @@
+﻿* dev/tom/mod-per-creation
+  dev/tom/onboarding-setup
+  main
+  remotes/origin/HEAD -> origin/main
+  remotes/origin/dev-Devin
+  remotes/origin/dev/zeid/mod-styles
+  remotes/origin/main
+  remotes/origin/qa-staging

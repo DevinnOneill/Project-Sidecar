@@ -554,7 +554,7 @@
             }
             tr.innerHTML =
               '<td><span class="prd-badge prd-badge--' + badgeClass + '">' + prd.tier + '</span></td>' +
-              '<td><span class="sailor-link">' + sailor.lastName + ', ' + sailor.firstName + '</span></td>' +
+              '<td><a href="personnel.html?id=' + sailor.id + '" class="sailor-link" onclick="event.stopPropagation()">' + sailor.lastName + ', ' + sailor.firstName + '</a></td>' +
               '<td>' + sailor.rate + '</td>' +
               '<td>' + sailor.payGrade + '</td>' +
               '<td>' + sailor.prd + '</td>' +
