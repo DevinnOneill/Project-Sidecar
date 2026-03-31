@@ -151,6 +151,7 @@
       display: flex;
       flex: 1;
       overflow: hidden;
+      position: relative;
     }
     .col {
       flex: 1;
@@ -161,18 +162,82 @@
     .col::-webkit-scrollbar { width: 6px; }
     .col::-webkit-scrollbar-thumb { background: var(--color-border-dark); border-radius: 4px; }
     
-    /* Typography per column */
-    .col-title {
-      font-family: var(--font-body);
-      font-size: 22px;
-      font-weight: 800;
-      color: var(--color-earth-700);
-      margin-top: 0;
+    /* Modular Layout inside Columns */
+    .data-module {
+      background: var(--color-bg-base);
+      border: 1px solid var(--color-border-default);
+      border-radius: 8px;
+      padding: var(--space-xl);
+      margin-bottom: var(--space-xl);
+      position: relative;
+      background-clip: padding-box;
+      transition: all 0.2s ease;
+    }
+    .data-module-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
       margin-bottom: var(--space-lg);
       border-bottom: 2px solid var(--color-border-dark);
-      display: inline-block;
+      padding-bottom: 8px;
     }
-    .col-right .col-title { color: var(--color-navy-700); }
+    .data-module-title {
+      font-family: var(--font-body);
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--color-earth-700);
+      margin: 0;
+    }
+    .col-right .data-module-title {
+      color: var(--color-navy-700);
+    }
+    .btn-maximize {
+      background: none;
+      border: none;
+      color: var(--color-text-muted);
+      cursor: pointer;
+      font-size: 16px;
+      padding: 4px;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+    }
+    .btn-maximize:hover {
+      background: var(--color-bg-sunken);
+      color: var(--color-navy-700);
+    }
+
+    /* Modal Mode for Modules */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 999;
+      display: none;
+    }
+    .modal-backdrop.active {
+      display: block;
+    }
+    .data-module.modal-mode {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 90%;
+      max-width: 900px;
+      max-height: 90vh;
+      overflow-y: auto;
+      z-index: 1000;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+      margin: 0;
+    }
+    .data-module.modal-mode .btn-maximize::after {
+      content: "✕ Close";
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: bold;
+    }
+    .data-module.modal-mode .btn-maximize svg { display: none; }
 
     .block-title {
       font-family: var(--font-body);
@@ -337,177 +402,223 @@
     </div>
   </section>
 
-  <!-- Dual Columns -->
+  <!-- Dual Columns with Modular Components -->
   <main class="split-layout">
-    
+    <div class="modal-backdrop" id="globalBackdrop" onclick="closeAllModals()"></div>
+
     <!-- Left Column: CAREER -->
-    <div class="col col-left">
-        <h2 class="col-title">Career</h2>
+    <div class="col col-left" id="careerCol">
         
-        <!-- Accordion 1 -->
-        <div class="accordion-item expanded" onclick="this.classList.toggle('expanded')">
-          <div class="accordion-header">Current Orders <span>^</span></div>
-          <div class="accordion-content">
-            <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 16px; align-items: start;">
-               <!-- Left Column (Bulk Data) -->
-               <div>
-                 <div class="mlabel" style="color:var(--color-navy-700); margin-bottom:4px;">Command</div>
-                 <div class="mval" style="font-size:12px; font-weight:normal; margin-bottom:2px;">UIC: <strong id="cUic">XXXXX</strong></div>
-                 <div class="mval" style="font-size:12px; margin-bottom:16px;" id="cCommand">USS COMMAND NAME</div>
+        <!-- Orders Module -->
+        <div class="data-module" id="mod-orders">
+          <div class="data-module-header">
+             <h2 class="data-module-title">Career / Orders</h2>
+             <button class="btn-maximize" onclick="toggleModal('mod-orders')" title="Expand to Modal">
+               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path></svg>
+             </button>
+          </div>
+          <div class="accordion-item expanded" onclick="this.classList.toggle('expanded')">
+            <div class="accordion-header">Current Orders <span>^</span></div>
+            <div class="accordion-content">
+              <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 16px; align-items: start;">
+                 <div>
+                   <div class="mlabel" style="color:var(--color-navy-700); margin-bottom:4px;">Command</div>
+                   <div class="mval" style="font-size:12px; font-weight:normal; margin-bottom:2px;">UIC: <strong id="cUic">XXXXX</strong></div>
+                   <div class="mval" style="font-size:12px; margin-bottom:16px;" id="cCommand">USS COMMAND NAME</div>
 
-                 <div class="mlabel" style="color:var(--color-navy-700); margin-bottom:4px;">Billet</div>
-                 <div class="mval" style="font-size:12px; font-weight:normal; margin-bottom:2px;">BSC: <strong id="cBsc">XXXXX</strong></div>
-                 <div class="mval" style="font-size:12px; margin-bottom:16px;" id="cBilletTitle">LAN ADMIN</div>
+                   <div class="mlabel" style="color:var(--color-navy-700); margin-bottom:4px;">Billet</div>
+                   <div class="mval" style="font-size:12px; font-weight:normal; margin-bottom:2px;">BSC: <strong id="cBsc">XXXXX</strong></div>
+                   <div class="mval" style="font-size:12px; margin-bottom:16px;" id="cBilletTitle">LAN ADMIN</div>
 
-                 <div class="mlabel" style="color:var(--color-navy-700); margin-bottom:4px;">Placement Info</div>
-                 <div class="mval" style="font-size:12px; font-weight:normal; margin-bottom:2px;">COG: <strong id="cCog">XXXXX</strong></div>
-                 <div class="mval" style="font-size:12px;" id="cPlacement">Placement officer info</div>
-               </div>
+                   <div class="mlabel" style="color:var(--color-navy-700); margin-bottom:4px;">Placement Info</div>
+                   <div class="mval" style="font-size:12px; font-weight:normal; margin-bottom:2px;">COG: <strong id="cCog">XXXXX</strong></div>
+                   <div class="mval" style="font-size:12px;" id="cPlacement">Placement officer info</div>
+                 </div>
+                 <div>
+                   <div class="mlabel" style="color:var(--color-navy-700); margin-bottom:4px;">Avail Date</div>
+                   <div class="mval" style="font-size:12px; margin-bottom:16px;" id="cAvailDate">AVAIL DATE</div>
 
-               <!-- Right Column (Specifics) -->
-               <div>
-                 <div class="mlabel" style="color:var(--color-navy-700); margin-bottom:4px;">Avail Date</div>
-                 <div class="mval" style="font-size:12px; margin-bottom:16px;" id="cAvailDate">AVAIL DATE</div>
-
-                 <div class="mlabel" style="color:var(--color-navy-700); margin-bottom:4px;">BIN</div>
-                 <div class="mval" style="font-size:12px; margin-bottom:16px;" id="cBin">99900000</div>
-               </div>
+                   <div class="mlabel" style="color:var(--color-navy-700); margin-bottom:4px;">BIN</div>
+                   <div class="mval" style="font-size:12px; margin-bottom:16px;" id="cBin">99900000</div>
+                 </div>
+              </div>
+            </div>
+          </div>
+          <div class="accordion-item" onclick="this.classList.toggle('expanded')">
+            <div class="accordion-header">Proposed Orders <span>v</span></div>
+            <div class="accordion-content">
+              No proposed orders.
             </div>
           </div>
         </div>
 
-        <!-- Accordion 2 -->
-        <div class="accordion-item" onclick="this.classList.toggle('expanded')">
-          <div class="accordion-header">Proposed Orders <span>v</span></div>
-          <div class="accordion-content">
-            No proposed orders.
+        <!-- Billet History Module -->
+        <div class="data-module" id="mod-billet">
+          <div class="data-module-header">
+             <h2 class="data-module-title">Billet History</h2>
+             <button class="btn-maximize" onclick="toggleModal('mod-billet')" title="Expand to Modal">
+               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path></svg>
+             </button>
+          </div>
+          <table>
+            <thead><tr><th>UIC</th><th>COMMAND</th><th>Billet</th><th>Start Date</th><th>Detach Date</th></tr></thead>
+            <tbody id="tBillet">
+               <!-- Generated via JS -->
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Quals & Education Module -->
+        <div class="data-module" id="mod-quals">
+          <div class="data-module-header">
+             <h2 class="data-module-title">Qualifications & Education</h2>
+             <button class="btn-maximize" onclick="toggleModal('mod-quals')" title="Expand to Modal">
+               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path></svg>
+             </button>
+          </div>
+          <h3 class="block-title" style="margin-top:0;" id="qTitle">Qualifications</h3>
+          <div id="qTopList" style="margin-bottom:8px;"></div>
+          
+          <div class="accordion-item" style="margin-bottom:var(--space-lg);" id="qAccordion">
+            <div class="accordion-header" onclick="this.parentElement.classList.toggle('expanded')">Expanded Descriptions <span>v</span></div>
+            <div class="accordion-content" id="qFullList" style="font-family:var(--font-data); font-size:12px; line-height:1.6; padding:12px;">
+               <!-- Generated via JS -->
+            </div>
+          </div>
+
+          <h3 class="block-title">Education / Training History</h3>
+          <table>
+            <thead><tr><th>Degree</th><th>Year</th><th>Major</th><th>University</th></tr></thead>
+            <tbody id="tEdu">
+               <!-- Generated via JS -->
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Personal Info Module -->
+        <div class="data-module" id="mod-personal">
+          <div class="data-module-header">
+             <h2 class="data-module-title">Personal Information</h2>
+             <button class="btn-maximize" onclick="toggleModal('mod-personal')" title="Expand to Modal">
+               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path></svg>
+             </button>
+          </div>
+          <div class="accordion-item expanded" style="margin-bottom:0;">
+            <div class="accordion-header" onclick="this.parentElement.classList.toggle('expanded')">Family / Dependents <span>^</span></div>
+            <div class="accordion-content p-0" style="display:block;">
+               <div class="sub-accordion expanded" onclick="this.classList.toggle('expanded')">
+                   <div class="sub-accordion-content" style="padding-top:16px; white-space:pre-wrap;" id="pFamily">Colocation info</div>
+               </div>
+            </div>
+          </div>
+          <div class="accordion-item" onclick="this.classList.toggle('expanded')" style="margin-bottom:0; border-radius:0;">
+            <div class="accordion-header">Duty Station <span>v</span></div>
+            <div class="accordion-content" id="pDuty"></div>
+          </div>
+          <div class="accordion-item" onclick="this.classList.toggle('expanded')" style="margin-bottom:0; border-radius:0;">
+            <div class="accordion-header">PRD <span>v</span></div>
+            <div class="accordion-content" id="pPrdInfo"></div>
+          </div>
+          <div class="accordion-item" onclick="this.classList.toggle('expanded')" style="margin-bottom:0; border-radius:0;">
+            <div class="accordion-header">Contact Information <span>v</span></div>
+            <div class="accordion-content" id="pContact"></div>
+          </div>
+          <div class="accordion-item" onclick="this.classList.toggle('expanded')" style="margin-bottom:0; border-radius:0;">
+            <div class="accordion-header">EFMP info <span>v</span></div>
+            <div class="accordion-content" id="pEfmp"></div>
+          </div>
+          <div class="accordion-item" onclick="this.classList.toggle('expanded')" style="margin-bottom:0; border-radius:0;">
+            <div class="accordion-header">LIMDU OPSDEF <span>v</span></div>
+            <div class="accordion-content" id="pLimdu"></div>
+          </div>
+          <div class="accordion-item" onclick="this.classList.toggle('expanded')" style="margin-bottom:0; border-radius:4px;">
+            <div class="accordion-header">PFA History <span>v</span></div>
+            <div class="accordion-content" id="pPfa"></div>
           </div>
         </div>
 
-        <h3 class="block-title">Billet History</h3>
-        <table>
-          <thead><tr><th>UIC</th><th>COMMAND</th><th>Billet</th><th>Start Date</th><th>Detach Date</th></tr></thead>
-          <tbody id="tBillet">
-             <!-- Generated via JS -->
-          </tbody>
-        </table>
-
-        <h3 class="block-title">Qualifications (AQD or NECs)</h3>
-        <table>
-          <thead>
-              <tr><th>YY</th><th>AQD</th><th id="mAqdCol1">4</th><th id="mAqdCol2">5</th><th id="mAqdCol3">10</th></tr>
-          </thead>
-          <tbody id="tAqd">
-             <!-- Generated via JS -->
-          </tbody>
-        </table>
-
-        <h3 class="block-title">Education / Training History</h3>
-        <table>
-          <thead><tr><th>Degree</th><th>Year</th><th>Major</th><th>University</th></tr></thead>
-          <tbody id="tEdu">
-             <!-- Generated via JS -->
-          </tbody>
-        </table>
-
-        <h3 class="block-title">Personal Information</h3>
-        
-        <div class="accordion-item expanded" style="margin-bottom:0;">
-          <div class="accordion-header" onclick="this.parentElement.classList.toggle('expanded')">Family / Dependents <span>^</span></div>
-          <div class="accordion-content p-0" style="display:block;">
-             <div class="sub-accordion expanded" onclick="this.classList.toggle('expanded')">
-                 <div class="sub-accordion-content" style="padding-top:16px; white-space:pre-wrap;" id="pFamily">Colocation info - Spouse Name\nBranch\nDOD ID</div>
-             </div>
-          </div>
-        </div>
-        <div class="accordion-item" onclick="this.classList.toggle('expanded')" style="margin-bottom:0; border-radius:0;">
-          <div class="accordion-header">Duty Station <span>v</span></div>
-          <div class="accordion-content" id="pDuty"></div>
-        </div>
-        <div class="accordion-item" onclick="this.classList.toggle('expanded')" style="margin-bottom:0; border-radius:0;">
-          <div class="accordion-header">PRD <span>v</span></div>
-          <div class="accordion-content" id="pPrdInfo"></div>
-        </div>
-        <div class="accordion-item" onclick="this.classList.toggle('expanded')" style="margin-bottom:0; border-radius:0;">
-          <div class="accordion-header">Contact Information <span>v</span></div>
-          <div class="accordion-content" id="pContact"></div>
-        </div>
-        <div class="accordion-item" onclick="this.classList.toggle('expanded')" style="margin-bottom:0; border-radius:0;">
-          <div class="accordion-header">EFMP info <span>v</span></div>
-          <div class="accordion-content" id="pEfmp"></div>
-        </div>
-        <div class="accordion-item" onclick="this.classList.toggle('expanded')" style="margin-bottom:0; border-radius:0;">
-          <div class="accordion-header">LIMDU OPSDEF <span>v</span></div>
-          <div class="accordion-content" id="pLimdu"></div>
-        </div>
-        <div class="accordion-item" onclick="this.classList.toggle('expanded')" style="margin-bottom:0; border-radius:4px;">
-          <div class="accordion-header">PFA History <span>v</span></div>
-          <div class="accordion-content" id="pPfa"></div>
-        </div>
-        
     </div>
 
     <!-- Right Column: COMPASS INFO -->
-    <div class="col col-right">
-        <h2 class="col-title" style="margin-bottom: 8px;">Compass Info Insights</h2>
+    <div class="col col-right" id="compassCol">
         
-        <h3 class="block-title">Exploratory Interests</h3>
-        <div class="compass-box">
-           <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px;">
+        <!-- Compass Info Module -->
+        <div class="data-module" id="mod-compass">
+          <div class="data-module-header">
+             <h2 class="data-module-title">Compass Info Insights</h2>
+             <button class="btn-maximize" onclick="toggleModal('mod-compass')" title="Expand to Modal">
+               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path></svg>
+             </button>
+          </div>
+          
+          <h3 class="block-title" style="margin-top:0;">Exploratory Interests</h3>
+          <div class="compass-box">
+             <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px;">
+                <div>
+                   <div class="mlabel">TOP SEARCHED REGIONS</div>
+                   <div id="cmpRegions">No active regions.</div>
+                </div>
+                <div>
+                   <div class="mlabel">TRENDING JOB PREFS</div>
+                   <div id="cmpJobs">Policy, Afloat Comms</div>
+                </div>
+             </div>
+             <div style="margin-bottom: 16px;">
+                   <div class="mlabel">UIC / ARERPORT</div>
+                   <div id="cmpUic">No available notes</div>
+             </div>
+             <div>
+                   <div class="mlabel">MEMBER PROVIDED NOTES & ALERTS</div>
+                   <div id="cmpNotes">Very motivated sailor.</div>
+             </div>
+          </div>
+
+          <h3 class="block-title">Career Intentions</h3>
+          <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 16px; font-family:var(--font-data); font-size:11px;">
               <div>
-                 <div class="mlabel">TOP SEARCHED REGIONS</div>
-                 <div id="cmpRegions">No active regions.</div>
+                   <div class="mlabel" style="margin-bottom:4px;">SHORT TERM FOCUS</div>
+                   <div id="cmpShortTerm">Advance to IT1</div>
               </div>
               <div>
-                 <div class="mlabel">TRENDING JOB PREFS</div>
-                 <div id="cmpJobs">Policy, Afloat Comms</div>
+                   <div class="mlabel" style="margin-bottom:4px;">LONG TERM GOAL</div>
+                   <div id="cmpLongTerm" style="max-width:200px;">Lateral transfer to officer candidate program</div>
               </div>
-           </div>
-           <div style="margin-bottom: 16px;">
-                 <div class="mlabel">UIC / ARERPORT</div>
-                 <div id="cmpUic">No available notes</div>
-           </div>
-           <div>
-                 <div class="mlabel">MEMBER PROVIDED NOTES & ALERTS</div>
-                 <div id="cmpNotes">Very motivated sailor.</div>
-           </div>
+              <div>
+                   <div class="mlabel" style="margin-bottom:4px;">ACTIVE EDUCATION</div>
+                   <div id="cmpEdu">Advocate Degree in Networking (In progress)</div>
+              </div>
+              <div>
+                   <div class="mlabel" style="margin-bottom:4px;">RETENTION INTENT</div>
+                   <div id="cmpIntent" style="font-weight:bold; letter-spacing:1px;">ADVANCE</div>
+              </div>
+          </div>
         </div>
 
-        <h3 class="block-title">Career Intentions</h3>
-        <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 16px; font-family:var(--font-data); font-size:11px; margin-bottom:var(--space-xl);">
-            <div>
-                 <div class="mlabel" style="margin-bottom:4px;">SHORT TERM FOCUS</div>
-                 <div id="cmpShortTerm">Advance to IT1</div>
-            </div>
-            <div>
-                 <div class="mlabel" style="margin-bottom:4px;">LONG TERM GOAL</div>
-                 <div id="cmpLongTerm" style="max-width:200px;">Lateral transfer to officer candidate program</div>
-            </div>
-            <div>
-                 <div class="mlabel" style="margin-bottom:4px;">ACTIVE EDUCATION</div>
-                 <div id="cmpEdu">Advocate Degree in Networking (In progress)</div>
-            </div>
-            <div>
-                 <div class="mlabel" style="margin-bottom:4px;">RETENTION INTENT</div>
-                 <div id="cmpIntent" style="font-weight:bold; letter-spacing:1px;">ADVANCE</div>
-            </div>
+        <!-- Application History Module -->
+        <div class="data-module" id="mod-apps">
+          <div class="data-module-header">
+             <h2 class="data-module-title">Formal Application History</h2>
+             <button class="btn-maximize" onclick="toggleModal('mod-apps')" title="Expand to Modal">
+               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path></svg>
+             </button>
+          </div>
+          
+          <h3 class="block-title" style="margin-top:0;">Favorited / Saved Billets</h3>
+          <div id="cmpSavedBillets" style="font-family:var(--font-data); font-size:11px; margin-bottom:var(--space-xl);">
+              No saved billets.
+          </div>
+
+          <h3 class="block-title">Formal Application History</h3>
+          <table>
+              <thead>
+                  <tr><th>DATE</th><th>COMMAND</th><th>BILLET</th><th>OUTCOME</th></tr>
+              </thead>
+              <tbody id="cmpPastApps">
+                  <tr><td colspan="4" style="text-align:center;">No past application data.</td></tr>
+              </tbody>
+          </table>
         </div>
 
-        <h3 class="block-title">Favorited / Saved Billets</h3>
-        <div id="cmpSavedBillets" style="font-family:var(--font-data); font-size:11px; margin-bottom:var(--space-xl);">
-            No saved billets.
-        </div>
-
-        <h3 class="block-title">Formal Application History</h3>
-        <table>
-            <thead>
-                <tr><th>DATE</th><th>COMMAND</th><th>BILLET</th><th>OUTCOME</th></tr>
-            </thead>
-            <tbody id="cmpPastApps">
-                <tr><td colspan="4" style="text-align:center;">No past application data.</td></tr>
-            </tbody>
-        </table>
-        
     </div>
   </main>
 
@@ -578,21 +689,21 @@
         
         var elRank = document.getElementById('mRank');
         elRank.textContent = col1Val;
-        elRank.style.backgroundColor = 'var(--color-prd-yellow)';
+        elRank.style.backgroundColor = 'transparent';
 
         var elLast = document.getElementById('mLastName');
         elLast.textContent = sailor.lastName.toUpperCase();
-        elLast.style.backgroundColor = 'var(--color-prd-yellow)';
+        elLast.style.backgroundColor = 'transparent';
 
         var elFirst = document.getElementById('mFirstName');
         elFirst.textContent = sailor.firstName.toUpperCase();
-        elFirst.style.backgroundColor = 'var(--color-prd-yellow)';
+        elFirst.style.backgroundColor = 'transparent';
 
         var elMiddle = document.getElementById('mMiddleName');
         var fullMid = (sailor.middleName || sailor.middleInitial || '').toUpperCase();
         if (fullMid.length === 1) fullMid += '.'; // Ensure trailing period if it's just an initial
         elMiddle.textContent = fullMid;
-        elMiddle.style.backgroundColor = 'var(--color-prd-yellow)';
+        elMiddle.style.backgroundColor = 'transparent';
 
         document.getElementById('mDesig').textContent = col4Val;
         document.getElementById('mDod').textContent = sailor.id;
@@ -644,21 +755,67 @@
             tBillet.innerHTML = '<tr><td colspan="5" style="text-align:center;">No billet history found.</td></tr>';
         }
 
-        // AQD History
-        var tAqd = document.getElementById('tAqd');
-        tAqd.innerHTML = '';
-        if (sailor.aqdMatrix && sailor.aqdMatrix.length > 0) {
-            // Re-label headers based on first element (mocked generic matrix)
-            var aq = sailor.aqdMatrix[0];
-            document.getElementById('mAqdCol1').textContent = aq.col1 || '4';
-            document.getElementById('mAqdCol2').textContent = aq.col2 || '5';
-            document.getElementById('mAqdCol3').textContent = aq.col3 || '10';
+        // Qualifications (AQD / NEC)
+        var qTitleEl = document.getElementById('qTitle');
+        var qTopListEl = document.getElementById('qTopList');
+        var qAccordionEl = document.getElementById('qAccordion');
+        var qFullListEl = document.getElementById('qFullList');
 
-            sailor.aqdMatrix.forEach(a => {
-                tAqd.innerHTML += `<tr><td>${a.yy}</td><td>${a.aqd}</td><td>${a.col1}</td><td>${a.col2}</td><td>${a.col3}</td></tr>`;
+        qTitleEl.textContent = isEnlisted ? 'Qualifications (NECs)' : 'Qualifications (AQDs)';
+
+        var qualList = [];
+        var mockTitlesO = ['Surface Warfare Officer Qualification', 'Officer Of the Deck Underway Qualification', 'Information Professional Support', 'Tactical Action Officer', 'Strategic Weapons'];
+        var mockTitlesE = ['Information Assurance Level II', 'Advanced Systems Maintenance', 'Expeditionary Combat Skills', 'Shipboard Tactical Systems', 'Security Technical Specialist'];
+        
+        if (isEnlisted) {
+            var necs = sailor.necCodes ? sailor.necCodes.slice() : [];
+            necs.forEach(function(nec, i) {
+               var year = String(26 - i);
+               var dateStr = '26' + String(i+1).padStart(2,'0') + String(i+10);
+               var code = (sailor.rate || 'UNK') + '-' + nec;
+               qualList.push({ yy: year, date: dateStr, code: code, title: mockTitlesE[i % mockTitlesE.length] });
             });
         } else {
-            tAqd.innerHTML = '<tr><td colspan="5" style="text-align:center;">No AQD data.</td></tr>';
+            var aqds = [];
+            if (sailor.aqdMatrix && sailor.aqdMatrix.length > 0) {
+                sailor.aqdMatrix.forEach(function(a) { if (a.aqd) aqds.push(a.aqd); });
+            } else if (sailor.necCodes) {
+                aqds = sailor.necCodes.slice();
+            }
+            if (aqds.length === 0) aqds = ['LA9', 'LB2'];
+            
+            aqds.forEach(function(aqd, i) {
+               var year = String(26 - i);
+               var dateStr = '26' + String(i+1).padStart(2,'0') + String(i+10);
+               var code = aqd.length <= 3 ? aqd : aqd.substring(0,3);
+               if (code.length === 1 && i === 0) code = 'LA9'; 
+               if (code.length === 1 && i === 1) code = 'LB2'; // Format mock defaults based on user examples
+               qualList.push({ yy: year, date: dateStr, code: code, title: mockTitlesO[i % mockTitlesO.length] });
+            });
+        }
+
+        if (qualList.length === 0) {
+            qTopListEl.innerHTML = '<div style="color:var(--color-text-muted); font-size:12px;">No qualifications on record.</div>';
+            qAccordionEl.style.display = 'none';
+        } else {
+            qAccordionEl.style.display = 'block';
+            
+            // Condensed View
+            var topHtml = '<div style="display:flex; flex-direction:column; gap:6px; font-weight:bold; font-size:14px; font-family:var(--font-data); padding:0 var(--space-md);">';
+            qualList.forEach(function(q, idx) {
+                topHtml += '<div>' + (idx+1) + '. ' + q.yy + ' ' + q.code + '</div>';
+            });
+            topHtml += '</div>';
+            qTopListEl.innerHTML = topHtml;
+
+            // Expanded View
+            var fullHtml = '';
+            qualList.forEach(function(q) {
+                fullHtml += '<div style="margin-bottom:8px; border-bottom:1px solid var(--color-border-default); padding-bottom:8px;">' +
+                               '<strong style="color:var(--color-navy-700);">' + q.code + '</strong> ' + q.title + ' earned ' + q.date +
+                            '</div>';
+            });
+            qFullListEl.innerHTML = fullHtml;
         }
 
         // Education
@@ -772,7 +929,36 @@
             else if (val.includes('charlie')) window.location.href = '?id=9999000003';
             else window.location.href = '?id=9999000001';
         });
+
+      // Event listener for escape key to close modal
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') closeAllModals();
+        });
       });
+
+      // --- Module/Modal Logic ---
+      window.toggleModal = function(moduleId) {
+        var el = document.getElementById(moduleId);
+        if (el.classList.contains('modal-mode')) {
+           el.classList.remove('modal-mode');
+           document.getElementById('globalBackdrop').classList.remove('active');
+           document.body.style.overflow = '';
+        } else {
+           closeAllModals(); // close any existing active modes
+           el.classList.add('modal-mode');
+           document.getElementById('globalBackdrop').classList.add('active');
+           document.body.style.overflow = 'hidden';
+        }
+      };
+
+      window.closeAllModals = function() {
+        var modules = document.querySelectorAll('.data-module.modal-mode');
+        for (var i = 0; i < modules.length; i++) {
+            modules[i].classList.remove('modal-mode');
+        }
+        document.getElementById('globalBackdrop').classList.remove('active');
+        document.body.style.overflow = '';
+      };
     })();
   </script>
 </body>
