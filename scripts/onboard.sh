@@ -308,10 +308,10 @@ echo ""
 
 # Branch assignments (update when team changes)
 declare -A BRANCH_MAP
-BRANCH_MAP["placeholder-dev-a"]="dev-1"
-BRANCH_MAP["placeholder-dev-b"]="dev-1"
-BRANCH_MAP["placeholder-dev-c"]="dev-2"
-BRANCH_MAP["placeholder-dev-d"]="dev-2"
+BRANCH_MAP["CoolCatCoding"]="dev-1"
+BRANCH_MAP["DevvOneill"]="dev-1"
+BRANCH_MAP["Abbiera"]="dev-2"
+BRANCH_MAP["brown-water"]="dev-2"
 BRANCH_MAP["DevinnOneill"]="qa-staging"
 
 echo "  What is your GitHub username?"

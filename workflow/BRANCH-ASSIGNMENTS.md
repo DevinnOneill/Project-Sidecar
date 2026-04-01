@@ -21,8 +21,8 @@ dev-2  (Team 2)  ──PR──>  qa-staging  ──PR──>  main
 
 | Branch | Developers | Role |
 |--------|-----------|------|
-| `dev-1` | `placeholder-dev-a`, `placeholder-dev-b` | Development Team 1 |
-| `dev-2` | `placeholder-dev-c`, `placeholder-dev-d` | Development Team 2 |
+| `dev-1` | `CoolCatCoding`, `DevvOneill` | Development Team 1 |
+| `dev-2` | `Abbiera`, `brown-water` | Development Team 2 |
 | `qa-staging` | `DevinnOneill` (Tier 1) | QA gate — reviews and merges dev PRs |
 | `main` | `DevinnOneill` (Tier 1) | Production — final merge authority |
 

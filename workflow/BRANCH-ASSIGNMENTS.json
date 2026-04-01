@@ -1,11 +1,11 @@
 {
   "branches": {
     "dev-1": {
-      "developers": ["placeholder-dev-a", "placeholder-dev-b"],
+      "developers": ["CoolCatCoding", "DevvOneill"],
       "description": "Development Branch 1"
     },
     "dev-2": {
-      "developers": ["placeholder-dev-c", "placeholder-dev-d"],
+      "developers": ["Abbiera", "brown-water"],
       "description": "Development Branch 2"
     },
     "qa-staging": {
