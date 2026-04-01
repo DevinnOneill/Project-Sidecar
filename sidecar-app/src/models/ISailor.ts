@@ -2,15 +2,66 @@ export interface ISailor {
   id: string;
   lastName: string;
   firstName: string;
+  middleName?: string;
   rate: string;
   payGrade: string;
+  designator?: string;
   prd: string;
   eaos: string;
   command: string;
   uic: string;
   billet: string;
+  bsc?: string;
   lastContact: string;
   detailer: string;
+  // Tom's expanded fields
+  billetHistory?: IBilletHistory[];
+  qualifications?: IQualification[];
+  education?: IEducation[];
+  personalInfo?: IPersonalInfo;
+  compassInsights?: ICompassInsights;
+}
+
+export interface IBilletHistory {
+  uic: string;
+  command: string;
+  billet: string;
+  startDate: string;
+  detachDate: string;
+}
+
+export interface IQualification {
+  year: string;
+  code: string;
+  title: string;
+  dateEarned: string;
+}
+
+export interface IEducation {
+  degree: string;
+  year: string;
+  major: string;
+  university: string;
+}
+
+export interface IPersonalInfo {
+  family?: string;
+  dutyStation?: string;
+  contactInfo?: string;
+  efmp?: string;
+  limdu?: string;
+  pfa?: string;
+}
+
+export interface ICompassInsights {
+  topRegions?: string;
+  trendingJobs?: string;
+  memberNotes?: string;
+  shortTermFocus?: string;
+  longTermGoal?: string;
+  activeEducation?: string;
+  retentionIntent?: string;
+  savedBillets?: string[];
 }
 
 export interface ICommEntry {
