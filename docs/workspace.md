@@ -1,14 +1,14 @@
 # SideCar Workspace: Strategic Vision & Development Plan
 
 > **Domain:** Module-Specific Development Roadmap
-> **Module:** MOD-WORK (`app/workspace.html`)
+> **Module:** MOD-WORK (`sidecar-app/src/Workspace/Workspace.tsx`)
 > **Date:** March 2026
 
 ---
 
 ## 1. Core Purpose
 
-The `workspace.html` module is the primary operational surface for Navy Detailers and Placement Coordinators. Its strategic mandate is to shift the user's role from a transactional "Detailing Clerk" to an **AI-Enabled Career Coach** and **Force Architect**. 
+The `Workspace/Workspace.tsx` component is the primary operational surface for Navy Detailers and Placement Coordinators. Its strategic mandate is to shift the user's role from a transactional "Detailing Clerk" to an **AI-Enabled Career Coach** and **Force Architect**. 
 
 This document synthesizes the strategic vision, current architectural audit findings, and the targeted development roadmap required to empower this persona shift and successfully sunset legacy platforms (EAIS, OAIS, ODIS).
 
@@ -57,4 +57,4 @@ To elevate the workspace from a CRM to a Force Architecture tool, the following 
 
 ## 5. Conclusion
 
-The current `workspace.html` provides a massive quality-of-life improvement for basic portfolio management. However, its true value lies in its potential predictive capability. All future development on this module must prioritize diagnostic intelligence over raw data display. Only by fully integrating Pvol, record quality synthesis, and automated gap analysis will SideCar fulfill its mandate to create AI-Enabled Career Coaches out of today's detailers.
+The current `Workspace.tsx` component provides a massive quality-of-life improvement for basic portfolio management. However, its true value lies in its potential predictive capability. All future development on this module must prioritize diagnostic intelligence over raw data display. Only by fully integrating Pvol, record quality synthesis, and automated gap analysis will SideCar fulfill its mandate to create AI-Enabled Career Coaches out of today's detailers.

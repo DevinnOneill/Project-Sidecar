@@ -259,9 +259,7 @@ The Git repository is organized into four branch levels that mirror the tiered a
 
 **QA / Staging Branch.** Where verified work stages are before Tier 1 review. QA runs here. Human review happens here. Nothing unverified enters it.
 
-**Developer Branches.** One branch per developer, per session, per module. A session that produces a halt verdict results in the branch being deleted---main and QA/Staging are untouched.
-
-**Breaker Branch.** A branch whose purpose is intentional failure. Destructive testing, dependency stress tests, and edge-case explorations run here. Nothing from the breaker branch advances to any other branch.
+**Developer Branches (dev-1, dev-2).** Two fixed development branches, each shared by a team of two developers. Branches are permanent and assigned --- see `workflow/BRANCH-ASSIGNMENTS.md` for the authoritative assignment table. A session that produces a halt verdict results in commits being reverted on the dev branch --- main and QA/Staging are untouched. No other branches are authorized; creating an unauthorized branch triggers a governance violation alert.
 
 ---
 

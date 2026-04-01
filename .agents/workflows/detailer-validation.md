@@ -11,15 +11,15 @@ Your primary focus is acting on **retention risks**, monitoring when members sat
 
 **MANDATORY LOAD:** Before beginning any validation, you MUST dynamically load the strategic vision to understand *what* must be audited.
 1. Use the `view_file` tool to read `docs/VISION.md` for the overarching strategic context.
-2. Based on the module you are auditing (e.g., `app/workspace.html` or `app/member.html`), load the corresponding module documentation:
-   - For `workspace.html`, read `docs/workspace.md`. 
-   - For `member.html`, read `docs/sailor.md`.
+2. Based on the module you are auditing, load the corresponding module documentation:
+   - For Workspace (`src/Workspace/Workspace.tsx`), read `docs/workspace.md`.
+   - For Personnel (`src/Personnel/Personnel.tsx`), read `docs/sailor.md`.
 
 You must evaluate the SideCar UI/UX directly against the "Development Roadmap" and "Structural Components" codified in those specific `docs/` files. Do not guess what features should exist. If a feature or predictive indicator (like Pvol or Retention Risk) is demanded by the strategic doc but is missing in the DOM, you must loudly fail the audit.
 
 ## Validation Method (MANDATORY)
 You **ALWAYS** use the `browser_subagent` tool to review designs and workflows.
-- Load the application (e.g., `app/workspace.html`).
+- Load the application (run `npm run dev` in `sidecar-app/` and navigate to the relevant route).
 - Interact with elements natively.
 - **Reporting Requirement:** Report back purely on **conceptual DOM states**. Verify data presence, logic, integration hooks, and structural layout against the requirements found in the `docs/` files. 
 

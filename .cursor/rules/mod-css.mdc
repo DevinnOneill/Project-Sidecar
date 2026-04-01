@@ -1,19 +1,19 @@
 ---
 description: MOD-CSS — Covenant Design System module rules
-globs: ["app/style.css"]
+globs: ["sidecar-app/src/index.css", "sidecar-app/src/**/*.css"]
 alwaysApply: false
 ---
 
 # MOD-CSS: Covenant Design System
 
-- **Write:** app/style.css ONLY
-- **Read:** All app/*.html files
+- **Write:** `sidecar-app/src/index.css` and `sidecar-app/src/**/*.css` ONLY
+- **Read:** All `sidecar-app/src/**/*.tsx` component files
 - **Focus:** UI-UX.md, DEVELOPMENT.md
 - **Key Constraints:** C-04, C-05, C-11, C-12, C-13, C-14
 
-Single CSS file with token system. Dark mode only (C-13).
+CSS token system for Vite + React app. Dark mode only (C-13).
 - All colors via CSS custom properties in :root (C-11)
 - No CSS nesting, @layer, @container (C-04 — NMCI baseline)
 - Typography: Verdana (display, body), DM Mono (data) (C-12)
 - PRD colors are semantically locked to urgency tiers (C-14)
-Do NOT modify any app/*.html files or app/app.js from this module.
+Do NOT modify any `.tsx` component files or `sidecar-app/src/services/` from this module.

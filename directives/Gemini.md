@@ -1,17 +1,17 @@
 # SIDECAR — Master Session Brief (Gemini.md)
 
-> **Version:** 1.0
-> **Date:** March 25, 2026
+> **Version:** 2.0
+> **Date:** March 31, 2026
 > **Authority:** Tier 1 — Strategic Governance
 > **Governed By:** My Compass Tiered Agentic Development Framework v4.0
-> **Development LLM:** Google Gemini (via Antigravity)
+> **Development LLM:** Anthropic Claude (Claude Code sessions)
 > **Governance LLM:** Anthropic Claude (Project Compass session management)
 
 ---
 
 ## PURPOSE
 
-This file is the COMPASS.md equivalent for the SideCar project. It loads first, always, before any agent or developer begins work in Antigravity. Its sole function is to establish identity, load the Directive Library in sequence, define the module architecture, and enforce the governance chain that every development session must follow.
+This file is the COMPASS.md equivalent for the SideCar project. It loads first, always, before any agent or developer begins work. Its sole function is to establish identity, load the Directive Library in sequence, define the module architecture, and enforce the governance chain that every development session must follow.
 
 **Any session that begins without a confirmed load of this file is in architectural violation. It halts.**
 
@@ -86,61 +86,65 @@ Load these directives in sequence before any execution begins. Each governs a sp
 
 ### Phase 1A File Map
 
-> **Amended 2026-03-29:** Updated from page-numbered files to descriptive module names. `workspace.html` consolidates the detailer and placement work surfaces.
+> **Amended 2026-03-31:** Migrated from flat HTML/CSS/JS to Vite + React + TypeScript targeting SPFx deployment.
 
 ```
-/sidecar-mvp/
-├── Gemini.md                — This file. Master Session Brief.
+/sidecar-app/
+├── public/
+│   ├── favicon.svg
+│   └── icons.svg
+├── src/
+│   ├── Landing/           — Landing.tsx + Landing.css
+│   ├── Workspace/         — Workspace.tsx + Workspace.css
+│   ├── Personnel/         — Personnel.tsx + Personnel.css
+│   ├── Command/           — Command.tsx + Command.css
+│   ├── Analytics/         — Analytics.tsx + Analytics.css
+│   ├── AdvancedSearch/    — AdvancedSearch.tsx + AdvancedSearch.css
+│   ├── components/        — Shared components (Topbar.tsx, etc.)
+│   ├── models/            — TypeScript interfaces (ISailor.ts)
+│   ├── services/          — Business logic + data layer
+│   │   ├── SideCarAdapter.ts
+│   │   ├── PrdEngine.ts
+│   │   └── SyntheticData.ts
+│   ├── App.tsx            — Router + layout
+│   ├── App.css
+│   ├── index.css          — Design tokens (:root)
+│   └── main.tsx           — Entry point
+├── index.html
+├── vite.config.ts
+├── tsconfig.json
+└── package.json
+```
+
+Governance and workflow files remain at the project root:
+```
+/Project-Sidecar/
 ├── directives/              — Directive Library
-│   ├── DEVELOPMENT.md
-│   ├── SECURITY.md
-│   ├── UI-UX.md
-│   ├── UX-PATTERNS.md
-│   ├── INTEGRATIONS.md
-│   ├── AUDIT.md
-│   ├── TESTING.md
-│   └── ONBOARDING.md
-├── workflow/
-│   └── MODULE-MAP.md        — Module routing table (canonical)
+├── workflow/                — MODULE-MAP.md (canonical routing table)
 ├── sessions/                — Session logs (append-only)
-│   └── YYYY-MM-DD_session-id.md
 ├── lessons/                 — Lessons Learned Repository
-│   ├── halts.md
-│   ├── exemplars.md
-│   └── patterns.md
-├── app/
-│   ├── landing.html         — Module: Landing / Intelligence Bar
-│   ├── workspace.html       — Module: Detailer Workspace (primary work surface)
-│   ├── member.html          — Module: Sailor Record View
-│   ├── command.html         — Module: Command Manning View
-│   ├── billet.html          — Module: Billet Detail View
-│   ├── analytics.html       — Module: Analytics Dashboard
-│   ├── style.css            — Shared: Covenant Design System
-│   ├── app.js               — Shared: Logic + Embedded Synthetic Data
-│   └── fonts/
-│       ├── Verdana.woff2
-│       └── DMMono-Regular.woff2
+└── sidecar-app/             — React application (file map above)
 ```
 
 ### Module Boundaries
 
-Each file is an independent module. The canonical module routing table lives in `workflow/MODULE-MAP.md`. Key rules:
+Each component directory is an independent module. The canonical module routing table lives in `workflow/MODULE-MAP.md`. Key rules:
 
 | Module ID | File(s) | Description | May Read | May Write |
 |---|---|---|---|---|
-| `MOD-LAND` | `app/landing.html` | Landing / Intelligence Bar | `style.css`, `app.js` | `landing.html` |
-| `MOD-WORK` | `app/workspace.html` | Detailer Workspace | `style.css`, `app.js` | `workspace.html` |
-| `MOD-MEMBER` | `app/member.html` | Sailor Record View | `style.css`, `app.js` | `member.html` |
-| `MOD-CMD` | `app/command.html` | Command Manning View | `style.css`, `app.js` | `command.html` |
-| `MOD-BILLET` | `app/billet.html` | Billet Detail View | `style.css`, `app.js` | `billet.html` |
-| `MOD-ANLYT` | `app/analytics.html` | Analytics Dashboard | `style.css`, `app.js` | `analytics.html` |
-| `MOD-CSS` | `app/style.css` | Covenant Design System | All `.html` files | `style.css` only |
-| `MOD-JS` | `app/app.js` | Shared Logic + Data | All `.html` files | `app.js` only |
+| `MOD-LAND` | `src/Landing/*` | Landing / Intelligence Bar | `index.css`, services/* | `Landing/*` |
+| `MOD-WORK` | `src/Workspace/*` | Detailer Workspace | `index.css`, services/* | `Workspace/*` |
+| `MOD-MEMBER` | `src/Personnel/*` | Sailor Record View | `index.css`, services/* | `Personnel/*` |
+| `MOD-CMD` | `src/Command/*` | Command Manning View | `index.css`, services/* | `Command/*` |
+| `MOD-ANLYT` | `src/Analytics/*` | Analytics Dashboard | `index.css`, services/* | `Analytics/*` |
+| `MOD-SEARCH` | `src/AdvancedSearch/*` | Advanced Search | `index.css`, services/* | `AdvancedSearch/*` |
+| `MOD-CSS` | `src/index.css` + component CSS | Covenant Design System | All components | CSS files only |
+| `MOD-SVC` | `src/services/*` | Shared Logic + Data + Adapter | All components | services/* only |
 | `MOD-DIR` | `directives/*` | Directive Library | All files | Tier 1 only |
 
 ### Cross-Module Work (Pragmatic)
 
-When a task inherently requires changes across module boundaries (e.g., adding a feature to `workspace.html` that also needs a new CSS token in `style.css`), the developer declares the cross-module scope at session start. The agent confirms the expanded boundary and proceeds. A separate session is not required for routine cross-cutting work — only for architecturally distinct changes. The boundary confirmation at session close documents which files were actually touched.
+When a task inherently requires changes across module boundaries (e.g., adding a feature to `Workspace/` that also needs a new CSS token in `index.css`), the developer declares the cross-module scope at session start. The agent confirms the expanded boundary and proceeds. A separate session is not required for routine cross-cutting work — only for architecturally distinct changes. The boundary confirmation at session close documents which files were actually touched.
 
 ---
 
@@ -148,19 +152,19 @@ When a task inherently requires changes across module boundaries (e.g., adding a
 
 These are non-negotiable. A violation triggers a halt, not a warning.
 
-> **White Paper Alignment Note:** The White Paper (Section VI) defines 5 Constitutional Rules for the My Compass mobile application (Expo Go, No Device Storage, Offline Degradation, Adapter Layer, Module Boundary). The 14 constraints below are the **SideCar-specific implementations** of those principles, adapted for a flat-file HTML/CSS/JS platform targeting NMCI. Rule 1 (Expo Go) maps to C-01 (no npm/frameworks). Rule 2 (No Device Storage) maps to C-03 (no PII/CUI). Rule 3 (Offline Degradation) maps to C-02/C-04 (no fetch, NMCI baseline). Rule 4 (Adapter Layer) maps to C-09. Rule 5 (Module Boundary) maps to C-08.
+> **White Paper Alignment Note:** The White Paper (Section VI) defines 5 Constitutional Rules for the My Compass mobile application (Expo Go, No Device Storage, Offline Degradation, Adapter Layer, Module Boundary). The 14 constraints below are the **SideCar-specific implementations** of those principles, adapted for a Vite + React + TypeScript platform targeting SPFx deployment on NMCI. Rule 1 (Expo Go) maps to C-01 (no npm/frameworks). Rule 2 (No Device Storage) maps to C-03 (no PII/CUI). Rule 3 (Offline Degradation) maps to C-02/C-04 (no fetch, NMCI baseline). Rule 4 (Adapter Layer) maps to C-09. Rule 5 (Module Boundary) maps to C-08.
 
-### C-01: No Server, No Build Tools, No npm
-Phase 1A is flat HTML/CSS/JS opened from a `file://` path. No webpack. No React. No frameworks. No transpilation.
+### C-01: Vite + React + TypeScript Platform
+SideCar uses Vite + React + TypeScript as its build platform, targeting SPFx deployment. All code must be TypeScript with strict mode. No additional frameworks beyond React, React Router, and Framer Motion without Tier 1 authorization.
 
-### C-02: No fetch() Calls
-All data is embedded in `app.js`. The `file://` protocol blocks cross-origin requests. No exceptions in Phase 1A.
+### C-02: Data Access Through SideCarAdapter Only
+All data access routes through `SideCarAdapter` in `src/services/SideCarAdapter.ts`. No direct fetch() calls from components. In Phase 1A, the adapter returns synthetic data. In Phase 1B, it will call Microsoft Graph API.
 
 ### C-03: No PII/CUI
 All data is synthetic. Realistic structure, fabricated values. No real names, SSNs, DODIDs, or command identifiers.
 
 ### C-04: NMCI Browser Baseline
-Target Chrome 110+ / Edge 110+. No `container queries`, no `@layer`, no `CSS nesting`, no top-level `await`. Test with these constraints.
+Target Chrome 110+ / Edge 110+. No `container queries`, no `@layer`, no `CSS nesting`, no top-level `await`. Test with these constraints. Vite build output must target ES2020 for Chrome 110+ compatibility.
 
 ### C-05: Font Fallbacks Mandatory
 Three-layer loading: CDN → local `.woff2` → system fallback. Google Fonts will be blocked on NMCI. The interface must be fully functional with Georgia, Arial, and Consolas as fallbacks.
@@ -172,10 +176,10 @@ NMCI Content Security Policy may block `data:` URIs. Always provide a file-based
 Any resource loaded from a CDN must have a documented offline alternative that ships with the bundle.
 
 ### C-08: Module Boundary Integrity
-Each page is self-contained. Cross-page state passes through `app.js` only. No page may directly call functions defined inline in another page.
+Each React component module is self-contained. Cross-component state passes through services and React Router only. No component may directly import logic from another module's directory.
 
 ### C-09: Adapter Layer Pattern
-All data access goes through a defined adapter interface in `app.js`. Phase 1A adapter returns embedded data. Phase 1B adapter will call Graph API. Same interface contract.
+All data access goes through the `SideCarAdapter` TypeScript service in `src/services/SideCarAdapter.ts`. Phase 1A adapter returns synthetic data from `SyntheticData.ts`. Phase 1B adapter will call Graph API. Same interface contract.
 
 ### C-10: Comm Log Immutability
 Communication records are append-only. No edit. No delete. This is a constitutional constraint, not a feature toggle.
@@ -227,7 +231,7 @@ Every session follows this 10-step sequence. No step may be skipped.
 ### When Scope-by-Context Is Sufficient
 - Feature additions within a single module
 - UI/UX adjustments and bug fixes
-- Routine cross-module work (e.g., HTML + CSS for one feature)
+- Routine cross-module work (e.g., component TSX + CSS for one feature)
 - Data additions to synthetic dataset
 
 ### Formal Execution Script Template (When Required)
@@ -239,7 +243,7 @@ Every session follows this 10-step sequence. No step may be skipped.
 - **Date:** YYYY-MM-DD
 - **Module:** [Module ID from MODULE-MAP.md]
 - **Developer:** [Name]
-- **Branch:** [dev/name/module-description]
+- **Branch:** [dev-1 or dev-2]
 - **Task:** [One-sentence description]
 - **Change Type:** [Functionality / UI/UX / Bug Fix / Refactor]
 - **Planned Changes:**
@@ -266,44 +270,35 @@ This lightweight confirmation replaces the formal Execution Script for routine w
 
 ## SECTION 8 — BRANCH WORKFLOW
 
-### Branch Structure (Mirrors Tier Authority)
+### Branch Structure (Fixed Branch Model)
 
 ```
 main                          — Production. Tier 1 merge authority only.
 ├── qa-staging                — Verified work stages here. QA + human review.
-│   ├── dev/[name]/mod-p3     — Developer branch. One per developer, per module.
-│   ├── dev/[name]/mod-css    — Example: developer working on style.css
-│   └── dev/[name]/mod-js     — Example: developer working on app.js
-└── breaker                   — Intentional failure testing. Nothing advances from here.
+│   ├── dev-1                 — Development Team 1 (2 developers)
+│   └── dev-2                 — Development Team 2 (2 developers)
 ```
 
-### Branch Naming Convention
-
-```
-dev/[developer-name]/[module-id]-[brief-description]
-```
-
-Examples:
-- `dev/jones/mod-p3-dashboard-table`
-- `dev/smith/mod-css-prd-tokens`
-- `dev/oneil/mod-js-adapter-refactor`
+Branches are permanent and assigned. See `workflow/BRANCH-ASSIGNMENTS.md` for the authoritative assignment table.
 
 ### Merge Flow (One Direction Only)
 
 ```
-dev/[name]/[module] → qa-staging → main
+dev-1 or dev-2 → qa-staging → main
 ```
 
 - `dev → qa-staging`: Requires Execution Script completion + QA gate pass
 - `qa-staging → main`: Requires Tier 1 explicit authorization
-- **No lateral merges between developer branches**
+- Developers push to their assigned dev branch. Two developers share each branch and coordinate via the session protocol.
+- **No lateral merges between dev branches**
 - **No direct push to main under any circumstance**
 - **All pushes are manual, human-triggered** (no automated CI/CD in Phase 1A)
+- **No other branches are authorized.** Creating an unauthorized branch triggers a governance violation alert.
 
 ### Halt Resolution
 
 If a session produces a halt verdict:
-1. The developer branch is deleted
+1. Commits are reverted on the dev branch
 2. `main` and `qa-staging` are untouched
 3. The halt is logged in `lessons/halts.md`
 4. A new session begins with a corrected Execution Script
@@ -373,7 +368,7 @@ function computePRDTier(sailor) {
 
 ## SECTION 14 — COVENANT DESIGN TOKENS (QUICK REFERENCE)
 
-Full token specification lives in SIDECAR_DESIGN v2.0. This is the operational subset every session must have loaded.
+Full token specification is defined in `src/index.css` (the `:root` declaration). This is the operational subset every session must have loaded.
 
 ```css
 :root {
@@ -437,30 +432,30 @@ Full token specification lives in SIDECAR_DESIGN v2.0. This is the operational s
 
 Every feature must account for both modes. Never build a feature that only works in one.
 
-### Mode A: Mac Development (Current)
-- CSV file picker / drag-and-drop in the browser
-- Client-side CSV parsing with vanilla JavaScript (no libraries)
-- Parsed data populates the dashboard in real time
-- Used for rapid iteration with real CSV exports
+### Mode A: Development (Current — Phase 1A)
+- `SyntheticData.ts` provides realistic fabricated data
+- `SideCarAdapter.ts` exposes the adapter interface returning synthetic data
+- Components call only the adapter — never `SyntheticData.ts` directly
+- Used for rapid iteration and demo without backend dependencies
 
-### Mode B: NMCI Production (Target)
-- CSV data is manually converted to a JavaScript object
-- Object is embedded directly in `app.js`
-- No file system access, no `fetch()`, no dynamic loading
-- Same UI, same computation, different data source
+### Mode B: SPFx Production (Target — Phase 1B+)
+- `SideCarAdapter.ts` switches its backing implementation to Microsoft Graph API calls through GCC High
+- SPFx web part hosts the React application within SharePoint
+- Same adapter interface, same components, different data source
 
 ### Adapter Interface Contract
-```javascript
-const SideCarAdapter = {
-  getSailors:    function() { /* returns array of sailor objects */ },
-  getCommLog:    function(sailorId) { /* returns array of comm entries */ },
-  getBillets:    function(commandId) { /* returns array of billet objects */ },
-  getCommands:   function() { /* returns array of command objects */ },
-  addCommEntry:  function(sailorId, entry) { /* append-only write */ }
-};
+```typescript
+// src/services/SideCarAdapter.ts
+interface ISideCarAdapter {
+  getSailors():              ISailor[];
+  getCommLog(sailorId: string):   ICommEntry[];
+  getBillets(commandId: string):  IBillet[];
+  getCommands():             ICommand[];
+  addCommEntry(sailorId: string, entry: ICommEntry): void;  // append-only
+}
 ```
 
-Phase 1A: These functions return embedded synthetic data from `app.js`.
+Phase 1A: These functions return synthetic data from `SyntheticData.ts`.
 Phase 1B: These functions call Microsoft Graph API through GCC High.
 **The interface contract does not change between phases.**
 
@@ -485,15 +480,15 @@ The system does not repeat errors it has already classified. It encodes the reso
 Before finishing ANY output, confirm:
 
 - [ ] No external dependencies without documented NMCI fallback
-- [ ] No `fetch()` calls in any Phase 1A code
+- [ ] No direct `fetch()` calls from components — all data through SideCarAdapter
 - [ ] All colors use CSS custom properties from the token system
 - [ ] All numerical data uses `--font-data` (DM Mono)
 - [ ] PRD colors match the locked 5-tier semantic system
 - [ ] Font loading uses three-layer fallback (CDN → local → system)
-- [ ] Works from `file://` path in Chrome/Edge
+- [ ] Builds cleanly with `npm run build` and runs with `npm run dev`
 - [ ] Synthetic data only — no real names, SSNs, DODIDs, or PII
-- [ ] Navigation between all pages is functional
-- [ ] Page 1 passes the 90-second flag officer test
+- [ ] Navigation between all routes is functional
+- [ ] Landing page passes the 90-second flag officer test
 - [ ] Module boundary was not violated
 - [ ] Session log entry was created
 
@@ -600,16 +595,16 @@ Before finishing ANY output, confirm:
 ## SECTION 19 — LLM OPERATING CONTEXT
 
 ### Development Stack
-- **Development LLM:** Google Gemini (executing code in Antigravity sessions)
+- **Development LLM:** Anthropic Claude (Claude Code sessions)
 - **Governance LLM:** Anthropic Claude (Project Compass — strategy, directive authoring, session planning)
-- **IDE:** Antigravity (Directive Library loads automatically at session open)
+- **IDE:** Claude Code / Cursor / VS Code (Directive Library loads automatically at session open)
 - **Version Control:** GitHub (branch workflow defined in Section 8)
 
-### Gemini-Specific Instructions
+### LLM Agent Instructions
 
 1. **Produce production-ready code.** Every code block must be copy-paste deployable. No pseudocode. No placeholder comments like "// add logic here." If you cannot complete a function, state what is missing and halt.
 
-2. **Respect the flat-file constraint.** You will be tempted to suggest React, Vue, or a build system. Do not. Phase 1A is vanilla HTML/CSS/JS opened from `file://`. This is not a limitation to work around — it is a design decision driven by NMCI constraints.
+2. **Respect the component architecture.** All new features are React + TypeScript components within the `sidecar-app/src/` structure. Follow the established module pattern: component TSX + component CSS + service integration through SideCarAdapter.
 
 3. **Use the token system.** Never output a hex color value in CSS or JavaScript outside the `:root` declaration. Reference the token. If a token does not exist for what you need, flag it — Tier 1 will decide whether to create one.
 
@@ -623,7 +618,7 @@ Before finishing ANY output, confirm:
 
 ## SECTION 20 — SESSION LOAD PROTOCOL (PRAGMATIC)
 
-> **Amended 2026-03-29:** Streamlined from full-ceremony model. Constitutional constraints remain non-negotiable. Ceremony reduced. The canonical version of this protocol lives in `.agents/workflows/session-load.md`.
+> **Amended 2026-03-31:** Streamlined from full-ceremony model. Constitutional constraints remain non-negotiable. Ceremony reduced.
 
 This section governs how any AI assistant initializes a development session.
 
@@ -632,13 +627,14 @@ This section governs how any AI assistant initializes a development session.
 On session open, internalize the core governance documents:
 
 **Always actively load:**
-1. `Gemini.md` — This document (master session brief)
+1. `directives/Gemini.md` — This document (master session brief)
 2. `directives/UI-UX.md` — Covenant design system
 3. `workflow/MODULE-MAP.md` — Module routing table
+4. `sidecar-app/src/index.css` — Design tokens (:root)
 
 **Internalized as background guardrails (read at least once, then referenced as needed):**
-4. `directives/DEVELOPMENT.md`, `SECURITY.md`, `UX-PATTERNS.md`, `INTEGRATIONS.md`, `AUDIT.md`, `TESTING.md`, `ONBOARDING.md`
-5. `lessons/halts.md`, `lessons/patterns.md`, `lessons/exemplars.md`
+5. `directives/DEVELOPMENT.md`, `SECURITY.md`, `UX-PATTERNS.md`, `INTEGRATIONS.md`, `AUDIT.md`, `TESTING.md`, `ONBOARDING.md`
+6. `lessons/halts.md`, `lessons/patterns.md`, `lessons/exemplars.md`
 
 ### Step 2: Confirm Load (One Line)
 

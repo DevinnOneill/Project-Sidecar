@@ -10,8 +10,8 @@
 Your code moves through three stages before it reaches production:
 
 ```
-YOUR BRANCH → qa-staging → main
-   (you)        (QA review)    (Tier 1 merge)
+dev-1 or dev-2 → qa-staging → main
+  (your team)     (QA review)    (Tier 1 merge)
 ```
 
 Nothing skips a stage. Nothing goes backwards.
@@ -23,15 +23,17 @@ Nothing skips a stage. Nothing goes backwards.
 One command — clone and onboard in one shot:
 
 ```bash
-git clone https://github.com/matthewcla/SideCar-Concept.git && cd SideCar-Concept && bash scripts/onboard.sh
+git clone https://github.com/DevinnOneill/Project-Sidecar.git && cd Project-Sidecar/sidecar-app && npm install && npm run dev
 ```
 
-The onboarding agent automatically:
-- Activates git hooks (catches mistakes before they reach GitHub)
-- Asks your name and creates your dev branch from main
-- Verifies fonts and core files
-- Opens SideCar in your browser
-- Walks you through the rules and how to save your work
+This clones the repo, installs dependencies, and starts the Vite dev server. Open `http://localhost:5173` in Chrome to see the app.
+
+Then switch to your assigned branch:
+
+```bash
+git checkout dev-1   # or dev-2 — whichever you're assigned to
+git pull origin dev-1
+```
 
 ---
 
@@ -40,28 +42,28 @@ The onboarding agent automatically:
 ### Step 1: Make sure you're up to date
 
 ```bash
-# Pull the latest from main
 git checkout main
 git pull origin main
 ```
 
-### Step 2: Create your branch
-
-Branch naming: `dev/[your-name]/[module-id]-[description]`
+### Step 2: Switch to your assigned branch
 
 ```bash
-git checkout -b dev/abby/mod-det-prd-column
+git checkout dev-1
+git pull origin dev-1
 ```
 
 **Module IDs:**
-| Module ID | File | Description |
-|-----------|------|-------------|
-| `mod-land` | `app/landing.html` | Landing page |
-| `mod-det` | `app/detailer.html` | Detailer Dashboard |
-| `mod-plac` | `app/placement.html` | Placement Coordinator |
-| `mod-anlyt` | `app/analytics.html` | Analytics Dashboard |
-| `mod-css` | `app/style.css` | Design system |
-| `mod-js` | `app/app.js` | Shared logic + data |
+| Module ID | File(s) | Description |
+|-----------|---------|-------------|
+| `MOD-LAND` | `src/Landing/*` | Landing page |
+| `MOD-WORK` | `src/Workspace/*` | Detailer Workspace |
+| `MOD-MEMBER` | `src/Personnel/*` | Sailor Record View |
+| `MOD-CMD` | `src/Command/*` | Command Manning View |
+| `MOD-ANLYT` | `src/Analytics/*` | Analytics Dashboard |
+| `MOD-SEARCH` | `src/AdvancedSearch/*` | Advanced Search |
+| `MOD-CSS` | `src/index.css` + CSS files | Design system |
+| `MOD-SVC` | `src/services/*` | Shared logic + data |
 
 ### Step 3: Open your IDE and start your session
 
@@ -92,7 +94,7 @@ This shows you which files were modified. **Make sure you only changed files in 
 
 ```bash
 # Stage specific files (recommended)
-git add app/detailer.html
+git add sidecar-app/src/Workspace/Workspace.tsx sidecar-app/src/Workspace/Workspace.css
 
 # DON'T do: git add .  (this can accidentally add files outside your module)
 ```
@@ -100,11 +102,11 @@ git add app/detailer.html
 ### Step 3: Commit with the required format
 
 ```bash
-git commit -m "[SC-2026-0326-001] MOD-DET: Add PRD tier column to dashboard table
+git commit -m "[SC-2026-0331-001] MOD-WORK: Add comm panel slide-out to Workspace
 
-- Modified: app/detailer.html
-- Task: Render PRD tiers with semantic color badges
-- Constraints: C-11, C-12, C-14"
+- Modified: src/Workspace/Workspace.tsx, src/Workspace/Workspace.css
+- Task: Implement slide-out communication panel
+- Constraints: C-09, C-10, C-11, C-14"
 ```
 
 **Commit message format:** `[SC-YYYY-MMDD-NNN] MODULE-ID: Brief description`
@@ -138,14 +140,10 @@ The git hooks automatically run two checks:
 After your commit succeeds:
 
 ```bash
-# First time pushing this branch:
-git push -u origin dev/abby/mod-det-prd-column
-
-# Subsequent pushes on the same branch:
-git push
+git push origin dev-1
 ```
 
-**This puts your code on GitHub under YOUR branch.** It does NOT touch `qa-staging` or `main`.
+**This puts your code on GitHub under your team's branch.** It does NOT touch `qa-staging` or `main`.
 
 ---
 
@@ -155,17 +153,18 @@ A PR is a request to merge your branch into `qa-staging`. Here's how:
 
 ### Option A: GitHub website (easiest)
 
-1. Go to https://github.com/matthewcla/SideCar-Concept
-2. You'll see a yellow banner: "dev/abby/mod-det-prd-column had recent pushes"
+1. Go to https://github.com/DevinnOneill/Project-Sidecar
+2. You'll see a yellow banner: "dev-1 had recent pushes"
 3. Click **"Compare & pull request"**
 4. Make sure **base** is set to `qa-staging` (NOT main)
-5. Write a title and description of what you did
-6. Click **"Create pull request"**
+5. Make sure **compare** is set to `dev-1` (or `dev-2`)
+6. Write a title and description of what you did
+7. Click **"Create pull request"**
 
 ### Option B: Terminal (if you have `gh` installed)
 
 ```bash
-gh pr create --base qa-staging --title "MOD-DET: Add PRD tier column" --body "Session: SC-2026-0326-001"
+gh pr create --base qa-staging --title "MOD-WORK: Add comm panel slide-out" --body "Session: SC-2026-0331-001"
 ```
 
 ---
@@ -180,8 +179,8 @@ Within 1-2 minutes, a bot will post a comment on your PR with a full report:
 SideCar QA Agent Report
 
 Quick Brief for Reviewer:
-  abbieyra is merging dev/abby/mod-det-prd-column → qa-staging
-  3 files changed in MOD-DET | Merge: clean
+  dev-1 → qa-staging
+  3 files changed in MOD-WORK | Merge: clean
   9 passed · 0 failed · 0 warnings
 
   All clear — safe to merge.
@@ -209,7 +208,7 @@ Once approved, the reviewer clicks "Merge pull request." Your code is now in `qa
 
 ### 4. qa-staging gets merged into main
 
-Only Tier 1 (Matthew) can merge from `qa-staging` into `main`. This is the final gate.
+Only Tier 1 can merge from `qa-staging` into `main`. This is the final gate.
 
 ---
 
@@ -226,21 +225,17 @@ git status
 git diff
 
 # Stage a file
-git add app/detailer.html
+git add sidecar-app/src/Workspace/Workspace.tsx
 
 # Commit
-git commit -m "[SC-2026-0326-001] MOD-DET: Brief description"
+git commit -m "[SC-2026-0331-001] MOD-WORK: Brief description"
 
-# Push
-git push -u origin dev/yourname/mod-det-description
+# Push to your assigned branch
+git push origin dev-1
 
-# Switch to a different branch
-git checkout main
-
-# Create a new branch from main
-git checkout main
-git pull origin main
-git checkout -b dev/yourname/mod-plac-new-task
+# Switch to your assigned branch
+git checkout dev-1
+git pull origin dev-1
 
 # See recent commits
 git log --oneline -10
@@ -252,9 +247,9 @@ git log --oneline -10
 
 1. **Never push to `main` directly.** Everything goes through PRs.
 2. **Never push to `qa-staging` directly.** Open a PR targeting it.
-3. **One module per branch.** `dev/abby/mod-det-table` only touches `app/detailer.html`.
-4. **One task per branch.** Finish the task, push, PR. Start a new branch for the next task.
-5. **Always pull main before creating a new branch.** Keeps you up to date.
+3. **Push only to your assigned branch (dev-1 or dev-2).** See `workflow/BRANCH-ASSIGNMENTS.md`.
+4. **Do not create new branches.** The four branches (dev-1, dev-2, qa-staging, main) are the only authorized branches.
+5. **Always pull your dev branch before starting work.** Keeps you up to date.
 6. **If your commit fails, read the error.** The hooks tell you exactly what's wrong.
 7. **If the QA Agent fails your PR, fix and push.** It re-runs automatically.
 8. **If you're confused, ask.** A halt is better than a mistake in production.

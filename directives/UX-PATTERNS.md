@@ -59,7 +59,7 @@ The Settings Hub allows each user to configure their local view. It acts as a sl
 ## 4. Shareability Protocol
 
 ### Purpose
-SideCar operates in environments where users may need to share their current view configuration (e.g., active filters, cohort selection). Because SideCar runs from `file://` in Phase 1A, URL-based sharing is unreliable. The Shareability Protocol uses JSON export/import.
+SideCar operates in environments where users may need to share their current view configuration (e.g., active filters, cohort selection). The Shareability Protocol uses JSON export/import for maximum portability across deployment contexts.
 
 ### Export
 - System generates a JSON blob containing current active filters, sorts, and UI toggles.

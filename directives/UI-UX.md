@@ -24,7 +24,7 @@
 ## 3. Color Token System
 
 ### Token Authority
-The `:root` declaration in `app/style.css` is the single source of truth for all color values. `Gemini.md` Section 14 is the quick reference. This document is the specification.
+The `:root` declaration in `sidecar-app/src/index.css` is the single source of truth for all color values. `Gemini.md` Section 14 is the quick reference. This document is the specification.
 
 **HARD RULE:** If a hex value appears anywhere in component CSS, in a `style` attribute, or in a JavaScript style assignment outside of the `:root` token declaration — it is a constraint violation (C-11). Find the appropriate token or create a new one.
 
@@ -146,7 +146,7 @@ SideCar uses exactly three fonts. Each has a single defined role. Using the wron
 
 **Layer 1 — Remote Load (Preferred):** Use `<link>` tags in `<head>`. Never `@import` inside CSS — `@import` blocks rendering and fails silently behind NMCI proxies.
 
-**Layer 2 — Local Font Package:** Distribute `.woff2` files in a `/fonts` directory. Define `@font-face` rules in `style.css` before any other usage. Fires automatically if remote load fails.
+**Layer 2 — Local Font Package:** Distribute `.woff2` files in a `/fonts` directory. Define `@font-face` rules in `index.css` before any other usage. Fires automatically if remote load fails.
 
 **Layer 3 — System Font Stack:**
 ```css
@@ -255,7 +255,7 @@ The accent border at the bottom of the topbar is never removed, hidden, conditio
 
 ### 6.2 PRD Badges
 
-PRD badges appear in the Sailor Priority Queue and the PRD pipeline strip. The badge CSS class is assigned by the `computePRDTier()` function in `app.js`. The UI rendering layer never reads a PRD date directly.
+PRD badges appear in the Sailor Priority Queue and the PRD pipeline strip. The badge CSS class is assigned by the `computePRDTier()` function in `src/services/PrdEngine.ts`. The UI rendering layer never reads a PRD date directly.
 
 ```css
 .prd-badge {
@@ -444,18 +444,20 @@ Data values must never animate (no count-up on load, no value transitions). Data
 
 ---
 
-## 8. NMCI Rendering Constraints
+## 8. NMCI Rendering Constraints (Build Output)
 
-- No CSS nesting (`& .child` syntax — Chrome 120+, beyond NMCI baseline)
+These constraints apply to the **Vite production build output**, not the source TypeScript/JSX:
+
+- No CSS nesting in output (`& .child` syntax — Chrome 120+, beyond NMCI baseline)
 - No `@container` queries (Chrome 105+, inconsistent on NMCI builds)
 - No `@layer` cascade layers
 - No `backdrop-filter: blur()` as sole visual indicator (may be disabled)
 - No `dvh` / `svh` viewport units (use `vh` with fallback)
-- No `top-level await`
-- No ES modules (`import`/`export`)
-- No Tailwind CSS CDN or any runtime CSS framework (blocked on NMCI, no network at `file://`)
-- **Target baseline:** Chrome 110+ / Edge 110+
+- No Tailwind CSS or any runtime CSS framework
+- **Vite build target:** ES2020 for Chrome 110+ / Edge 110+ compatibility
 - **Test with font fallbacks active** — the interface must be fully functional on Georgia/Arial/Consolas
+
+> **Note:** Source code uses TypeScript `import`/`export` and React JSX — Vite compiles these to Chrome 110-compatible output.
 
 ---
 
@@ -498,8 +500,8 @@ These prohibitions are constitutional. Any of the following in a delivered artif
 | Prohibited | Why |
 |---|---|
 | External CDN JS without local fallback | Breaks on NMCI. Constraint C-07. |
-| `fetch()` calls to local `file://` paths | CORS block in Chrome/Edge. Constraint C-02. |
-| PRD tier logic in UI or rendering layer | Constraint C-14. Single processing layer in `app.js` only. |
+| Direct `fetch()` calls from React components | All data through SideCarAdapter.ts. Constraint C-02/C-09. |
+| PRD tier logic in components or rendering layer | Constraint C-14. Single processing layer in `PrdEngine.ts` only. |
 | `@import` for Google Fonts | Blocks rendering, fails silently behind NMCI proxies. |
 | `localStorage`/`sessionStorage` for PII | Constraint C-03. No PII on device. |
 | `border-radius` above 10px on data elements | Exceeds Covenant radius constraint (exception: landing cards at 16px). |
@@ -536,6 +538,6 @@ This is not decorative. The disconnected data architecture means users must alwa
 
 ---
 
-*UI-UX.md v3.0 — SideCar Directive Library — Expanded 2026-03-27*
+*UI-UX.md v3.1 — SideCar Directive Library — Amended 2026-03-31 for React/TypeScript*
 
 

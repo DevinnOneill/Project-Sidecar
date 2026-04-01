@@ -4,7 +4,6 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { SideCarAdapter } from '../services/SideCarAdapter';
 import { computePRDTier, daysSinceContact } from '../services/PrdEngine';
 import type { ISailor, INotification, IOrderStatus, IPrdResult } from '../models/ISailor';
-import { PIPELINE_STAGES } from '../services/SyntheticData';
 import './Landing.css';
 
 type RoleMode = 'Detailer' | 'Placement';
@@ -112,10 +111,6 @@ export default function Landing() {
     if (days > 30) return 'contact--stale';
     if (days > 14) return 'contact--aging';
     return 'contact--healthy';
-  };
-
-  const getPipelineLabel = (stage: string) => {
-    return PIPELINE_STAGES.find(p => p.key === stage)?.label || '—';
   };
 
   return (

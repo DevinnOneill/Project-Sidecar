@@ -1,7 +1,8 @@
 # DEVELOPMENT.md — Development Standards
 
-> **Version:** 1.0 | **Domain:** Governed Development Cycle, Branch Workflow, Commit Format
+> **Version:** 2.0 | **Domain:** Governed Development Cycle, Branch Workflow, Commit Format
 > **Authority:** Tier 1 | **Loaded By:** Every code-producing session
+> **Amended:** 2026-03-31 — Updated for Vite + React + TypeScript architecture
 
 ---
 
@@ -43,11 +44,11 @@ The 10-step cycle defined in `Gemini.md` Section 6 is the authoritative sequence
 
 Example:
 ```
-[SC-2026-0325-001] MOD-P3: Add PRD tier column to dashboard table
+[SC-2026-0331-001] MOD-WORK: Add comm panel slide-out to Workspace
 
-- Modified: page3.html (lines 45-120)
-- Task: Render PRD tiers with semantic color badges
-- Constraints: C-11 (tokens), C-12 (typography), C-14 (PRD semantic)
+- Modified: src/Workspace/Workspace.tsx, src/Workspace/Workspace.css
+- Task: Implement slide-out communication panel with append-only log
+- Constraints: C-09 (adapter), C-10 (immutability), C-11 (tokens), C-14 (PRD semantic)
 - QA score: C:8 S:9 CR:8 OD:9
 ```
 
@@ -55,50 +56,60 @@ Example:
 
 See `Gemini.md` Section 8 for the full branch structure. Key rules:
 
-- **One branch per developer, per module, per session**
-- **Branch naming:** `dev/[name]/[module-id]-[description]`
-- **Merge direction:** `dev → qa-staging → main` (one direction only)
-- **No lateral merges** between developer branches
+- **Developers push to their assigned fixed branch (dev-1 or dev-2).** See `workflow/BRANCH-ASSIGNMENTS.md`.
+- **Merge direction:** `dev-1 or dev-2 → qa-staging → main` (one direction only)
+- **No lateral merges** between dev branches
 - **All pushes are manual** — no automated CI/CD
-- **Halt = branch deleted** — main and qa-staging untouched
+- **Halt = commits reverted on dev branch** — main and qa-staging untouched
 
 ## 5. Code Standards
 
-### HTML
-- Semantic HTML5 elements (`<nav>`, `<main>`, `<section>`, `<article>`, `<aside>`)
-- No inline styles (use CSS classes referencing tokens)
-- No inline JavaScript longer than a single event binding
-- All pages include the shared `style.css` and `app.js`
+### TypeScript
+- **Strict mode required** — `tsconfig.json` enforces `strict: true`
+- All components and services must be fully typed — no `any` without justification
+- Use TypeScript interfaces from `src/models/ISailor.ts` for all domain types
+- ES2020 target (Chrome 110+ compatibility)
+- All data access through the `SideCarAdapter` TypeScript service
+
+### React Components
+- Functional components only (no class components)
+- Each module follows the pattern: `ModuleName/ModuleName.tsx` + `ModuleName/ModuleName.css`
+- Props must be explicitly typed with TypeScript interfaces
+- State management through React hooks (`useState`, `useEffect`, `useMemo`)
+- Routing through React Router v7 — no manual URL manipulation
+- Animations through Framer Motion only — no CSS keyframe animations on data
 
 ### CSS
-- All values use CSS custom properties from `:root`
-- No hardcoded hex values outside `:root` declaration
-- BEM-like naming: `.dashboard-table__row--critical`
-- No `@import` — single `style.css` file
-- No CSS nesting (NMCI Chrome 110 compatibility)
+- All values use CSS custom properties from `:root` in `src/index.css`
+- No hardcoded hex values outside `:root` declaration (C-11)
+- BEM-like naming: `.workspace__roster-row--critical`
+- Component-scoped CSS files (one per module)
+- No CSS nesting (NMCI Chrome 110 compatibility in build output)
 - No `@layer` or `@container` (NMCI compatibility)
+- No CSS-in-JS libraries — use plain CSS files with token references
 
-### JavaScript
-- ES6 baseline (Chrome 110+): `const`, `let`, arrow functions, template literals, destructuring
-- No top-level `await`
-- No `import`/`export` (no modules — flat file architecture)
-- No `fetch()` in Phase 1A
-- All shared functions defined in `app.js`
-- All data access through the `SideCarAdapter` interface
+### Services
+- All business logic in `src/services/` — never in components
+- `SideCarAdapter.ts` is the sole data access interface (C-09)
+- `PrdEngine.ts` owns PRD computation — LOCKED, requires Tier 1 to modify
+- `SyntheticData.ts` generates all Phase 1A test data
 
-## 6. File Size Discipline
+## 6. Build & Bundle Discipline
 
-> **Amended 2026-03-29:** Targets updated to reflect workspace.html consolidation. The primary work surface is a single-file SPA that replaced what were previously 3 separate pages.
+> **Amended 2026-03-31:** Updated for Vite build pipeline.
 
-Phase 1A ships as a flat file bundle transferred via USB or SharePoint. Keep it lean.
+### Development
+- `npm run dev` — Vite dev server with HMR
+- `npm run build` — Production build with TypeScript checking
+- `npm run lint` — ESLint checks
 
-- `style.css`: Target < 50KB (Covenant token system + all component styles)
-- `app.js`: Target < 60KB (including embedded synthetic data and SideCarAdapter)
-- `workspace.html`: Target < 80KB (consolidated primary work surface — exception to page target)
-- `landing.html`: Target < 50KB (Intelligence Bar + Smart Pill)
-- Other page HTML: Target < 20KB each (drilldown views)
-- Total bundle (excluding fonts): Target < 400KB
+### Bundle Targets
+- Total production build (excluding fonts): Target < 500KB
+- Individual component CSS: Target < 10KB each
+- `src/index.css` (design tokens): Target < 5KB
+- Vite tree-shaking and code-splitting enabled by default
+- Build output must target ES2020 for Chrome 110+ (C-04)
 
 ---
 
-*DEVELOPMENT.md v1.0 — SideCar Directive Library*
+*DEVELOPMENT.md v2.0 — SideCar Directive Library*

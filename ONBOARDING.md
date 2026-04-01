@@ -11,10 +11,10 @@
 Copy this, paste it in your terminal, hit Enter:
 
 ```bash
-git clone https://github.com/matthewcla/SideCar-Concept.git && cd SideCar-Concept && bash scripts/onboard.sh
+git clone https://github.com/DevinnOneill/Project-Sidecar.git && cd Project-Sidecar/sidecar-app && npm install && npm run dev
 ```
 
-The onboarding agent walks you through everything automatically. It takes about 5 minutes, no experience needed. If you've already onboarded, it detects the `.onboarded` sentinel and skips.
+Install dependencies and start the Vite dev server. The app opens at `http://localhost:5173`.
 
 ---
 
@@ -35,7 +35,7 @@ Right now, SideCar is a **proof of concept** running on synthetic data. No real 
 
 This project uses a **governed development framework**. In plain English:
 
-1. **Every file has a boundary.** You work on ONE file at a time. If your task is on `app/detailer.html`, you cannot edit `app/style.css` in the same session. Need to touch another file? Open a new session.
+1. **Every module has a boundary.** You work on ONE module at a time. If your task is in `src/Workspace/`, you cannot edit `src/index.css` in the same session. Need to touch another module? Open a new session.
 
 2. **An AI assistant helps you code.** When you open this project in your IDE (Claude Code, Cursor, or VS Code with AI), the assistant automatically loads the project rules. It knows what you're allowed to do and guides you.
 
@@ -53,13 +53,13 @@ These are the constitutional constraints. They're non-negotiable — the git hoo
 
 | Rule | What It Means | Why |
 |------|-------------|-----|
-| **No `fetch()` calls** | All data comes through `SideCarAdapter` in `app/app.js`. Never call `fetch()` directly. | SideCar must work from `file://` on NMCI machines with no internet. |
+| **No `fetch()` calls** | All data comes through `SideCarAdapter` in `src/services/SideCarAdapter.ts`. Never call `fetch()` directly. | SideCar must work offline on NMCI machines with no internet. |
 | **No hardcoded colors** | Use CSS tokens like `var(--color-gold-primary)`. Never write hex values outside of `:root`. | Keeps the design system consistent. One change updates everything. |
-| **No CSS nesting, @layer, @container** | Write flat CSS only. No `&` selectors, no modern CSS features. | NMCI machines run older browsers (Chrome 110+). |
-| **One module per session** | Working on `detailer.html`? Don't edit `style.css` in the same session. | Prevents conflicts when multiple developers work simultaneously. |
+| **No CSS nesting in build output** | Write flat CSS in component files | NMCI Chrome 110+ baseline for build output |
+| **One module per session** | Working on `Workspace/`? Don't edit `index.css` in the same session. | Prevents conflicts when multiple developers work simultaneously. |
 | **Synthetic data only** | No real names, SSNs, DODIDs, or command identifiers. | Phase 1A has no authorization for real data. Legal requirement. |
 | **Light mode only** | White surfaces + brass gold accents. No dark mode. | Covenant design system specification. |
-| **Adapter pattern only** | All data goes through `SideCarAdapter`. Never access data arrays directly. | The adapter swaps between synthetic, CSV, and API data seamlessly. |
+| **Adapter pattern only** | All data goes through `SideCarAdapter` in `src/services/SideCarAdapter.ts`. Never access data arrays directly. | The adapter swaps between synthetic, CSV, and API data seamlessly. |
 
 ---
 
@@ -69,14 +69,14 @@ A halt means the system stopped you because something wasn't right. **This is go
 
 **AI halt** — You tried to edit a file outside your module:
 ```
-HALT: style.css is MOD-CSS. You declared MOD-DET.
+HALT: index.css is MOD-CSS. You declared MOD-WORK.
 Close this session and open a new one for MOD-CSS.
 ```
 **Fix:** Stay in your module, or close and start a new session.
 
 **Git hook halt** — You committed code with a violation:
 ```
-HALT: C-11 violation in detailer.html:45
+HALT: C-11 violation in Workspace.css:45
 No hardcoded hex values outside :root. Use CSS custom properties.
 ```
 **Fix:** Replace the hex value with a CSS token, re-stage, and commit again.
@@ -105,8 +105,8 @@ Loaded: WHITE_PAPER.md, Gemini.md, DEVELOPMENT.md, SECURITY.md,
 
 ### 2. The AI scopes your work
 Before you write any code, the AI asks:
-- **Which module?** (MOD-LAND, MOD-DET, MOD-PLAC, MOD-ANLYT, MOD-CSS, MOD-JS)
-- **What is your branch?** (e.g., `dev/jones/mod-det-prd-column`)
+- **Which module?** (MOD-LAND, MOD-WORK, MOD-MEMBER, MOD-CMD, MOD-ANLYT, MOD-SEARCH, MOD-CSS, MOD-SVC)
+- **What is your branch?** (dev-1 or dev-2)
 - **What are you working on?** (one sentence)
 - **What type of changes?** (Functionality, UI/UX, Bug Fix, or Refactor)
 - **List your planned changes** (your "edit contract")
@@ -128,17 +128,14 @@ Example: `[SC-2026-0325-001] MOD-DET: Add PRD tier column to dashboard table`
 
 ## Branch Workflow
 
-Your code reaches production in stages:
+Your code reaches production in stages. The project uses a **fixed branch model** — there are exactly four branches, all permanent:
 
 ```
-dev/[your-name]/[module-id]-[description]     ← You work here
-        ↓ (push)
-qa-staging                                     ← Senior devs review
-        ↓ (merge — reviewers only)
-main                                           ← Production
+dev-1 or dev-2  →  qa-staging  →  main
+   (your team)      (Tier 1 QA)    (production)
 ```
 
-Nobody's code goes straight to `main`. Ever.
+Each dev branch is shared by two developers. You push to your assigned branch (dev-1 or dev-2), open a PR to qa-staging, and Tier 1 merges qa-staging into main. Nobody creates new branches. Nobody's code goes straight to `main`. Ever.
 
 ---
 
@@ -189,14 +186,13 @@ Your first commit is reviewed by Tier 1 regardless of QA status. This is a calib
 ### On Your Mac (Current)
 - Editor: VS Code, Cursor, or Claude Code
 - AI: Loads governance automatically at session open
-- Browser: Chrome (test from both `file://` and local server)
+- Runtime: Node.js + npm
+- Browser: Chrome (`http://localhost:5173` via `npm run dev`)
 - Git: Clone, branch, commit, push
-- Data: Synthetic embedded in `app/app.js`
+- Data: Synthetic generated by `src/services/SyntheticData.ts`
 
-### On NMCI (Target — You Won't Have)
-- No terminal. No Git. No IDE.
-- Microsoft Office and a browser. That's it.
-- **Your code must work in this environment.** Test accordingly.
+### On NMCI (Target — SPFx Deployment)
+- Application deployed as SPFx web part. Build output targets Chrome 110+.
 
 ---
 
@@ -205,8 +201,8 @@ Your first commit is reviewed by Tier 1 regardless of QA status. This is a calib
 | Mistake | What To Do Instead |
 |---|---|
 | Hardcoding a hex color | Use the CSS custom property from `:root` |
-| Using `fetch()` to load data | Use `SideCarAdapter` which returns embedded data |
-| Modifying `style.css` while on a page module | Request a separate session for CSS changes |
+| Using `fetch()` to load data | Use `SideCarAdapter.ts` which returns synthetic data |
+| Modifying `index.css` while on a component module | Request a separate session for CSS changes |
 | Adding real Navy data for "testing" | Use synthetic data patterns from SECURITY.md |
 | Using CSS nesting (`& .child`) | Use full selector paths |
 | Skipping the QA gate for "small changes" | Run the full cycle. Small changes fail too. |
@@ -241,8 +237,8 @@ Your first commit is reviewed by Tier 1 regardless of QA status. This is a calib
 | **EAOS** | End of Active Obligated Service. |
 | **Billet** | A job slot at a command. Can be filled or vacant. |
 | **NMCI** | Navy Marine Corps Intranet. The target network. |
-| **Adapter** | `SideCarAdapter` in `app/app.js`. All data flows through it. |
-| **Module** | A single page/file with defined boundaries. One module per session. |
+| **Adapter** | `SideCarAdapter` in `src/services/SideCarAdapter.ts`. All data flows through it. |
+| **Module** | A React component directory or service with defined boundaries. One module per session. |
 | **Session** | One work period on one module. Starts with scope, ends with commit. |
 | **Halt** | System stopped you for a rule violation. Read the message, fix, retry. |
 | **Directive** | A governance document in `directives/`. Defines rules for a specific area. |
@@ -252,4 +248,4 @@ Your first commit is reviewed by Tier 1 regardless of QA status. This is a calib
 
 ---
 
-*ONBOARDING.md v2.0 — SideCar Governed Development Framework*
+*ONBOARDING.md v3.0 — SideCar Governed Development Framework*

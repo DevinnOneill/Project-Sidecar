@@ -13,7 +13,7 @@ Each item follows this format:
 ```
 ### [ID] Title
 - **Module:** Which MOD-* module this touches
-- **Page(s):** Which HTML file(s) are modified or created
+- **Page(s):** Which React component(s) are modified or created
 - **Adapter:** New SideCarAdapter methods required (synth stub first)
 - **Priority:** 🔴 Critical | 🟡 High | 🟢 Medium | ⚪ Low
 - **MS365 Target:** Which MS365 service this maps to in Phase 1B
@@ -23,8 +23,8 @@ Each item follows this format:
 
 **Rules:**
 1. Every new adapter method starts as `Promise.resolve(SYNTHETIC_DATA)` — no `fetch()` until Phase 1B.
-2. Every new page follows the module boundary rules in `MODULE-MAP.md`.
-3. Every new component uses the Covenant Design System tokens in `style.css`.
+2. Every new component follows the module boundary rules in `MODULE-MAP.md`.
+3. Every new component uses the Covenant Design System tokens in `sidecar-app/src/index.css`.
 4. No item ships without passing the quality gate in `TESTING.md`.
 
 ---
@@ -35,16 +35,16 @@ Each item follows this format:
 
 ### COM-001 — Comm Log Timeline View
 - **Module:** MOD-DET
-- **Page(s):** `workspace.html`, `member.html`
+- **Page(s):** `Workspace/Workspace.tsx`, `Personnel/Personnel.tsx`
 - **Adapter:** `getCommLog(sailorId)` (exists)
 - **Priority:** 🔴 Critical
 - **MS365 Target:** Outlook Mail / Graph API
 - **Status:** ✅ Done (Sprint 1)
-- **Description:** Replace the flat comm log list with a vertical timeline component. Each entry shows: date, type icon (📧 email / 📞 phone / 💬 teams / 📋 note), summary, and staleness indicator. The timeline renders inside the Sailor detail panel on `member.html` and as a slide-out on `workspace.html` row click. Design must handle 50+ entries with virtual scrolling.
+- **Description:** Replace the flat comm log list with a vertical timeline component. Each entry shows: date, type icon (📧 email / 📞 phone / 💬 teams / 📋 note), summary, and staleness indicator. The timeline renders inside the Sailor detail panel on `Personnel/Personnel.tsx` and as a slide-out on `Workspace/Workspace.tsx` row click. Design must handle 50+ entries with virtual scrolling.
 
 ### COM-002 — Quick Contact Buttons
 - **Module:** MOD-DET
-- **Page(s):** `workspace.html`, `member.html`
+- **Page(s):** `Workspace/Workspace.tsx`, `Personnel/Personnel.tsx`
 - **Adapter:** `addCommEntry(sailorId, entry)` (exists)
 - **Priority:** 🔴 Critical
 - **MS365 Target:** Outlook / Teams Deep Links
@@ -53,7 +53,7 @@ Each item follows this format:
 
 ### COM-003 — Email Template Library
 - **Module:** MOD-DET
-- **Page(s):** New: `templates.html` or modal in `workspace.html`
+- **Page(s):** New: `Workspace/Templates.tsx` or modal in `Workspace/Workspace.tsx`
 - **Adapter:** New: `getTemplates()` → synth stub
 - **Priority:** 🟡 High
 - **MS365 Target:** Outlook Templates / Graph API draft creation
@@ -69,16 +69,16 @@ Each item follows this format:
 
 ### COM-004 — Contact Staleness Heatmap
 - **Module:** MOD-DET, MOD-ANLYT
-- **Page(s):** `workspace.html`, `analytics.html`
+- **Page(s):** `Workspace/Workspace.tsx`, `Analytics/Analytics.tsx`
 - **Adapter:** `getSailors()` (exists — uses `lastContact` field)
 - **Priority:** 🟡 High
 - **MS365 Target:** Power BI (Phase 1B visualization)
 - **Status:** ✅ Done (Sprint 5)
-- **Description:** Add a heatmap row to the workspace dashboard showing contact staleness distribution: 0-7d (green), 8-14d (light green), 15-30d (yellow), 31-60d (orange), 60d+ (red). Each cell is clickable and filters the roster to that staleness band. Also render a summary version on `analytics.html` as a community-wide contact health metric.
+- **Description:** Add a heatmap row to the workspace dashboard showing contact staleness distribution: 0-7d (green), 8-14d (light green), 15-30d (yellow), 31-60d (orange), 60d+ (red). Each cell is clickable and filters the roster to that staleness band. Also render a summary version on `Analytics/Analytics.tsx` as a community-wide contact health metric.
 
 ### COM-005 — Auto-Log Indicator (Phase 1B Prep)
 - **Module:** MOD-DET
-- **Page(s):** `workspace.html`, `member.html`
+- **Page(s):** `Workspace/Workspace.tsx`, `Personnel/Personnel.tsx`
 - **Adapter:** New: `getAutoLogStatus()` → synth stub (returns `{ enabled: false, pendingSyncs: 0 }`)
 - **Priority:** 🟢 Medium
 - **MS365 Target:** Graph Mail search → auto-populate comm log
@@ -93,16 +93,16 @@ Each item follows this format:
 
 ### SCH-001 — Appointment Calendar Widget
 - **Module:** MOD-DET
-- **Page(s):** `workspace.html` (sidebar or drawer)
+- **Page(s):** `Workspace/Workspace.tsx` (sidebar or drawer)
 - **Adapter:** New: `getAppointments(detailerId, dateRange)` → synth stub
 - **Priority:** 🔴 Critical
 - **MS365 Target:** Microsoft Bookings API / Graph Calendar
 - **Status:** ✅ Done (Sprint 3)
-- **Description:** Add a collapsible calendar sidebar to the workspace showing today's and this week's appointments. Each appointment card shows: Sailor name, rate/grade, time, type (phone/video/in-person), and a one-line reason. Include a "No appointments today" empty state. Clicking an appointment opens the Sailor's `member.html` record. Synthetic data: 3-5 fake appointments per day for the current week.
+- **Description:** Add a collapsible calendar sidebar to the workspace showing today's and this week's appointments. Each appointment card shows: Sailor name, rate/grade, time, type (phone/video/in-person), and a one-line reason. Include a "No appointments today" empty state. Clicking an appointment opens the Sailor's `Personnel/Personnel.tsx` record. Synthetic data: 3-5 fake appointments per day for the current week.
 
 ### SCH-002 — Booking Link Generator
 - **Module:** MOD-DET
-- **Page(s):** `workspace.html`, `member.html`
+- **Page(s):** `Workspace/Workspace.tsx`, `Personnel/Personnel.tsx`
 - **Adapter:** New: `getBookingLink(detailerId)` → synth stub (returns a placeholder URL)
 - **Priority:** 🟡 High
 - **MS365 Target:** Microsoft Bookings public page
@@ -111,7 +111,7 @@ Each item follows this format:
 
 ### SCH-003 — Appointment Preparation Card
 - **Module:** MOD-DET
-- **Page(s):** `workspace.html` (calendar sidebar)
+- **Page(s):** `Workspace/Workspace.tsx` (calendar sidebar)
 - **Adapter:** `getSailor(sailorId)` (exists), `getCommLog(sailorId)` (exists)
 - **Priority:** 🟡 High
 - **MS365 Target:** Bookings → Forms pre-appointment
@@ -120,7 +120,7 @@ Each item follows this format:
 
 ### SCH-004 — No-Show Tracker
 - **Module:** MOD-DET
-- **Page(s):** `workspace.html` (calendar sidebar)
+- **Page(s):** `Workspace/Workspace.tsx` (calendar sidebar)
 - **Adapter:** New: `getNoShows(detailerId, dateRange)` → synth stub
 - **Priority:** 🟢 Medium
 - **MS365 Target:** Bookings webhook / Graph Calendar
@@ -135,7 +135,7 @@ Each item follows this format:
 
 ### FRM-001 — Preference Intake Status Column
 - **Module:** MOD-DET
-- **Page(s):** `workspace.html`
+- **Page(s):** `Workspace/Workspace.tsx`
 - **Adapter:** New: `getFormStatus(sailorId)` → synth stub
 - **Priority:** 🔴 Critical
 - **MS365 Target:** Microsoft Forms / Power Automate
@@ -144,7 +144,7 @@ Each item follows this format:
 
 ### FRM-002 — Send Preference Form Action
 - **Module:** MOD-DET
-- **Page(s):** `workspace.html`, `member.html`
+- **Page(s):** `Workspace/Workspace.tsx`, `Personnel/Personnel.tsx`
 - **Adapter:** New: `sendFormLink(sailorId, formType)` → synth stub (returns `{ sent: true, formUrl: '...' }`)
 - **Priority:** 🟡 High
 - **MS365 Target:** Microsoft Forms + Power Automate notification
@@ -153,16 +153,16 @@ Each item follows this format:
 
 ### FRM-003 — Preference Summary Panel
 - **Module:** MOD-DET
-- **Page(s):** `member.html`
+- **Page(s):** `Personnel/Personnel.tsx`
 - **Adapter:** New: `getFormResponses(sailorId)` → synth stub
 - **Priority:** 🟡 High
 - **MS365 Target:** Microsoft Forms responses API
 - **Status:** ✅ Done (Sprint 4)
-- **Description:** On the Sailor detail page (`member.html`), add a "Preferences" tab showing structured intake data: Top 3 billet choices (ranked), geographic preferences, sea/shore preference, COLO status (yes/no + spouse info), EFMP status (yes/no + category), and free-text special circumstances. Synthetic data: randomized but realistic preference sets.
+- **Description:** On the Sailor detail page (`Personnel/Personnel.tsx`), add a "Preferences" tab showing structured intake data: Top 3 billet choices (ranked), geographic preferences, sea/shore preference, COLO status (yes/no + spouse info), EFMP status (yes/no + category), and free-text special circumstances. Synthetic data: randomized but realistic preference sets.
 
 ### FRM-004 — Bulk Form Send
 - **Module:** MOD-DET
-- **Page(s):** `workspace.html`
+- **Page(s):** `Workspace/Workspace.tsx`
 - **Adapter:** `sendFormLink` (from FRM-002, called in loop)
 - **Priority:** 🟢 Medium
 - **MS365 Target:** Power Automate batch processing
@@ -177,7 +177,7 @@ Each item follows this format:
 
 ### ALT-001 — Action Center Panel
 - **Module:** MOD-DET
-- **Page(s):** `workspace.html` (drawer or sidebar)
+- **Page(s):** `Workspace/Workspace.tsx` (drawer or sidebar)
 - **Adapter:** New: `getNotifications(detailerId)` → synth stub
 - **Priority:** 🔴 Critical
 - **MS365 Target:** Teams Adaptive Cards / Power Automate
@@ -192,25 +192,25 @@ Each item follows this format:
 
 ### ALT-002 — PRD Countdown Banners
 - **Module:** MOD-DET
-- **Page(s):** `workspace.html`, `member.html`
+- **Page(s):** `Workspace/Workspace.tsx`, `Personnel/Personnel.tsx`
 - **Adapter:** `getSailors()` (exists — computed from PRD dates)
 - **Priority:** 🟡 High
 - **MS365 Target:** Power Automate scheduled flows
 - **Status:** ✅ Done (Sprint 2)
-- **Description:** Add milestone banners triggered at PRD threshold crossings: 9 months ("Window Opening"), 6 months ("Active Negotiation"), 3 months ("Orders Required"), 0 months ("EXPIRED — Escalation"). On `member.html`, the banner renders prominently at the top of the Sailor record. On `workspace.html`, the PRD badge already exists but add a tooltip showing "Crosses to CRITICAL in 12 days." Pure frontend computation — no new adapter calls.
+- **Description:** Add milestone banners triggered at PRD threshold crossings: 9 months ("Window Opening"), 6 months ("Active Negotiation"), 3 months ("Orders Required"), 0 months ("EXPIRED — Escalation"). On `Personnel/Personnel.tsx`, the banner renders prominently at the top of the Sailor record. On `Workspace/Workspace.tsx`, the PRD badge already exists but add a tooltip showing "Crosses to CRITICAL in 12 days." Pure frontend computation — no new adapter calls.
 
 ### ALT-003 — Escalation Flag System
 - **Module:** MOD-DET, MOD-PLAC
-- **Page(s):** `workspace.html`, `command.html`
+- **Page(s):** `Workspace/Workspace.tsx`, `Placement/Command.tsx`
 - **Adapter:** New: `getEscalations(detailerId)` → synth stub
 - **Priority:** 🟡 High
 - **MS365 Target:** Power Automate → Teams channel post
 - **Status:** ✅ Done (Sprint 5)
-- **Description:** Build a compound escalation scoring system. A Sailor triggers escalation when: PRD EXPIRED + no contact >30d, OR PRD CRITICAL + LIMDU + no orders, OR any flag combination exceeding a risk threshold. Escalated Sailors render with a pulsing red border in the roster and appear in a dedicated "ESCALATION" section at the top of the workspace. On `command.html`, escalated Sailors surface in the "Immediate Action" list with a [⚡ ESCALATED] badge.
+- **Description:** Build a compound escalation scoring system. A Sailor triggers escalation when: PRD EXPIRED + no contact >30d, OR PRD CRITICAL + LIMDU + no orders, OR any flag combination exceeding a risk threshold. Escalated Sailors render with a pulsing red border in the roster and appear in a dedicated "ESCALATION" section at the top of the workspace. On `Placement/Command.tsx`, escalated Sailors surface in the "Immediate Action" list with a [⚡ ESCALATED] badge.
 
 ### ALT-004 — Daily Digest Summary
 - **Module:** MOD-DET
-- **Page(s):** `workspace.html` (modal on first load)
+- **Page(s):** `Workspace/Workspace.tsx` (modal on first load)
 - **Adapter:** Computed from existing adapter methods
 - **Priority:** 🟢 Medium
 - **MS365 Target:** Power Automate → Outlook daily email
@@ -225,16 +225,16 @@ Each item follows this format:
 
 ### RPT-001 — PRD Trend Chart
 - **Module:** MOD-ANLYT
-- **Page(s):** `analytics.html`
+- **Page(s):** `Analytics/Analytics.tsx`
 - **Adapter:** `getSailors()` (exists — computed projection)
 - **Priority:** 🟡 High
 - **MS365 Target:** Power BI Embedded
 - **Status:** ⬜ Backlog
-- **Description:** Add a 12-month PRD projection chart showing how the tier distribution will shift over time. X-axis: months (current → +12). Y-axis: count per tier. This is a stacked area chart rendered in pure CSS/SVG (no charting library — NMCI constraint). The chart projects current Sailors forward assuming no orders are written, showing the "wave" of PRDs approaching. Critical for resource planning.
+- **Description:** Add a 12-month PRD projection chart showing how the tier distribution will shift over time. X-axis: months (current → +12). Y-axis: count per tier. This is a stacked area chart rendered in pure CSS/SVG or lightweight React components (no heavy charting library — NMCI constraint). The chart projects current Sailors forward assuming no orders are written, showing the "wave" of PRDs approaching. Critical for resource planning.
 
 ### RPT-002 — Detailer Activity Metrics
 - **Module:** MOD-ANLYT
-- **Page(s):** `analytics.html`
+- **Page(s):** `Analytics/Analytics.tsx`
 - **Adapter:** New: `getActivityMetrics(detailerId, dateRange)` → synth stub
 - **Priority:** 🟢 Medium
 - **MS365 Target:** Power BI → Graph API activity data
@@ -243,7 +243,7 @@ Each item follows this format:
 
 ### RPT-003 — Manning Trend Line
 - **Module:** MOD-ANLYT
-- **Page(s):** `analytics.html`
+- **Page(s):** `Analytics/Analytics.tsx`
 - **Adapter:** `getCommands()`, `getBillets()` (exist — computed projection)
 - **Priority:** 🟡 High
 - **MS365 Target:** Power BI Embedded
@@ -252,16 +252,16 @@ Each item follows this format:
 
 ### RPT-004 — Power BI Embed Container
 - **Module:** MOD-ANLYT
-- **Page(s):** `analytics.html`
+- **Page(s):** `Analytics/Analytics.tsx`
 - **Adapter:** New: `getPowerBIEmbed(reportId)` → synth stub (returns placeholder config)
 - **Priority:** 🟢 Medium
 - **MS365 Target:** Power BI JavaScript SDK
 - **Status:** ⬜ Backlog
-- **Description:** Add a tabbed section to `analytics.html` with an embedded Power BI report container. In Phase 1A, the embed container shows a styled placeholder: "Power BI Report — Available when connected to GCC High environment" with a mock report thumbnail. In Phase 1B, the container uses the Power BI JS SDK to render live embedded reports. The adapter provides the embed token and report configuration.
+- **Description:** Add a tabbed section to `Analytics/Analytics.tsx` with an embedded Power BI report container. In Phase 1A, the embed container shows a styled placeholder: "Power BI Report — Available when connected to GCC High environment" with a mock report thumbnail. In Phase 1B, the container uses the Power BI JS SDK to render live embedded reports. The adapter provides the embed token and report configuration.
 
 ### RPT-005 — Export to PowerPoint / PDF
 - **Module:** MOD-ANLYT
-- **Page(s):** `analytics.html`
+- **Page(s):** `Analytics/Analytics.tsx`
 - **Adapter:** Computed from existing data
 - **Priority:** ⚪ Low
 - **MS365 Target:** Power BI export API
@@ -276,7 +276,7 @@ Each item follows this format:
 
 ### WFL-001 — Order Drafting Wizard
 - **Module:** MOD-DET
-- **Page(s):** `member.html` or new `orders.html`
+- **Page(s):** `Personnel/Personnel.tsx` or new `Workspace/Orders.tsx`
 - **Adapter:** New: `draftOrder(sailorId, billetId)` → synth stub
 - **Priority:** 🟡 High
 - **MS365 Target:** Power Automate → SharePoint document generation
@@ -285,7 +285,7 @@ Each item follows this format:
 
 ### WFL-002 — Slate Builder
 - **Module:** MOD-PLAC
-- **Page(s):** New: `slate.html` or panel in `command.html`
+- **Page(s):** New: `Placement/Slate.tsx` or panel in `Placement/Command.tsx`
 - **Adapter:** New: `getSlate(billetId)` → synth stub, `addToSlate(billetId, sailorId)` → synth stub
 - **Priority:** 🟡 High
 - **MS365 Target:** Power Automate → SharePoint list, Outlook notification
@@ -294,12 +294,12 @@ Each item follows this format:
 
 ### WFL-003 — Workflow Status Pipeline
 - **Module:** MOD-DET
-- **Page(s):** `workspace.html`, `member.html`
+- **Page(s):** `Workspace/Workspace.tsx`, `Personnel/Personnel.tsx`
 - **Adapter:** New: `getOrderStatus(sailorId)` → synth stub
 - **Priority:** 🟢 Medium
 - **MS365 Target:** Power Automate → status tracking
 - **Status:** ✅ Done (Sprint 5)
-- **Description:** Add a horizontal pipeline indicator to each Sailor record showing where they are in the assignment process: [Preference Collection] → [Billet Matching] → [Slate Review] → [Order Drafted] → [Order Approved] → [Orders Issued]. Each stage is a clickable step showing date entered, responsible party, and any blockers. Renders as a compact horizontal stepper in the roster and as a full-width bar on `member.html`.
+- **Description:** Add a horizontal pipeline indicator to each Sailor record showing where they are in the assignment process: [Preference Collection] → [Billet Matching] → [Slate Review] → [Order Drafted] → [Order Approved] → [Orders Issued]. Each stage is a clickable step showing date entered, responsible party, and any blockers. Renders as a compact horizontal stepper in the roster and as a full-width bar on `Personnel/Personnel.tsx`.
 
 ---
 
@@ -309,7 +309,7 @@ Each item follows this format:
 
 ### NAV-001 — Role-Aware Landing
 - **Module:** MOD-LAND
-- **Page(s):** `landing.html`
+- **Page(s):** `Landing/Landing.tsx`
 - **Adapter:** New: `getCurrentUser()` → synth stub (returns `{ role: 'DETAILER', designator: 'PERS-401', name: 'CDR Clark' }`)
 - **Priority:** 🟢 Medium
 - **MS365 Target:** Microsoft Entra ID (Azure AD)
@@ -318,7 +318,7 @@ Each item follows this format:
 
 ### NAV-002 — Workspace Tab Navigation
 - **Module:** MOD-DET
-- **Page(s):** `workspace.html`
+- **Page(s):** `Workspace/Workspace.tsx`
 - **Adapter:** None
 - **Priority:** 🟡 High
 - **MS365 Target:** N/A (pure frontend)
@@ -353,7 +353,7 @@ Each item follows this format:
 
 ## Adapter Method Inventory
 
-### Existing (app.js)
+### Existing (SideCarAdapter.ts)
 | Method | Status |
 |--------|--------|
 | `getSailors(filters)` | ✅ Implemented |

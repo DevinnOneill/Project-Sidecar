@@ -9,11 +9,11 @@
 Copy this, paste it in your terminal, and hit Enter:
 
 ```bash
-git clone https://github.com/matthewcla/SideCar-Concept.git && cd SideCar-Concept && bash scripts/onboard.sh
+git clone https://github.com/DevinnOneill/Project-Sidecar.git && cd Project-Sidecar/sidecar-app && npm install && npm run dev
 ```
 
-**Everything else is automatic.** The onboarding agent walks you through the entire setup — what SideCar is, how the project works, the rules, your workspace, everything. No experience needed. Takes about 5 minutes.
+**That starts the app.** Open `http://localhost:5173` in Chrome. Then read `ONBOARDING.md` for the full walkthrough — what SideCar is, how the project works, the rules, everything. Takes about 5 minutes.
 
 ---
 
-*Already onboarded? To re-run: `rm .onboarded && bash scripts/onboard.sh`*
+*Tech stack: Vite + React + TypeScript. See `README.md` for full details.*

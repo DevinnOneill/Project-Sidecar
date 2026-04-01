@@ -16,36 +16,20 @@ if [ -z "$STAGED_FILES" ]; then
   exit 0
 fi
 
-# --- C-02: No fetch() calls ---
+# --- C-02: No direct fetch() calls in components ---
 for FILE in $STAGED_FILES; do
   case "$FILE" in
-    *.html|*.js)
+    *.tsx|*.ts|*.js|*.jsx)
+      # Allow fetch() in services/ (adapter layer), block elsewhere
+      case "$FILE" in
+        */services/*) continue ;;
+      esac
       # Check staged content (not working copy) for fetch(
       MATCHES=$(git diff --cached -U0 "$FILE" 2>/dev/null | grep -E -n '^\+.*fetch\(' | grep -v '^\+\+\+' || true)
       if [ -n "$MATCHES" ]; then
         echo ""
         echo "  HALT: C-02 violation in $FILE"
-        echo "  No fetch() calls allowed. All data must route through SideCarAdapter."
-        echo "  Phase 1A runs from file:// protocol — fetch() will fail."
-        echo ""
-        echo "  Matching lines in diff:"
-        echo "$MATCHES" | sed 's/^/    /'
-        echo ""
-        VIOLATIONS=$((VIOLATIONS + 1))
-      fi
-      ;;
-  esac
-done
-
-# --- C-01: No import/export statements ---
-for FILE in $STAGED_FILES; do
-  case "$FILE" in
-    *.html|*.js)
-      MATCHES=$(git diff --cached -U0 "$FILE" 2>/dev/null | grep -E -n '^\+.*(^import |^export )' | grep -v '^\+\+\+' || true)
-      if [ -n "$MATCHES" ]; then
-        echo ""
-        echo "  HALT: C-01 violation in $FILE"
-        echo "  No ES modules (import/export). Phase 1A is flat files from file://."
+        echo "  No fetch() calls allowed in components. All data must route through SideCarAdapter."
         echo ""
         echo "  Matching lines in diff:"
         echo "$MATCHES" | sed 's/^/    /'
