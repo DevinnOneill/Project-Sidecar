@@ -1,14 +1,14 @@
 # SideCar Workspace: Strategic Vision & Development Plan
 
 > **Domain:** Module-Specific Development Roadmap
-> **Module:** MOD-WORK (`sidecar-app/src/Workspace/Workspace.tsx`)
+> **Module:** MOD-WORK (`app/workspace.html`)
 > **Date:** March 2026
 
 ---
 
 ## 1. Core Purpose
 
-The `Workspace/Workspace.tsx` component is the primary operational surface for Navy Detailers and Placement Coordinators. Its strategic mandate is to shift the user's role from a transactional "Detailing Clerk" to an **AI-Enabled Career Coach** and **Force Architect**. 
+The `workspace.html` module is the primary operational surface for Navy Detailers and Placement Coordinators. Its strategic mandate is to shift the user's role from a transactional "Detailing Clerk" to an **AI-Enabled Career Coach** and **Force Architect**. 
 
 This document synthesizes the strategic vision, current architectural audit findings, and the targeted development roadmap required to empower this persona shift and successfully sunset legacy platforms (EAIS, OAIS, ODIS).
 
@@ -55,6 +55,17 @@ To elevate the workspace from a CRM to a Force Architecture tool, the following 
 2. **Separations Tracker:** A high-visibility, dedicated workflow that ingests live NSIPS separation status. Sailors filing for separation represent acute retention risks that demand immediate, specialized coach intervention outside the normal PRD rotation pipeline.
 3. **Automated Coaching Gap Pathway:** A 1-click workflow to instantly draft and send a Sailor a personalized, actionable plan for qualification attainment based on their Pvol targets.
 
-## 5. Conclusion
+## 5. Bento-Box Workflow Hub Architecture
 
-The current `Workspace.tsx` component provides a massive quality-of-life improvement for basic portfolio management. However, its true value lies in its potential predictive capability. All future development on this module must prioritize diagnostic intelligence over raw data display. Only by fully integrating Pvol, record quality synthesis, and automated gap analysis will SideCar fulfill its mandate to create AI-Enabled Career Coaches out of today's detailers.
+To fully align the workspace with the "Glass Cockpit" philosophy, the layout must decouple the persistent operational dashboard from deep-dive, task-specific workflows.
+
+### The Paradigm Shift
+Currently, a single workflow (e.g., the Strategic Intervention Kanban) visually dominates the entire primary viewport. Moving forward, the workspace will transition to a **Bento-Box Workflow Hub**:
+1. **Persistent Sidebar Hub:** The left-hand sidebar (Priority Interventions, Schedule, Action List) becomes the consistent, underlying "My Workspace" frame. It acts as the ever-present heartbeat of the Detailer's day.
+2. **Dynamic Bento Grid:** The center mass of the screen, currently occupied by the Kanban board, will be replaced by a dynamic grid of "Widgets"—each representing a distinct, launchable workflow (e.g., Intervention Pipeline, Orders Writing, Slating & Assignment, Separations Tracker).
+3. **Priority-Weighted Scaling:** The visual footprint (size and placement) of each widget in the bento grid is algorithmically driven by the user's immediate operational priorities. A workflow that requires urgent action expands; idle workflows collapse.
+4. **Modal Workflow Isolation:** Clicking a widget does not navigate away from the hub. Instead, it launches the specific workflow (like the full-screen Kanban pipeline or the Orders Writer) inside a dedicated, isolated Modal. This preserves the underlying situational awareness of the Hub while providing a focused environment for deep work.
+
+## 6. Conclusion
+
+The current `workspace.html` provides a massive quality-of-life improvement for basic portfolio management. However, its true value lies in its potential predictive capability. All future development on this module must prioritize diagnostic intelligence over raw data display, and embrace the Bento-Box Hub architecture to manage cognitive load. Only by fully integrating Pvol, record quality synthesis, and automated gap analysis will SideCar fulfill its mandate to create AI-Enabled Career Coaches out of today's detailers.
