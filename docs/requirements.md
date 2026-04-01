@@ -1,5 +1,8 @@
 # SideCar Project Requirements & Infrastructure Needs
 
+> **Version:** 1.0 | **Created:** 2026-04-01  
+> **Authority:** Product Planning (Non-Governance — Does Not Override Directives)
+
 Based on the technical architecture and capabilities outlined in the **SideCar Strategic Concept & Vision**, this project extends significantly beyond the baseline capabilities of a standard Flank Speed User account. 
 
 To execute the data-dense, AI-driven, automated workflows described (specifically Dataverse integration, NLP sentiment analysis, and continuous data pipelines), the team will require elevated architectural access and Premium licensing.

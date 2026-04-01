@@ -1,7 +1,9 @@
 # SideCar Sailor Profile: Strategic Vision & Development Plan
 
-> **Domain:** Module-Specific Development Roadmap
-> **Module:** MOD-MEMBER (`sidecar-app/src/Personnel/Personnel.tsx`)
+> **Version:** 1.0 | **Created:** 2026-03-28  
+> **Authority:** Product Planning (Non-Governance — Does Not Override Directives)  
+> **Domain:** Module-Specific Development Roadmap  
+> **Module:** MOD-MEMBER (`sidecar-app/src/Personnel/Personnel.tsx`)  
 > **Date:** March 2026
 
 ---

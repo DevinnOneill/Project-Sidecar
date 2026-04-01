@@ -1,5 +1,8 @@
 # SideCar: Strategic Concept & Vision
 
+> **Version:** 1.1 | **Created:** 2026-03-28 | **Updated:** 2026-04-01  
+> **Authority:** Product Planning (Non-Governance — Does Not Override Directives)
+
 ## 1. Core Concept
 SideCar represents the evolution of Navy HR's industrial distribution design into a fluid, user-centric experience. It acts as a modern, high-performance interface that "bolts on" to the massive legacy personnel infrastructure, providing Sailors and Distribution Officers with actionable, predictive insights rather than bureaucratic data entry screens.
 
@@ -24,14 +27,15 @@ Because all raw communication telemetry and behavior data from MyCompass and MS3
 A core feature of the SideCar platform is shifting assignment methodology from "filling a gap today" to "building a career years in advance." Using demographic, behavioral, and historical data, the system provides advanced analytics for the AI-Enabled Career Coach:
 - **Record Quality Synthesis:** SideCar must synthesize the qualitative strength of the Sailor's service record (evaluations, promotion velocity, acquired qualifications) and present a clear, comparative metric. The Coach must instantly understand the objective competitiveness and quality of the record relative to fleet averages.
 - **Probability of Volunteerism (Pvol):** The platform uses predictive analytics to suggest what future billets a specific member is most likely to desire based on their MyCompass telemetry.
-- **Long-Range Competitiveness Planning:** SideCar maps the Sailor's *current record quality* directly against the *requirements* for those high-Pvol billets. By presenting this gap analysis early in a Sailor's current tour, the Coach can actively guide the Sailor on building a structured plan to organically close those qualification gaps, maximizing their competitiveness and opportunity.
+- **Long-Range Competitiveness Planning:** SideCar maps the Sailor's *current record quality* directly against the *requirements* for those high-Pvol billets.
+- **Best Navy Fit (BnF):** SideCar's algorithmic matching engine evaluates optimal Sailor-to-billet assignments using rate/grade compatibility, qualification alignment, geographic preferences, career trajectory, and Pvol predictions. BnF replaces static mainframe queries with predictive, multi-variable optimization.
 
 ## 5. The Strategic Mandate: Legacy Divestment
-By consolidating these capabilities into a single, high-density workspace, SideCar fulfills a critical strategic objective for the enterprise: **enabling the Navy HR structured divestment of EAIS, OAIS, and ODIS.** SideCar is engineered from the ground up with the data density, workflow automation, and predictive intelligence required to permanently sunset these legacy systems.
+By consolidating these capabilities into a single, high-density workspace, SideCar fulfills a critical strategic objective for the enterprise: **enabling the Navy HR structured divestment of EAIS, OAIS, and ODIS.** SideCar is engineered from the ground up with the data density, workflow automation, and predictive intelligence required to permanently sunset these legacy systems. This divestment path is further supported by a planned migration from the current Flank Speed/Azure architecture to **Advana Jupiter** (the DoD's enterprise data environment), ensuring alignment with SECNAV data enterprise directives.
 
 ## 6. The Evolution of Roles: Coaches and Architects
 By eliminating the friction of manual transaction processing and automating PRD management, the platform actively kills the legacy concept of "detailing" and "placement."
-- **The AI-Enabled Career Coach:** Distribution Officers shift from being transaction clerks hunting for billet matches to strategic mentors. Because SideCar handles the PRD timeline, the Coach uses the interface to understand *why* the Sailor serves, where they are in their plan, and how to maximize their opportunity. The system proactively flags **retention risks, Pvol goals, and satisfied tour requirements** so the Coach can intervene effectively over a multi-year horizon.
+- **The AI-Enabled Career Coach:** Distribution Officers shift from being transaction clerks hunting for billet matches to strategic mentors. The system proactively flags **retention risks, Pvol goals, and satisfied tour requirements** so the Coach can intervene effectively over a multi-year horizon. To further augment effectiveness, SideCar generates an **AI Coaching Vector** for each interaction — a context-aware coaching script synthesized from the Sailor's behavioral telemetry, competitiveness gaps, and BnF targets.
 - **The Force Architect:** Rather than reactively filling manning gaps, personnel managers become strategic asset managers. Empowered by predictive modeling and the outputs of automated background record reviews, they actively shape the distribution of talent and combat systemic shortages before they hit the fleet.
 
 ## 7. UI/UX Design Philosophy (The Glass Cockpit)

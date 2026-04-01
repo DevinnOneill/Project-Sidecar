@@ -1,5 +1,10 @@
 # SideCar Workspace: Comprehensive Refactoring Plan
 
+> **Version:** 1.0 | **Created:** 2026-04-01  
+> **Authority:** Product Planning (Non-Governance — Does Not Override Directives)  
+> **Domain:** Module-Specific Development Roadmap  
+> **Module:** MOD-WORK (`sidecar-app/src/Workspace/Workspace.tsx`)
+
 ## 1. Strategic Intent & Persona Shift
 The traditional Detailer workspace has artificially capped the user's role as a "Detailing Clerk" reacting to PRD timelines via a monolithic Kanban board. 
 
@@ -33,9 +38,9 @@ The `pipeline-board-wrapper` (which currently houses the Kanban Board) will be d
   - **Milestone & Empathy Context:** A dedicated alert zone highlighting recent notable changes in the Sailor's life/record. Designed to build instant rapport. Examples:
     - *Celebratory (*`🎉`*)*: Newly acquired NEC, selection for advancement, degree completion.
     - *Empathy (*`❤️`*)*: Recent EFMP enrollment, pending COLO request, identified administrative/pay hardships.
-  - **Analytics Block (Sentiment):** A visual sparkline (`<div class="sentiment-sparkline">`) mapping a 6-month sentiment trend. Includes a text readout of extracted burnout triggers (e.g., "Critical Stressor: High Admin Friction").
+  - **Analytics Block (Sentiment):** A visual sparkline (`<SentimentSparkline />`) mapping a 6-month sentiment trend. Includes a text readout of extracted burnout triggers (e.g., "Critical Stressor: High Admin Friction").
   - **Gap Engine Block (Pvol vs Record):** A visual progress bar depicting the Sailor's objective Competitiveness Score versus the required score for their top Pvol target. A bulleted list below outlines the exact missing qualifications or AQDs causing the gap.
-  - **AI Coaching Vector Block:** A stylized inset box (`<div class="ai-prompt-box">`) containing a synthesized coaching script/prompt for the Detailer to utilize (e.g., "Address frustration regarding admin friction. Pitch CSG-staff billet as a pathway to gaining required NEC.").
+  - **AI Coaching Vector Block:** A stylized inset box (`<CoachingPrompt />`) containing a synthesized coaching script/prompt for the Detailer to utilize (e.g., "Address frustration regarding admin friction. Pitch CSG-staff billet as a pathway to gaining required NEC.").
 - **Action Footer:** Buttons to "Launch Appt Prep Card", "Draft Coaching Plan", or "Log Contact".
 
 ### Widget B: Orders Writing Hub
@@ -88,7 +93,7 @@ The `pipeline-board-wrapper` (which currently houses the Kanban Board) will be d
 ---
 
 ## 4. Synthetic Data Scaffolding Requirements
-Because SideCar is currently a decoupled concept prototype (C-03 Constraint: Synthetic Only), we must build the underlying data structures in `app/app.js` to support these new bento widgets. 
+Because SideCar is currently a decoupled concept prototype (C-03 Constraint: Synthetic Only), we must build the underlying data structures in `sidecar-app/src/services/SyntheticData.ts` to support these new bento widgets. 
 
 ### `SYNTHETIC_DIGITAL_TWIN`
 Provides the deep telemetry for the **Intervention Planner**.
@@ -126,7 +131,7 @@ Drives the **Separations Tracker** widget.
 ## 5. Advancements in Core Workflows
 
 ### Advanced Prep Cards (The "Why")
-Currently, `#prepCard` is generic. It will be refactored to hook directly into the new `SYNTHETIC_DIGITAL_TWIN` dataset. Detailers will clearly see a Sailor's predictive profile *before* a Microsoft Bookings call begins.
+Currently, the `PrepCard` component is generic. It will be refactored to hook directly into the new `SYNTHETIC_DIGITAL_TWIN` dataset. Detailers will clearly see a Sailor's predictive profile *before* a Microsoft Bookings call begins.
 
 ### Mass Operations Parity
 The hub must support force-level actions. We will introduce a "Select Mode" toggle inside the Bento Hub which transforms the interfaces to allow multi-select. 
@@ -135,7 +140,7 @@ The hub must support force-level actions. We will introduce a "Select Mode" togg
 ## 6. Execution Phases
 Once this plan is approved and transitioned to an Implementation Plan artifact, development will proceed in the following order:
 
-1. **Phase 1: Data Scaffolding & Layout Purge:** Strip the Kanban board from HTML/CSS. Build the Grid layout. Inject the new synthetic data models into `app.js`.
+1. **Phase 1: Data Scaffolding & Layout Purge:** Strip the Kanban board from HTML/CSS. Build the Grid layout. Inject the new synthetic data models into `SyntheticData.ts`.
 2. **Phase 2: Bento Widget Construction:** Build the HTML/CSS structural shells for the 4 core widgets based on the specs above, populating them with the new dummy data.
 3. **Phase 3: The Coaching Strategy UI:** Implement the split-pane UI for the Intervention Planner, wiring up the UI to represent the Digital Twin telemetry (Events, Pvol, Sentiment Sparklines, AI Coaching Prompts).
 4. **Phase 4: Workflow Parity:** Overhaul the Prep Card and enable Mass Actions.
