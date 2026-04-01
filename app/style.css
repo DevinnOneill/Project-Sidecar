@@ -3,21 +3,27 @@
    Version: 2.0
    Authority: Gemini.md Section 14, UI-UX.md
    Constraint: C-11 (no hex outside :root), C-12 (typography),
-               C-13 (light mode, white + gold), C-04 (no nesting, no @layer)
+               C-13 (light mode, white + gold), C-04 (NMCI baseline compliance)
    ============================================================ */
 
 /* --- DESIGN TOKENS --- */
 :root {
-  /* --- Backgrounds --- */
-  --color-bg-void:       #FAFAFA;   /* absolute floor — page body background */
-  --color-bg-base:       #F4F1EC;   /* warm linen — primary page background */
-  --color-bg-surface:    #EDEAE3;   /* warm stone — card/panel surfaces */
+  /* Backgrounds (lighter = deeper / more elevated) — Amended 2026-03-25 */
+  --color-bg-void:       #FAFAFA;
+  --color-bg-base:       #FDFDFD;
+  --color-bg-surface:    #FFFFFF;
+  --color-bg-elevated:   #F5F5F5;
+  --color-bg-overlay:    #F0EDE8;
   --color-bg-sunken:     #E3DFD7;   /* inset areas, table zebra rows */
   --color-bg-dark:       #1C2B3A;   /* deep navy — header bar, login screen */
   --color-bg-dark-mid:   #243346;   /* slightly lighter navy for panels on dark */
 
-  /* --- Gold Accent --- */
-  --color-gold-primary:  #B39F75;   /* navigation borders, section dividers, key structural labels */
+  /* Gold (signal, not decoration) */
+  --color-gold-primary:  #B39F75;
+  --color-gold-bright:   #9E8869;
+  --color-gold-dim:      #C4B596;
+  --color-gold-glow:     rgba(179,159,117,0.10);
+  --color-gold-border:   #BA9D71;
 
   /* --- Navy Primaries --- */
   --color-navy-900:      #0F1B2D;   /* near-black navy */
@@ -32,19 +38,20 @@
   --color-earth-300:     #B5996E;   /* light tan */
   --color-earth-100:     #D9C9B2;   /* pale sand, border highlights */
 
-  /* --- Text --- */
-  --color-text-primary:  #1A1F2E;   /* near-black with blue undertone */
-  --color-text-secondary:#2D3748;   /* slate 800 - dark enough for legacy eyes */
-  --color-text-muted:    #5A667A;   /* gray 600 - elevated from 7A8494 */
+  /* Text */
+  --color-text-primary:  #111111;
+  --color-text-secondary:#444444;
+  --color-text-muted:    #666666;
+  --color-text-dim:      #999999;
   --color-text-inverse:  #EEE9E0;   /* warm white on dark backgrounds */
   --color-text-inverse-muted: #9AABBF; /* muted on dark */
 
-  /* --- Borders & Dividers --- */
-  --color-border-subtle:     #D4CFC7;   /* hairline on light backgrounds */
-  --color-border-default:    #BFB9AF;   /* standard card borders */
-  --color-border-strong:     #8B7355;   /* stronger structural borders */
-  --color-border-dark:       #2D3E50;   /* borders on dark surfaces */
-  --color-border-gold:       #8B7355;   /* retaining token name, using earth tone */
+  /* Borders */
+  --color-border-subtle: #E8E8E8;
+  --color-border-default:#D4D4D4;
+  --color-border-strong: #B0B0B0;
+  --color-border-gold:   #BA9D71;
+  --color-border-dark:   #2D3E50;   /* borders on dark surfaces */
 
   /* PRD Tiers (semantic — never repurpose per C-14) */
   --color-prd-gray:            #E8EAF0;
@@ -59,15 +66,19 @@
   --color-prd-red:             #FDECEB;
   --color-prd-red-text:        #C0392B;
   --color-prd-red-glow:        rgba(192,57,43,0.1);
+  --color-prd-escalated:       #F5ECF8;
+  --color-prd-escalated-text:  #8E24AA;
+  --color-prd-escalated-glow:  rgba(142,36,170,0.08);
 
   /* Status Dots */
   --color-dot-gray:      #9AA0B0;
   --color-dot-green:     #2D8A4E;
   --color-dot-yellow:    #D4A017;
   --color-dot-red:       #C0392B;
+  --color-dot-escalated: #9B30B8;
 
   /* Typography */
-  --font-brand:    'Bebas Neue', Impact, sans-serif;
+  --font-brand:    'Verdana', sans-serif;
   --font-display:  'Verdana', sans-serif;
   --font-body:     'Verdana', sans-serif;
   --font-data:     'DM Mono', Consolas, monospace;
