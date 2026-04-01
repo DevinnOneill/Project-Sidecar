@@ -327,13 +327,64 @@ Each item follows this format:
 
 ---
 
+## Epic 8: Bento-Box Workspace Hub (Workspace Refactoring)
+
+> The current Kanban-dominant workspace layout will be replaced by a Bento-Box Workflow Hub. These items define the multi-widget command center architecture specified in `docs/workspace-plan.md`.
+
+### BNT-001 — Bento Grid Layout & Kanban Purge
+- **Module:** MOD-WORK
+- **Page(s):** `Workspace/Workspace.tsx`
+- **Adapter:** None (layout change)
+- **Priority:** 🔴 Critical
+- **MS365 Target:** N/A (pure frontend)
+- **Status:** ⬜ Backlog
+- **Description:** Replace the `pipeline-board-wrapper` Kanban layout with a responsive CSS Grid (`.bento-grid`) supporting 4 dynamic widgets. The left-hand sidebar (Priority Interventions, Schedule, Action List) remains persistent. Widget clicks launch full-viewport modal overlays (`.bento-modal`) rather than navigating away from the hub. Priority-weighted scaling adjusts widget footprint based on operational urgency.
+
+### BNT-002 — Coaching Strategy & Digital Twin Widget
+- **Module:** MOD-WORK
+- **Page(s):** `Workspace/Workspace.tsx`, new: `Workspace/DigitalTwin.tsx`
+- **Adapter:** New: `getDigitalTwin(sailorId)` → synth stub
+- **Priority:** 🔴 Critical
+- **MS365 Target:** Azure AI Foundry (sentiment analysis, coaching vector)
+- **Status:** ⬜ Backlog
+- **Description:** Build the primary Bento widget: a split-pane with an AI-flagged intervention roster (left) and Digital Twin Canvas (right). Canvas displays: Risk Matrix Score, Milestone & Empathy Context, 6-month sentiment sparkline, Pvol vs. Record competitiveness gap, and an **AI Coaching Vector** — a synthesized coaching script for the Detailer. Synthetic data model: `SYNTHETIC_DIGITAL_TWIN`.
+
+### BNT-003 — Orders Writing Hub Widget
+- **Module:** MOD-WORK
+- **Page(s):** `Workspace/Workspace.tsx`, new: `Workspace/OrdersHub.tsx`
+- **Adapter:** `getOrderStatus(sailorId)` (exists), `getAllOrderStatuses()` (exists)
+- **Priority:** 🟡 High
+- **MS365 Target:** Power Automate → SharePoint document generation
+- **Status:** ⬜ Backlog
+- **Description:** Dense, scrolling orders status table widget. Columns: Sailor Name, Target Command/Billet, Status Lozenge, Time-in-Status. Stalled rows auto-elevate with gold/red borders. Clicking launches Orders Workstation Modal for deep-dive drafting. Synthetic data model: `SYNTHETIC_ORDERS_STATUS`.
+
+### BNT-004 — Slating & Assignment Widget
+- **Module:** MOD-WORK, MOD-PLAC
+- **Page(s):** `Workspace/Workspace.tsx`, new: `Workspace/SlatingWidget.tsx`
+- **Adapter:** New: `getCommunityMetrics()` → synth stub, `getProposedMatches()` → synth stub
+- **Priority:** 🟡 High
+- **MS365 Target:** Dataverse / Power Automate
+- **Status:** ⬜ Backlog
+- **Description:** Force architecture overview: macro-metrics ribbon (Available Billets, Unslated Inventory, Match Rate), supply/demand deficit bar, and BnF-generated match feed. Clicking launches Slating Optimizer Modal with drag-and-drop slating. Synthetic data model: `SYNTHETIC_SLATING_BOARD`.
+
+### BNT-005 — Separations Tracker Widget
+- **Module:** MOD-WORK
+- **Page(s):** `Workspace/Workspace.tsx`, new: `Workspace/SeparationsTracker.tsx`
+- **Adapter:** New: `getSeparations()` → synth stub
+- **Priority:** 🟡 High
+- **MS365 Target:** NSIPS integration (Phase 1B)
+- **Status:** ⬜ Backlog
+- **Description:** High-alert widget (`.widget--critical` crimson/gold border) showing Sailors with active separation intent: Name, Intent Date, Stated Driver, AI Loss Impact Score (0-100), AI Recommendation ([RETAIN] or [PROCESS]). Clicking launches Retention/Offboarding Modal. Synthetic data model: `SYNTHETIC_SEPARATIONS`.
+
+---
+
 ## Priority Matrix Summary
 
 | Priority | Count | Items |
 |----------|-------|-------|
-| 🔴 Critical | 5 | ~~COM-001~~, ~~COM-002~~, ~~SCH-001~~, ~~FRM-001~~, ~~ALT-001~~ |
-| 🟡 High | 12 | COM-003, COM-004, ~~SCH-002~~, ~~SCH-003~~, FRM-002, FRM-003, ~~ALT-002~~, ALT-003, RPT-001, RPT-003, WFL-001, WFL-002, ~~NAV-002~~ |
-| 🟢 Medium | 8 | COM-005, SCH-004, FRM-004, ALT-004, RPT-002, RPT-004, WFL-003, NAV-001 |
+| 🔴 Critical | 7 | ~~COM-001~~, ~~COM-002~~, ~~SCH-001~~, ~~FRM-001~~, ~~ALT-001~~, BNT-001, BNT-002 |
+| 🟡 High | 16 | ~~COM-003~~, ~~COM-004~~, ~~SCH-002~~, ~~SCH-003~~, ~~FRM-002~~, ~~FRM-003~~, ~~ALT-002~~, ~~ALT-003~~, RPT-001, RPT-003, WFL-001, WFL-002, ~~NAV-002~~, BNT-003, BNT-004, BNT-005 |
+| 🟢 Medium | 8 | COM-005, SCH-004, FRM-004, ALT-004, RPT-002, RPT-004, ~~WFL-003~~, NAV-001 |
 | ⚪ Low | 1 | RPT-005 |
 
 ### Recommended Build Order (Frontend Sprints)
@@ -348,6 +399,8 @@ Each item follows this format:
 | **Sprint 6** | RPT-001, RPT-003, RPT-004 | Analytics charts + Power BI prep |
 | **Sprint 7** | WFL-001, WFL-002 | Order wizard + slate builder |
 | **Sprint 8** | NAV-001, COM-005, ALT-004, FRM-004, SCH-004, RPT-002, RPT-005 | Polish + Phase 1B prep |
+| **Sprint 9** | BNT-001, BNT-002, BNT-003 | Bento Hub layout + Coaching Widget + Orders Widget |
+| **Sprint 10** | BNT-004, BNT-005 | Slating Widget + Separations Tracker |
 
 ---
 
@@ -390,6 +443,10 @@ Each item follows this format:
 | `getSlate(billetId)` | WFL-002 | SharePoint List |
 | `addToSlate(billetId, sailorId)` | WFL-002 | SharePoint List |
 | `getCurrentUser()` | NAV-001 | Entra ID (Azure AD) |
+| `getDigitalTwin(sailorId)` | BNT-002 | Azure AI Foundry |
+| `getCommunityMetrics()` | BNT-004 | Dataverse |
+| `getProposedMatches()` | BNT-004 | BnF Algorithm |
+| `getSeparations()` | BNT-005 | NSIPS Integration |
 
 ---
 

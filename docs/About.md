@@ -1,5 +1,8 @@
 # Project SideCar
 
+> **Version:** 1.0 | **Created:** 2026-03-28  
+> **Authority:** Product Planning (Non-Governance — Does Not Override Directives)
+
 ## The Logic Behind "SideCar": A Conceptual Framework
 
 In the context of the US Navy's continuous evolution in manpower, detailing, and career management, moving away from bureaucratic acronyms (e.g., NSIPS, MNA, NP2) toward a conceptual, user-centric metaphor marks a significant shift in design philosophy.
