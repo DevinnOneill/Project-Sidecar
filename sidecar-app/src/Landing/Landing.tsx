@@ -3,58 +3,28 @@ import { Link, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { SideCarAdapter } from '../services/SideCarAdapter';
 import { computePRDTier, daysSinceContact } from '../services/PrdEngine';
-import type { ISailor, INotification, IOrderStatus, IPrdResult } from '../models/ISailor';
+import type { ISailor } from '../models/ISailor';
+import { AdvancedSearchPanel } from '../AdvancedSearch/AdvancedSearch';
 import './Landing.css';
 
-type RoleMode = 'Detailer' | 'Placement';
-
 export default function Landing() {
-  const [role, setRole] = useState<RoleMode>('Detailer');
-  const [roleOpen, setRoleOpen] = useState(false);
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<ISailor[]>([]);
   const [showResults, setShowResults] = useState(false);
+  const [showAdvanced, setShowAdvanced] = useState(false);
   const [hoveredSailor, setHoveredSailor] = useState<ISailor | null>(null);
   const [hoverPos, setHoverPos] = useState({ x: 0, y: 0 });
   const navigate = useNavigate();
-  const [actionItems, setActionItems] = useState<Array<{ sailor: ISailor; prdResult: IPrdResult; contactDays: number; orderStatus: IOrderStatus | null; notifications: INotification[] }>>([]);
-  const [notificationCount, setNotificationCount] = useState(0);
-
   const searchRef = useRef<HTMLDivElement>(null);
   const hoverTimeout = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
 
-  // Load action items on mount
-  useEffect(() => {
-    async function loadActions() {
-      const sailors = await SideCarAdapter.getSailors();
-      const notifications = await SideCarAdapter.getNotifications();
-      const orderStatuses = await SideCarAdapter.getAllOrderStatuses();
-      setNotificationCount(notifications.length);
-
-      const enriched = sailors.map((s) => {
-        const prdResult = computePRDTier(s);
-        const cd = daysSinceContact(s);
-        const orderStatus = orderStatuses.find(o => o.sailorId === s.id) || null;
-        const sailorNotifications = notifications.filter(n => n.sailorId === s.id);
-        return { sailor: s, prdResult, contactDays: cd, orderStatus, notifications: sailorNotifications };
-      });
-
-      // Sort by urgency hierarchy: EXPIRED → CRITICAL → stale contacts → rest
-      enriched.sort((a, b) => {
-        const tierOrder: Record<string, number> = { EXPIRED: 0, CRITICAL: 1, URGENT: 2, WATCH: 3, STABLE: 4 };
-        const tierDiff = (tierOrder[a.prdResult.tier] ?? 5) - (tierOrder[b.prdResult.tier] ?? 5);
-        if (tierDiff !== 0) return tierDiff;
-        return b.contactDays - a.contactDays;
-      });
-
-      setActionItems(enriched);
-    }
-    loadActions();
-  }, []);
-
-  // Search handler
   const handleSearch = useCallback(async (q: string) => {
     setQuery(q);
+    if (q.length < 2) {
+      setResults([]);
+      // Do not hide results automatically on short queries so the Advanced Search button remains visible
+      return;
+    }
     if (q.length < 2) {
       setResults([]);
       setShowResults(false);
@@ -114,7 +84,11 @@ export default function Landing() {
   };
 
   return (
-    <div className="landing">
+    <motion.div 
+      className="landing"
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.3 }}
+    >
       {/* Corner Brackets */}
       <div className="corner corner--tl" /><div className="corner corner--tr" />
       <div className="corner corner--bl" /><div className="corner corner--br" />
@@ -140,82 +114,25 @@ export default function Landing() {
         <motion.div
           className="intel-bar"
           ref={searchRef}
+          layoutId="global-search"
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
+          transition={{ duration: 0.8, ease: "easeInOut" }}
         >
-          {/* Role Selector */}
-          <div className="role-selector">
-            <button
-              className="role-selector__button"
-              onClick={() => setRoleOpen(!roleOpen)}
-              aria-expanded={roleOpen}
-            >
-              {role}
-              <svg className="role-selector__chevron" width="10" height="6" viewBox="0 0 10 6">
-                <path d="M1 1l4 4 4-4" stroke="currentColor" strokeWidth="1.5" fill="none" strokeLinecap="round"/>
-              </svg>
-            </button>
-            <AnimatePresence>
-              {roleOpen && (
-                <motion.div
-                  className="role-selector__dropdown"
-                  initial={{ opacity: 0, y: -4, scale: 0.98 }}
-                  animate={{ opacity: 1, y: 0, scale: 1 }}
-                  exit={{ opacity: 0, y: -4, scale: 0.98 }}
-                  transition={{ duration: 0.15 }}
-                >
-                  <button
-                    className={`role-selector__option ${role === 'Detailer' ? 'role-selector__option--active' : ''}`}
-                    onClick={() => { 
-                      setRole('Detailer'); 
-                      setRoleOpen(false); 
-                    }}
-                  >
-                    <div className="role-selector__option-text">
-                      <span>Detailer</span>
-                      <span className="role-selector__option-desc">Rank sailors by PRD urgency</span>
-                    </div>
-                  </button>
-                  <button
-                    className={`role-selector__option ${role === 'Placement' ? 'role-selector__option--active' : ''}`}
-                    onClick={() => { setRole('Placement'); setRoleOpen(false); }}
-                  >
-                    <div className="role-selector__option-text">
-                      <span>Placement</span>
-                      <span className="role-selector__option-desc">Rank commands by manning risk</span>
-                    </div>
-                  </button>
-                  <button
-                    className="role-selector__option"
-                    onClick={() => { setRoleOpen(false); navigate('/advanced-search'); }}
-                  >
-                    <div className="role-selector__option-text">
-                      <span>Advanced Search</span>
-                      <span className="role-selector__option-desc">Build custom SQL-like data queries</span>
-                    </div>
-                  </button>
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </div>
-
           {/* Search Input */}
           <input
             className="intel-bar__input"
             type="text"
-            placeholder={role === 'Detailer'
-              ? 'Search sailors, billets, commands...'
-              : 'Search commands, billets, manning...'}
+            placeholder="Search sailors, billets, commands..."
             value={query}
             onChange={e => handleSearch(e.target.value)}
-            onFocus={() => query.length >= 2 && setShowResults(true)}
+            onFocus={() => setShowResults(true)}
             onKeyDown={handleSearchKeyDown}
           />
 
           {/* Search Results Dropdown */}
           <AnimatePresence>
-            {showResults && results.length > 0 && (
+            {showResults && (
               <motion.div
                 className="search-results"
                 initial={{ opacity: 0, y: -8 }}
@@ -223,9 +140,11 @@ export default function Landing() {
                 exit={{ opacity: 0, y: -8 }}
                 transition={{ duration: 0.2 }}
               >
-                <div className="search-results__header">
-                  {results.length} result{results.length !== 1 ? 's' : ''}
-                </div>
+                {results.length > 0 && (
+                  <div className="search-results__header">
+                    {results.length} result{results.length !== 1 ? 's' : ''}
+                  </div>
+                )}
                 {results.map(s => {
                   const prd = computePRDTier(s);
                   return (
@@ -234,7 +153,7 @@ export default function Landing() {
                       className="search-results__item"
                       onMouseEnter={(e) => handleMouseEnter(s, e)}
                       onMouseLeave={handleMouseLeave}
-                      onClick={() => { /* navigate to personnel page */ }}
+                      onClick={() => { navigate(`/personnel/${s.id}`); }}
                     >
                       <span className={getPrdClass(prd.tier)}>{prd.tier}</span>
                       <span className="search-results__name">
@@ -247,6 +166,29 @@ export default function Landing() {
                     </div>
                   );
                 })}
+                
+                <div 
+                  className="search-results__advanced" 
+                  onClick={() => { setShowAdvanced(true); setShowResults(false); }}
+                  style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '12px 16px', fontWeight: 600, color: 'var(--color-gold)', cursor: 'pointer', borderTop: '1px solid var(--color-border-subtle)', background: 'var(--color-bg-sunken)' }}
+                >
+                  <span style={{ fontSize: '1.2rem' }}>🔍</span> Advanced Search...
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          {/* Advanced Search Embed */}
+          <AnimatePresence>
+            {showAdvanced && (
+              <motion.div
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                transition={{ duration: 0.2 }}
+                style={{ position: 'absolute', top: 'calc(100% + 8px)', left: 0, right: 0, zIndex: 60, boxShadow: 'var(--shadow-xl)', borderRadius: 'var(--radius-md)', overflow: 'hidden', background: 'var(--color-bg-elevated)', border: '1px solid var(--color-border)' }}
+              >
+                <AdvancedSearchPanel onClose={() => setShowAdvanced(false)} />
               </motion.div>
             )}
           </AnimatePresence>
@@ -254,64 +196,29 @@ export default function Landing() {
 
 
 
-        {/* Smart Pill — Workspace Summary */}
-        <motion.div
-          className="smart-pill"
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.25, ease: [0.16, 1, 0.3, 1] }}
-        >
-          <div className="smart-pill__content">
-            <span className="smart-pill__label">
-              {role === 'Detailer' ? 'Workspace Summary' : 'Command Summary'}
-            </span>
-            <span className="smart-pill__count">
-              {notificationCount} priority items
-            </span>
-          </div>
-          <Link className="smart-pill__link" to="/workspace">
-            Enter {role === 'Detailer' ? 'Workspace' : 'Command'} →
-          </Link>
-        </motion.div>
-
-        {/* Detailer Action Queue */}
-        {role === 'Detailer' && (
-          <motion.section 
-            className="action-list"
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.35, duration: 0.5 }}
+        {/* Hero Cards Navigation */}
+        <AnimatePresence mode="wait">
+          <motion.div
+            className="hero-nav"
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.95 }}
+            transition={{ duration: 0.3 }}
           >
-            {actionItems.map((item, index) => (
-              <motion.div
-                key={item.sailor.id}
-                className={`action-tile ${item.prdResult.tier === 'EXPIRED' || item.prdResult.tier === 'CRITICAL' ? 'action-tile--urgent' : ''}`}
-                initial={{ opacity: 0, x: -12 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.4 + index * 0.05 }}
-                onMouseEnter={(e) => handleMouseEnter(item.sailor, e)}
-                onMouseLeave={handleMouseLeave}
-                onClick={() => navigate(`/personnel/${item.sailor.id}`)}
-              >
-                <div className="action-tile__info">
-                  <span className={getPrdClass(item.prdResult.tier)}>
-                    {item.prdResult.tier === 'EXPIRED' ? 'EXP' : item.prdResult.label}
-                  </span>
-                  <div className="action-tile__identity">
-                    <span className="action-tile__name">{item.sailor.lastName}, {item.sailor.firstName}</span>
-                    <span className="action-tile__rate">{item.sailor.rate} {item.sailor.payGrade}</span>
-                  </div>
-                </div>
-                
-                <span className="action-tile__command">{item.sailor.command}</span>
-
-                <button className="action-tile__btn">
-                  View Record
-                </button>
-              </motion.div>
-            ))}
-          </motion.section>
-        )}
+            <Link to="/workspace" className="hero-card">
+              <span className="hero-card__icon">📊</span>
+              <span className="hero-card__label">Detailer</span>
+            </Link>
+            <Link to="/command" className="hero-card">
+              <span className="hero-card__icon">⚓</span>
+              <span className="hero-card__label">Placement</span>
+            </Link>
+            <Link to="/analytics" className="hero-card">
+              <span className="hero-card__icon">📈</span>
+              <span className="hero-card__label">Executive View</span>
+            </Link>
+          </motion.div>
+        </AnimatePresence>
       </main>
 
       {/* Hover Card */}
@@ -370,6 +277,6 @@ export default function Landing() {
         )}
       </AnimatePresence>
 
-    </div>
+    </motion.div>
   );
 }

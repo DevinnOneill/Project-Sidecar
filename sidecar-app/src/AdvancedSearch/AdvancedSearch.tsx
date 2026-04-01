@@ -58,7 +58,7 @@ const ADV_OPERATORS = {
   ]
 };
 
-export default function AdvancedSearch() {
+export function AdvancedSearchPanel({ onClose }: { onClose?: () => void }) {
   const [source, setSource] = useState<SourceType>('sailors');
   const [conditions, setConditions] = useState<Array<ICondition & { id: number }>>([]);
   const [nextId, setNextId] = useState(1);
@@ -168,21 +168,12 @@ export default function AdvancedSearch() {
   };
 
   return (
-    <div className="adv-search-container">
-      {/* Topbar */}
-      <div className="adv-search-topbar">
-        <Link to="/" className="adv-search-topbar__brand">
-          SIDE<span className="adv-search-topbar__brand-accent">[CAR]</span>
-        </Link>
-        <div className="adv-search-topbar__search">
-          <input type="text" placeholder="Describe what you're looking for..." />
+    <div className="adv-search-panel-container">
+      {onClose && (
+        <div style={{ padding: '8px 16px', background: 'var(--color-bg-sunken)', display: 'flex', justifyContent: 'flex-end', borderBottom: '1px solid var(--color-border-subtle)' }}>
+          <button onClick={onClose} style={{ background: 'none', border: 'none', cursor: 'pointer', fontWeight: 600, color: 'var(--color-text-muted)' }}>✕ Close Advanced Search</button>
         </div>
-        <Link to="/" className="adv-search-topbar__back">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
-          Back
-        </Link>
-      </div>
-
+      )}
       <div className="adv-search-body">
         {/* Left: Query Builder */}
         <div className="adv-query-panel">
@@ -311,6 +302,27 @@ export default function AdvancedSearch() {
           </div>
         </div>
       </div>
+    </div>
+  );
+}
+
+export default function AdvancedSearch() {
+  return (
+    <div className="adv-search-container">
+      {/* Topbar */}
+      <div className="adv-search-topbar">
+        <Link to="/" className="adv-search-topbar__brand">
+          SIDE<span className="adv-search-topbar__brand-accent">[CAR]</span>
+        </Link>
+        <div className="adv-search-topbar__search">
+          <input type="text" placeholder="Describe what you're looking for..." />
+        </div>
+        <Link to="/" className="adv-search-topbar__back">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+          Back
+        </Link>
+      </div>
+      <AdvancedSearchPanel />
     </div>
   );
 }

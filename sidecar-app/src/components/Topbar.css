@@ -147,3 +147,31 @@
   font-size: 0.75rem;
   color: var(--color-text-secondary);
 }
+
+/* ── Topbar Navigation (Hero Cards Transferred) ── */
+.topbar__nav {
+  display: flex;
+  gap: var(--space-sm);
+  align-items: center;
+  margin-right: var(--space-md);
+}
+
+.topbar__nav-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  background: var(--color-bg-elevated);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-sm);
+  text-decoration: none;
+  font-size: 1rem;
+  transition: all var(--duration-fast) var(--ease-out);
+}
+
+.topbar__nav-link:hover {
+  background: var(--color-gold-glow);
+  border-color: var(--color-border-gold);
+  transform: translateY(-1px);
+}

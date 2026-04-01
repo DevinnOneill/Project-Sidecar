@@ -1,4 +1,5 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
+import { AnimatePresence } from 'framer-motion';
 import Landing from './Landing/Landing';
 import Workspace from './Workspace/Workspace';
 import Personnel from './Personnel/Personnel';
@@ -7,10 +8,11 @@ import Analytics from './Analytics/Analytics';
 import AdvancedSearch from './AdvancedSearch/AdvancedSearch';
 import './App.css';
 
-function App() {
+function AnimatedRoutes() {
+  const location = useLocation();
   return (
-    <BrowserRouter>
-      <Routes>
+    <AnimatePresence mode="wait">
+      <Routes location={location} key={location.pathname}>
         <Route path="/" element={<Landing />} />
         <Route path="/landing" element={<Landing />} />
         <Route path="/workspace" element={<Workspace />} />
@@ -19,6 +21,14 @@ function App() {
         <Route path="/command" element={<Command />} />
         <Route path="/analytics" element={<Analytics />} />
       </Routes>
+    </AnimatePresence>
+  );
+}
+
+function App() {
+  return (
+    <BrowserRouter>
+      <AnimatedRoutes />
     </BrowserRouter>
   );
 }

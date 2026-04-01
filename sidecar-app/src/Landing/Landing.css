@@ -315,142 +315,52 @@
   border-color: var(--color-gold);
 }
 
-/* ── Smart Pill ────────────────────────────────── */
-.smart-pill {
+/* ── Hero Nav (Shortcut Cards) ─────────────────── */
+.hero-nav {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
+  justify-content: center;
+  gap: var(--space-lg);
+  margin-top: var(--space-sm);
   width: 100%;
-  padding: var(--space-md) var(--space-lg);
-  background: var(--color-bg-elevated);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-sm);
-  transition: border-color var(--duration-base) var(--ease-out),
-              box-shadow var(--duration-base) var(--ease-out);
 }
 
-.smart-pill:hover {
-  border-color: var(--color-border-gold);
-  box-shadow: var(--shadow-glow);
-}
-
-.smart-pill__content {
+.hero-card {
   display: flex;
   flex-direction: column;
-  gap: 2px;
-}
-
-.smart-pill__label {
-  font-size: 0.75rem;
-  font-weight: 600;
-  color: var(--color-text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-}
-
-.smart-pill__count {
-  font-size: 1rem;
-  font-weight: 700;
-  color: var(--color-text-primary);
-}
-
-.smart-pill__link {
-  font-size: 0.8125rem;
-  font-weight: 600;
-  color: var(--color-gold);
-  text-decoration: none;
-  letter-spacing: 0.02em;
-  transition: color var(--duration-fast);
-}
-
-.smart-pill__link:hover {
-  color: var(--color-gold-bright);
-}
-
-/* ── Action List (Inline Queue) ────────────────── */
-.action-list {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  margin-top: var(--space-md);
-}
-
-.action-tile {
-  display: flex;
   align-items: center;
-  justify-content: space-between;
-  padding: 14px 20px;
-  background: var(--color-bg-elevated);
+  justify-content: center;
+  width: 110px;
+  height: 100px;
+  background: var(--color-bg-surface);
   border: 1px solid var(--color-border-subtle);
-  border-radius: var(--radius-md);
-  cursor: pointer;
-  transition: all var(--duration-fast);
-  gap: var(--space-md);
+  border-radius: var(--radius-lg);
+  text-decoration: none;
+  transition: all var(--duration-fast) var(--ease-out);
+  box-shadow: var(--shadow-sm);
 }
 
-.action-tile:hover {
-  background: var(--color-gold-glow);
+.hero-card:hover {
+  background: var(--color-bg-elevated);
   border-color: var(--color-border-gold);
-  transform: translateX(2px);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
 }
 
-.action-tile--urgent {
-  border-left: 3px solid var(--color-prd-expired-dot);
+.hero-card__icon {
+  font-size: 1.5rem;
+  margin-bottom: var(--space-xs);
 }
 
-.action-tile__info {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  min-width: 250px;
-}
-
-.action-tile__identity {
-  display: flex;
-  flex-direction: column;
-}
-
-.action-tile__name {
-  font-size: 0.9375rem;
-  font-weight: 600;
-  color: var(--color-text-primary);
-  line-height: 1.2;
-}
-
-.action-tile__rate {
-  font-family: var(--font-data);
-  font-size: 0.75rem;
-  color: var(--color-text-muted);
-  margin-top: 2px;
-}
-
-.action-tile__command {
-  flex: 1;
-  font-size: 0.8125rem;
-  color: var(--color-text-muted);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.action-tile__btn {
-  background: var(--color-bg-primary);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-sm);
-  padding: 6px 12px;
+.hero-card__label {
   font-family: var(--font-body);
   font-size: 0.75rem;
-  font-weight: 600;
-  color: var(--color-text-secondary);
-  white-space: nowrap;
-  transition: all var(--duration-fast);
+  font-weight: 500;
+  color: var(--color-text-primary);
+  text-align: center;
 }
 
-.action-tile:hover .action-tile__btn {
+.hero-card:hover .hero-card__label {
   color: var(--color-gold);
-  border-color: var(--color-gold);
 }
 
 /* ── PRD Badge ─────────────────────────────────── */
