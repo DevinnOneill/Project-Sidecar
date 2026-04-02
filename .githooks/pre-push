@@ -1,0 +1,95 @@
+#!/bin/bash
+# SideCar Pre-Push Hook — Branch Authorization
+# Validates the developer is authorized to push to the current branch.
+# References: workflow/BRANCH-ASSIGNMENTS.json
+
+set -e
+
+BRANCH=$(git symbolic-ref --short HEAD 2>/dev/null)
+if [ -z "$BRANCH" ]; then
+  echo "  [SIDECAR] Cannot determine current branch. Push aborted."
+  exit 1
+fi
+
+# Allowed branches — only these 4 exist in the repo
+ALLOWED_BRANCHES="main qa-staging dev-1 dev-2"
+
+if ! echo "$ALLOWED_BRANCHES" | grep -qw "$BRANCH"; then
+  echo ""
+  echo "  ============================================"
+  echo "  HALT: Unauthorized branch '$BRANCH'"
+  echo "  ============================================"
+  echo ""
+  echo "  SideCar uses a fixed branch model."
+  echo "  The only authorized branches are:"
+  echo "    - dev-1  (Development Team 1)"
+  echo "    - dev-2  (Development Team 2)"
+  echo "    - qa-staging  (Tier 1 QA gate)"
+  echo "    - main  (Production)"
+  echo ""
+  echo "  You cannot create or push to arbitrary branches."
+  echo "  Switch to your assigned branch:"
+  echo "    git checkout dev-1   (or dev-2)"
+  echo ""
+  echo "  See: workflow/BRANCH-ASSIGNMENTS.md"
+  echo ""
+  exit 1
+fi
+
+# Read developer's git username
+GIT_USER=$(git config user.name 2>/dev/null || echo "")
+if [ -z "$GIT_USER" ]; then
+  echo "  [SIDECAR] Warning: git user.name not set. Cannot verify branch authorization."
+  echo "  Run: git config user.name \"Your Name\""
+  exit 0
+fi
+
+# Check branch authorization from JSON config
+SCRIPT_DIR="$(cd "$(dirname "$0")/.." && pwd)"
+ASSIGNMENTS_FILE="$SCRIPT_DIR/workflow/BRANCH-ASSIGNMENTS.json"
+
+if [ ! -f "$ASSIGNMENTS_FILE" ]; then
+  echo "  [SIDECAR] Warning: BRANCH-ASSIGNMENTS.json not found. Skipping authorization check."
+  exit 0
+fi
+
+# Extract developers assigned to the current branch
+# Uses basic grep/sed since jq may not be available on all dev machines
+BRANCH_DEVS=$(grep -A 5 "\"$BRANCH\"" "$ASSIGNMENTS_FILE" | grep "developers" | sed 's/.*\[//;s/\].*//;s/"//g;s/,/ /g' || echo "")
+
+if [ -z "$BRANCH_DEVS" ]; then
+  # Branch exists in allowed list but not in assignments (e.g., new branch not yet configured)
+  exit 0
+fi
+
+# Check if placeholder usernames are still in use
+if echo "$BRANCH_DEVS" | grep -q "placeholder"; then
+  # Placeholders haven't been replaced yet — skip authorization check
+  exit 0
+fi
+
+# Check if the current user is in the authorized list
+AUTHORIZED=false
+for DEV in $BRANCH_DEVS; do
+  if [ "$GIT_USER" = "$DEV" ]; then
+    AUTHORIZED=true
+    break
+  fi
+done
+
+if [ "$AUTHORIZED" = false ]; then
+  echo ""
+  echo "  ============================================"
+  echo "  HALT: Not authorized for branch '$BRANCH'"
+  echo "  ============================================"
+  echo ""
+  echo "  Your git username: $GIT_USER"
+  echo "  Authorized for '$BRANCH': $BRANCH_DEVS"
+  echo ""
+  echo "  Switch to your assigned branch or contact Tier 1."
+  echo "  See: workflow/BRANCH-ASSIGNMENTS.md"
+  echo ""
+  exit 1
+fi
+
+exit 0

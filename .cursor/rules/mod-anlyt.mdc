@@ -1,16 +1,16 @@
 ---
 description: MOD-ANLYT — Analytics Dashboard module rules
-globs: ["app/analytics.html"]
+globs: ["sidecar-app/src/Analytics/**"]
 alwaysApply: false
 ---
 
 # MOD-ANLYT: Analytics Dashboard
 
-- **Write:** app/analytics.html ONLY
-- **Read:** app/style.css, app/app.js
+- **Write:** `sidecar-app/src/Analytics/` components ONLY
+- **Read:** `sidecar-app/src/index.css`, `sidecar-app/src/services/SideCarAdapter.ts`
 - **Focus:** UI-UX.md, INTEGRATIONS.md
 - **Key Constraints:** C-01, C-02, C-03, C-04, C-08, C-09, C-11, C-12, C-13, C-14
 
-Distribution health metrics, trends, and community-level analytics.
+Distribution health metrics, trends, and community-level analytics (React + TypeScript).
 Uses SideCarAdapter.getSailors, getCommands, getBillets.
-Do NOT modify app/style.css, app/app.js, or any other page file from this module.
+Do NOT modify `sidecar-app/src/index.css`, `sidecar-app/src/services/`, or any other module's components from this module.

@@ -61,32 +61,25 @@ jobs:
           VIOLATION_COUNT=0
 
           # ─── C-02: fetch() violations ───
-          FETCH_HITS=$(grep -rn 'fetch(' app/*.html app/*.js 2>/dev/null | grep -v 'SideCarAdapter' | grep -v '// Phase 1B' || true)
+          FETCH_HITS=$(grep -rn 'fetch(' sidecar-app/src/**/*.tsx sidecar-app/src/**/*.ts 2>/dev/null | grep -v 'SideCarAdapter' | grep -v 'services/' | grep -v '// Phase 1B' || true)
           if [ -n "$FETCH_HITS" ]; then
             VIOLATION_COUNT=$((VIOLATION_COUNT + 1))
-            FIXES="$FIXES### Fix #$VIOLATION_COUNT: Remove \`fetch()\` calls (C-02)\n\n"
-            FIXES="$FIXES**Why it broke:** SideCar runs from \`file://\` protocol on NMCI. The browser blocks \`fetch()\` on local files — it will silently fail and show no data.\n\n"
+            FIXES="$FIXES### Fix #$VIOLATION_COUNT: Remove raw \`fetch()\` calls (C-02)\n\n"
+            FIXES="$FIXES**Why it broke:** All data fetching must go through the SideCarAdapter service. Raw \`fetch()\` bypasses the adapter layer and will fail in offline/NMCI environments.\n\n"
             FIXES="$FIXES**Where:**\n\`\`\`\n$FETCH_HITS\n\`\`\`\n\n"
             FIXES="$FIXES**How to fix:** Replace \`fetch()\` with the adapter pattern:\n"
-            FIXES="$FIXES\`\`\`javascript\n"
+            FIXES="$FIXES\`\`\`typescript\n"
             FIXES="$FIXES// WRONG\nfetch('/api/sailors').then(r => r.json())\n\n"
-            FIXES="$FIXES// RIGHT\nSideCarAdapter.getSailors().then(function(sailors) {\n  // use sailors here\n});\n"
+            FIXES="$FIXES// RIGHT\nimport { SideCarAdapter } from '../services/SideCarAdapter';\nconst sailors = await SideCarAdapter.getSailors();\n"
             FIXES="$FIXES\`\`\`\n\n---\n\n"
           fi
 
-          # ─── C-01: import/export violations ───
-          MODULE_HITS=$(grep -rn '^\s*import \|^\s*export ' app/*.html app/*.js 2>/dev/null || true)
-          if [ -n "$MODULE_HITS" ]; then
-            VIOLATION_COUNT=$((VIOLATION_COUNT + 1))
-            FIXES="$FIXES### Fix #$VIOLATION_COUNT: Remove ES module syntax (C-01)\n\n"
-            FIXES="$FIXES**Why it broke:** Phase 1A is flat HTML/CSS/JS from \`file://\`. ES modules (\`import\`/\`export\`) require a server — they don't work from local files.\n\n"
-            FIXES="$FIXES**Where:**\n\`\`\`\n$MODULE_HITS\n\`\`\`\n\n"
-            FIXES="$FIXES**How to fix:** Move your function into \`app/app.js\` (in a separate MOD-JS session) or define it inline in a \`<script>\` block on your page. No \`import\` or \`export\` keywords.\n\n---\n\n"
-          fi
+          # ─── C-01: Vite + React — import/export is expected, skip legacy check ───
+          # ES modules are standard in the Vite + React + TypeScript build pipeline
 
           # ─── C-11: Hardcoded hex ───
-          if [ -f app/style.css ]; then
-            HEX_HITS=$(awk '/:root\s*\{/{in_root=1} /^\}/{if(in_root) in_root=0} !in_root && /#[0-9a-fA-F]{3,8}/' app/style.css || true)
+          if [ -f sidecar-app/src/index.css ]; then
+            HEX_HITS=$(awk '/:root\s*\{/{in_root=1} /^\}/{if(in_root) in_root=0} !in_root && /#[0-9a-fA-F]{3,8}/' sidecar-app/src/index.css || true)
             if [ -n "$HEX_HITS" ]; then
               VIOLATION_COUNT=$((VIOLATION_COUNT + 1))
               FIXES="$FIXES### Fix #$VIOLATION_COUNT: Replace hardcoded hex colors (C-11)\n\n"
@@ -97,12 +90,12 @@ jobs:
               FIXES="$FIXES/* WRONG */\ncolor: #B39F75;\nbackground: #FAFAFA;\n\n"
               FIXES="$FIXES/* RIGHT */\ncolor: var(--color-gold-primary);\nbackground: var(--color-bg-void);\n"
               FIXES="$FIXES\`\`\`\n\n"
-              FIXES="$FIXES**Available tokens:** See \`app/style.css\` \`:root\` block or \`directives/UI-UX.md\` Section 3.\n\n---\n\n"
+              FIXES="$FIXES**Available tokens:** See \`sidecar-app/src/index.css\` \`:root\` block or \`directives/UI-UX.md\` Section 3.\n\n---\n\n"
             fi
           fi
 
           # ─── C-04: CSS nesting / @layer / @container ───
-          CSS_HITS=$(grep -rn '@layer\|@container' app/style.css 2>/dev/null | grep -v '^\s*/\*\|^\s*\*\|^\s*C-' || true)
+          CSS_HITS=$(grep -rn '@layer\|@container' sidecar-app/src/index.css 2>/dev/null | grep -v '^\s*/\*\|^\s*\*\|^\s*C-' || true)
           if [ -n "$CSS_HITS" ]; then
             VIOLATION_COUNT=$((VIOLATION_COUNT + 1))
             FIXES="$FIXES### Fix #$VIOLATION_COUNT: Remove modern CSS features (C-04)\n\n"
@@ -112,7 +105,7 @@ jobs:
           fi
 
           # ─── C-03: PII check ───
-          PII_HITS=$(grep -rni '\bSSN\b\|social security\|DODID:[0-9]' app/*.html app/*.js 2>/dev/null | grep -v 'synthetic\|9999\|Synthetic\|SYNTHETIC\|pattern\|Pattern' || true)
+          PII_HITS=$(grep -rni '\bSSN\b\|social security\|DODID:[0-9]' sidecar-app/src/ 2>/dev/null | grep -v 'synthetic\|9999\|Synthetic\|SYNTHETIC\|pattern\|Pattern' || true)
           if [ -n "$PII_HITS" ]; then
             VIOLATION_COUNT=$((VIOLATION_COUNT + 1))
             FIXES="$FIXES### Fix #$VIOLATION_COUNT: Remove possible PII (C-03)\n\n"
@@ -125,17 +118,17 @@ jobs:
           fi
 
           # ─── C-07: CDN without fallback ───
-          CDN_HITS=$(grep -rn 'cdn\.\|cdnjs\.\|unpkg\.\|jsdelivr\.\|tailwindcss\|googleapis' app/*.html 2>/dev/null | grep -v '<!--' || true)
+          CDN_HITS=$(grep -rn 'cdn\.\|cdnjs\.\|unpkg\.\|jsdelivr\.\|tailwindcss\|googleapis' sidecar-app/src/ sidecar-app/index.html 2>/dev/null | grep -v '<!--' | grep -v 'node_modules' || true)
           if [ -n "$CDN_HITS" ]; then
             VIOLATION_COUNT=$((VIOLATION_COUNT + 1))
             FIXES="$FIXES### Fix #$VIOLATION_COUNT: Remove external CDN dependencies (C-07)\n\n"
-            FIXES="$FIXES**Why it broke:** NMCI blocks external CDNs. \`file://\` protocol has no network access. Your CDN resources will fail to load — the page will break.\n\n"
+            FIXES="$FIXES**Why it broke:** NMCI blocks external CDNs. External resources will fail to load in offline environments.\n\n"
             FIXES="$FIXES**Where:**\n\`\`\`\n$CDN_HITS\n\`\`\`\n\n"
-            FIXES="$FIXES**How to fix:** Download the resource and include it locally in the \`app/\` directory, or rewrite with vanilla CSS/JS. No Tailwind, no external scripts.\n\n---\n\n"
+            FIXES="$FIXES**How to fix:** Install the dependency via npm and import it through the Vite build pipeline. No external CDN links.\n\n---\n\n"
           fi
 
           # ─── C-13: Dark mode / color scheme ───
-          DARK_HITS=$(grep -rn 'prefers-color-scheme' app/*.css app/*.html 2>/dev/null || true)
+          DARK_HITS=$(grep -rn 'prefers-color-scheme' sidecar-app/src/**/*.css sidecar-app/src/**/*.tsx sidecar-app/index.html 2>/dev/null || true)
           if [ -n "$DARK_HITS" ]; then
             VIOLATION_COUNT=$((VIOLATION_COUNT + 1))
             FIXES="$FIXES### Fix #$VIOLATION_COUNT: Remove color-scheme queries (C-13)\n\n"
@@ -145,7 +138,7 @@ jobs:
           fi
 
           # ─── Missing files ───
-          for FILE in app/landing.html app/detailer.html app/placement.html app/style.css app/app.js; do
+          for FILE in sidecar-app/src/Landing/Landing.tsx sidecar-app/src/Workspace/Workspace.tsx sidecar-app/src/Personnel/Personnel.tsx sidecar-app/src/index.css sidecar-app/src/services/SideCarAdapter.ts; do
             if [ ! -f "$FILE" ]; then
               VIOLATION_COUNT=$((VIOLATION_COUNT + 1))
               FIXES="$FIXES### Fix #$VIOLATION_COUNT: Missing required file: \`$FILE\`\n\n"
@@ -154,31 +147,31 @@ jobs:
             fi
           done
 
-          # ─── Navigation broken ───
+          # ─── Navigation broken — React Router routes ───
           NAV_ISSUES=""
-          for PAGE in app/landing.html app/detailer.html app/placement.html app/analytics.html; do
-            if [ -f "$PAGE" ]; then
-              for LINK in landing.html detailer.html placement.html analytics.html; do
-                SELF=$(basename "$PAGE")
-                if [ "$LINK" != "$SELF" ] && ! grep -q "$LINK" "$PAGE" 2>/dev/null; then
-                  NAV_ISSUES="$NAV_ISSUES- \`$PAGE\` is missing a link to \`$LINK\`\n"
-                fi
-              done
-            fi
-          done
+          ROUTER_FILE=$(find sidecar-app/src -name "App.tsx" -o -name "Router.tsx" -o -name "routes.tsx" 2>/dev/null | head -1)
+          if [ -n "$ROUTER_FILE" ]; then
+            for ROUTE in "/" "/workspace" "/personnel" "/analytics"; do
+              if ! grep -q "\"$ROUTE\"\|'$ROUTE'" "$ROUTER_FILE" 2>/dev/null; then
+                NAV_ISSUES="$NAV_ISSUES- Route \`$ROUTE\` not found in \`$ROUTER_FILE\`\n"
+              fi
+            done
+          else
+            NAV_ISSUES="- No router file found (App.tsx / Router.tsx / routes.tsx)\n"
+          fi
           if [ -n "$NAV_ISSUES" ]; then
             VIOLATION_COUNT=$((VIOLATION_COUNT + 1))
-            FIXES="$FIXES### Fix #$VIOLATION_COUNT: Broken navigation links\n\n"
-            FIXES="$FIXES**Why it broke:** Every page must link to every other page through the topbar nav. Missing links mean users can't navigate.\n\n"
-            FIXES="$FIXES**Missing links:**\n$NAV_ISSUES\n"
-            FIXES="$FIXES**How to fix:** Add the missing \`<a href=\"...\"\` links to your page's \`<nav>\` section. Copy the nav from a working page like \`app/landing.html\`.\n\n---\n\n"
+            FIXES="$FIXES### Fix #$VIOLATION_COUNT: Missing React Router routes\n\n"
+            FIXES="$FIXES**Why it broke:** Every view must have a route defined in the React Router configuration. Missing routes mean users can't navigate.\n\n"
+            FIXES="$FIXES**Missing routes:**\n$NAV_ISSUES\n"
+            FIXES="$FIXES**How to fix:** Add the missing \`<Route path=\"...\" element={...} />\` entries to your router configuration in \`App.tsx\`.\n\n---\n\n"
           fi
 
           # ─── Token system gaps ───
-          if [ -f app/style.css ]; then
+          if [ -f sidecar-app/src/index.css ]; then
             TOKEN_ISSUES=""
             for TOKEN in --color-bg-void --color-bg-surface --color-gold-primary --color-text-primary --color-border-gold --font-display --font-body --font-data; do
-              if ! grep -q "$TOKEN" app/style.css; then
+              if ! grep -q "$TOKEN" sidecar-app/src/index.css; then
                 TOKEN_ISSUES="$TOKEN_ISSUES- \`$TOKEN\`\n"
               fi
             done
@@ -187,7 +180,7 @@ jobs:
               FIXES="$FIXES### Fix #$VIOLATION_COUNT: Missing design tokens in style.css\n\n"
               FIXES="$FIXES**Why it broke:** Pages reference these tokens. If they're missing from \`:root\`, styles fall back to browser defaults — the design breaks.\n\n"
               FIXES="$FIXES**Missing tokens:**\n$TOKEN_ISSUES\n"
-              FIXES="$FIXES**How to fix:** Restore the tokens in \`app/style.css\` \`:root\` block. Reference values from \`directives/Gemini.md\` Section 14.\n\n---\n\n"
+              FIXES="$FIXES**How to fix:** Restore the tokens in \`sidecar-app/src/index.css\` \`:root\` block. Reference values from \`directives/Gemini.md\` Section 14.\n\n---\n\n"
             fi
           fi
 

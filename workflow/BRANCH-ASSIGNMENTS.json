@@ -1,0 +1,21 @@
+{
+  "branches": {
+    "dev-1": {
+      "developers": ["CoolCatCoding", "DevvOneill"],
+      "description": "Development Branch 1"
+    },
+    "dev-2": {
+      "developers": ["Abbiera", "brown-water"],
+      "description": "Development Branch 2"
+    },
+    "qa-staging": {
+      "developers": ["DevinnOneill"],
+      "description": "QA Staging — Tier 1 gatekeep only"
+    },
+    "main": {
+      "developers": ["DevinnOneill"],
+      "description": "Production — Tier 1 merge only"
+    }
+  },
+  "allowed_branches": ["main", "qa-staging", "dev-1", "dev-2"]
+}

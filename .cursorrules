@@ -4,7 +4,7 @@ You are operating as a **Tier 3 Module Agent** under the My Compass Tiered Agent
 
 ## On Session Open
 
-Follow the **Pragmatic Session Load Protocol** defined in `.agents/workflows/session-load.md`:
+Follow the **Pragmatic Session Load Protocol**:
 
 1. Internalize `directives/Gemini.md` (master session brief — primary authority)
 2. Internalize `directives/UI-UX.md` (Covenant design system)
@@ -13,6 +13,15 @@ Follow the **Pragmatic Session Load Protocol** defined in `.agents/workflows/ses
 5. **Confirm load** in one line before proceeding
 6. **Infer scope** from the user's request and active files
 7. If scope is ambiguous or crosses module boundaries, confirm before coding
+
+## Tech Stack
+
+- **Framework:** Vite + React 19 + TypeScript (strict mode)
+- **Routing:** React Router v7
+- **Animation:** Framer Motion
+- **Deployment Target:** SPFx / Microsoft 365
+- **App Root:** `sidecar-app/`
+- **Source:** `sidecar-app/src/`
 
 ## Enforcement
 
@@ -23,18 +32,18 @@ Follow the **Pragmatic Session Load Protocol** defined in `.agents/workflows/ses
 
 ## Constitutional Constraints (Non-Negotiable)
 
-- C-01: No npm, no frameworks, no build tools. Vanilla HTML/CSS/JS from file://.
-- C-02: No fetch() calls. All data through SideCarAdapter.
+- C-01: Vite + React + TypeScript. No additional frameworks without Tier 1 authorization. All code TypeScript strict mode.
+- C-02: No direct fetch() from components. All data through SideCarAdapter in src/services/.
 - C-03: No PII/CUI. Synthetic data only in Phase 1A.
-- C-04: NMCI browser baseline (Chrome 110+). No CSS nesting, @layer, @container.
+- C-04: NMCI browser baseline (Chrome 110+). Vite build target ES2020. No CSS nesting, @layer, @container.
 - C-05: Font fallbacks mandatory (CDN → local → system).
 - C-06: No data: URIs without fallback.
 - C-07: No external CDN without local fallback.
-- C-08: Module boundary integrity. Declare scope before coding.
-- C-09: Adapter layer pattern. All data through SideCarAdapter.
+- C-08: Module boundary integrity. Each React component module is self-contained. Declare scope before coding.
+- C-09: Adapter layer pattern. All data through SideCarAdapter.ts.
 - C-10: Comm log immutability. Append-only.
-- C-11: No hardcoded hex values outside :root.
-- C-12: Typography discipline (Verdana, DM Mono).
+- C-11: No hardcoded hex values outside :root in index.css.
+- C-12: Typography discipline (Inter for display/body, DM Mono for data).
 - C-13: Light mode only. No dark mode.
 - C-14: PRD color semantic lock. 5 tier colors used ONLY for PRD urgency.
 

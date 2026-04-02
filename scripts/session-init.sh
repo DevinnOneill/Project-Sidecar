@@ -27,27 +27,61 @@ fi
 
 # Prompt for module
 echo "  Available modules:"
-echo "    MOD-LAND  — app/landing.html (Landing / Role Selection)"
-echo "    MOD-DET   — app/detailer.html (Detailer Dashboard)"
-echo "    MOD-PLAC  — app/placement.html (Placement Coordinator)"
-echo "    MOD-ANLYT — app/analytics.html (Analytics Dashboard)"
-echo "    MOD-CSS   — app/style.css (Covenant Design System)"
-echo "    MOD-JS    — app/app.js (Shared Logic + Data + Adapter)"
+echo "    MOD-LAND   — src/Landing/        (Landing / Role Selection)"
+echo "    MOD-WORK   — src/Workspace/      (Detailer Workspace)"
+echo "    MOD-MEMBER — src/Personnel/      (Sailor Record View)"
+echo "    MOD-CMD    — src/Command/        (Command Manning View)"
+echo "    MOD-ANLYT  — src/Analytics/      (Analytics Dashboard)"
+echo "    MOD-SEARCH — src/AdvancedSearch/ (Advanced Search)"
+echo "    MOD-CSS    — src/index.css + CSS (Design System)"
+echo "    MOD-SVC    — src/services/       (Shared Logic + Data)"
 echo ""
 read -p "  Which module? " MODULE
 
 # Validate module
 case "$MODULE" in
-  MOD-LAND|MOD-DET|MOD-PLAC|MOD-ANLYT|MOD-CSS|MOD-JS) ;;
+  MOD-LAND|MOD-WORK|MOD-MEMBER|MOD-CMD|MOD-ANLYT|MOD-SEARCH|MOD-CSS|MOD-SVC) ;;
   *)
-    echo "  ERROR: Invalid module ID. Must be one of: MOD-LAND, MOD-DET, MOD-PLAC, MOD-ANLYT, MOD-CSS, MOD-JS"
+    echo "  ERROR: Invalid module ID. Must be one of: MOD-LAND, MOD-WORK, MOD-MEMBER, MOD-CMD, MOD-ANLYT, MOD-SEARCH, MOD-CSS, MOD-SVC"
     exit 1
     ;;
 esac
 
-# Prompt for developer info
+# Prompt for developer name
 read -p "  Developer name: " DEVELOPER
-read -p "  What is your branch? (dev/name/module-description): " BRANCH
+
+# Auto-detect current branch and validate against fixed branch model
+BRANCH=$(git branch --show-current 2>/dev/null)
+
+if [ -z "$BRANCH" ]; then
+  echo "  ERROR: Could not detect current git branch."
+  echo "  Make sure you are in a git repository."
+  exit 1
+fi
+
+# Validate branch — only dev-1, dev-2, and qa-staging are allowed
+case "$BRANCH" in
+  dev-1|dev-2)
+    echo "  Branch detected: $BRANCH"
+    ;;
+  qa-staging)
+    echo "  Branch detected: $BRANCH (Tier 1)"
+    ;;
+  *)
+    echo ""
+    echo "  ERROR: You are on branch '$BRANCH', which is not an assigned dev branch."
+    echo ""
+    echo "  Allowed branches:"
+    echo "    dev-1       — Development Team 1"
+    echo "    dev-2       — Development Team 2"
+    echo "    qa-staging  — QA / Tier 1 only"
+    echo ""
+    echo "  Switch to your assigned branch first:"
+    echo "    git checkout dev-1    (or dev-2)"
+    echo ""
+    exit 1
+    ;;
+esac
 
 # Prompt for task scope
 read -p "  What are you working on? (one sentence): " TASK

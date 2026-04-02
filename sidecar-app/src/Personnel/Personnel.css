@@ -1,5 +1,6 @@
 /* ============================================================
    PERSONNEL — Sailor Record Page
+   Tom's Modular Data Card Layout — React/TypeScript Port
    ============================================================ */
 
 .personnel {
@@ -89,15 +90,6 @@
   margin-bottom: var(--space-md);
 }
 
-/* ── Card ──────────────────────────────────────── */
-.card {
-  background: var(--color-bg-elevated);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
-  padding: var(--space-lg);
-  margin-bottom: var(--space-lg);
-}
-
 /* ── Pipeline ──────────────────────────────────── */
 .pipeline-card {
   background: var(--color-bg-elevated);
@@ -172,6 +164,373 @@
 
 .personnel__left, .personnel__right { min-width: 0; }
 
+/* ============================================================
+   DATA MODULE — Modular Card System
+   ============================================================ */
+.data-module {
+  background: var(--color-bg-elevated);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  padding: var(--space-lg);
+  margin-bottom: var(--space-lg);
+}
+
+.data-module-header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-md);
+}
+
+.data-module-title {
+  font-family: var(--font-body);
+  font-size: 20px;
+  font-weight: 800;
+  margin: 0;
+  letter-spacing: 0.01em;
+}
+
+.data-module-title--gold {
+  color: var(--color-gold);
+}
+
+.data-module-title--navy {
+  color: var(--color-navy);
+}
+
+.data-module-expand-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-sm);
+  background: var(--color-bg-primary);
+  color: var(--color-text-muted);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  flex-shrink: 0;
+}
+
+.data-module-expand-btn:hover {
+  background: var(--color-bg-sunken);
+  color: var(--color-text-primary);
+  border-color: var(--color-border);
+}
+
+.data-module-content {
+  /* Container for module body */
+}
+
+/* ── Modal Mode ────────────────────────────────── */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: var(--color-bg-glass-dark);
+  z-index: 999;
+}
+
+.data-module.modal-mode {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 90%;
+  max-width: 900px;
+  max-height: 90vh;
+  overflow-y: auto;
+  z-index: 1000;
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.3);
+  border-color: var(--color-border-gold);
+}
+
+/* ============================================================
+   ACCORDION
+   ============================================================ */
+.accordion {
+  border-top: 1px solid var(--color-border-subtle);
+  margin-top: var(--space-sm);
+}
+
+.accordion:first-child {
+  border-top: none;
+  margin-top: 0;
+}
+
+.accordion__trigger {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  width: 100%;
+  padding: var(--space-sm) 0;
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  color: var(--color-text-secondary);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  transition: color 0.15s ease;
+}
+
+.accordion__trigger:hover {
+  color: var(--color-text-primary);
+}
+
+.accordion__chevron {
+  font-size: 0.625rem;
+  color: var(--color-text-muted);
+  width: 12px;
+  flex-shrink: 0;
+}
+
+.accordion__title {
+  flex: 1;
+}
+
+.accordion__body {
+  padding: 0 0 var(--space-sm) var(--space-lg);
+}
+
+/* ============================================================
+   MODULE TABLES
+   ============================================================ */
+.mod-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--font-data);
+  font-size: 0.75rem;
+}
+
+.mod-table thead th {
+  text-align: left;
+  font-size: 0.625rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: var(--space-xs) var(--space-sm);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.mod-table tbody td {
+  padding: var(--space-xs) var(--space-sm);
+  color: var(--color-text-secondary);
+  border-bottom: 1px solid var(--color-border-subtle);
+  white-space: nowrap;
+}
+
+.mod-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* ── Module Shared ─────────────────────────────── */
+.mod-subtitle {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-text-muted);
+  margin: 0 0 var(--space-sm) 0;
+}
+
+.mod-subtitle--spaced {
+  margin-top: var(--space-lg);
+}
+
+.mod-text {
+  font-size: 0.8125rem;
+  color: var(--color-text-secondary);
+  line-height: 1.5;
+  margin: 0;
+}
+
+.mod-empty {
+  font-size: 0.8125rem;
+  color: var(--color-text-muted);
+  font-style: italic;
+  margin: 0;
+}
+
+/* ============================================================
+   MOD: CAREER / ORDERS
+   ============================================================ */
+.orders-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-sm) var(--space-md);
+  margin-bottom: var(--space-md);
+}
+
+.orders-field {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.orders-label {
+  font-size: 0.625rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.orders-value {
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--color-text-primary);
+}
+
+.orders-value--data {
+  font-family: var(--font-data);
+}
+
+.proposed-orders {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  font-size: 0.8125rem;
+  color: var(--color-text-secondary);
+}
+
+.proposed-orders__blocker {
+  color: var(--color-prd-critical-text);
+}
+
+/* ============================================================
+   MOD: QUALIFICATIONS
+   ============================================================ */
+.quals-list {
+  list-style: decimal;
+  padding-left: var(--space-lg);
+  margin: 0 0 var(--space-sm) 0;
+}
+
+.quals-list__item {
+  font-size: 0.8125rem;
+  color: var(--color-text-secondary);
+  padding: 2px 0;
+}
+
+.quals-list__code {
+  font-family: var(--font-data);
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--color-gold);
+  margin-right: var(--space-sm);
+}
+
+.quals-list__title {
+  color: var(--color-text-primary);
+}
+
+.quals-detail {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.quals-detail__entry {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: var(--space-xs) 0;
+  border-bottom: 1px solid var(--color-border-subtle);
+}
+
+.quals-detail__entry:last-child {
+  border-bottom: none;
+}
+
+.quals-detail__code {
+  font-family: var(--font-data);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  color: var(--color-gold);
+}
+
+.quals-detail__title {
+  font-size: 0.8125rem;
+  color: var(--color-text-primary);
+  font-weight: 500;
+}
+
+.quals-detail__date {
+  font-family: var(--font-data);
+  font-size: 0.6875rem;
+  color: var(--color-text-muted);
+}
+
+/* ============================================================
+   MOD: COMPASS INFO INSIGHTS
+   ============================================================ */
+.compass-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  margin-bottom: var(--space-md);
+}
+
+.compass-intentions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.compass-field {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.compass-label {
+  font-size: 0.625rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.compass-value {
+  font-size: 0.8125rem;
+  color: var(--color-text-primary);
+  line-height: 1.4;
+}
+
+/* ============================================================
+   MOD: APPLICATION HISTORY
+   ============================================================ */
+.saved-billets {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 var(--space-sm) 0;
+}
+
+.saved-billets__item {
+  font-size: 0.8125rem;
+  color: var(--color-text-secondary);
+  padding: var(--space-xs) 0;
+  border-bottom: 1px solid var(--color-border-subtle);
+  padding-left: var(--space-sm);
+  position: relative;
+}
+
+.saved-billets__item::before {
+  content: '\2605';
+  position: absolute;
+  left: 0;
+  color: var(--color-gold);
+  font-size: 0.625rem;
+  top: 6px;
+}
+
+.saved-billets__item:last-child {
+  border-bottom: none;
+}
+
 /* ── Radar Chart ───────────────────────────────── */
 .radar-wrap {
   display: flex;
@@ -203,8 +562,8 @@
   border-radius: 50%;
 }
 
-.radar-legend__dot--current { background: #1A7A3E; }
-.radar-legend__dot--target  { background: #9A7A0A; }
+.radar-legend__dot--current { background: var(--color-prd-stable-text); }
+.radar-legend__dot--target  { background: var(--color-gold); }
 
 /* ── Preferences ───────────────────────────────── */
 .prefs__choice {
@@ -243,8 +602,9 @@
 /* ── Comm Log ──────────────────────────────────── */
 .comm-header {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
   align-items: center;
+  margin-bottom: var(--space-sm);
 }
 
 .comm-count {
@@ -286,7 +646,7 @@
   line-height: 1.4;
 }
 
-/* ── Shared (re-declare for this page scope) ───── */
+/* ── Shared Badges ─────────────────────────────── */
 .prd-badge {
   font-family: var(--font-data);
   font-size: 0.625rem;

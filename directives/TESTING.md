@@ -1,8 +1,9 @@
 # TESTING.md — Quality Assurance Standards
 
-> **Version:** 1.0 | **Domain:** Quality Gate, Scoring Framework, Remediation Protocol
+> **Version:** 2.0 | **Domain:** Quality Gate, Scoring Framework, Remediation Protocol
 > **Authority:** Tier 1
 > **Loaded By:** QA Agent at Step 7 of the Governed Development Cycle
+> **Amended:** 2026-03-31 — Updated for Vite + React + TypeScript architecture
 
 ---
 
@@ -35,11 +36,12 @@ Beyond the four dimensions, every SideCar output must pass these checks:
 - [ ] Gold used for signal, not decoration
 
 ### Functional Compliance
-- [ ] Works from `file://` path in Chrome/Edge
-- [ ] No `fetch()` calls
+- [ ] Builds cleanly with `npm run build` (zero TypeScript errors)
+- [ ] Runs correctly with `npm run dev`
+- [ ] No direct `fetch()` calls from components — all through SideCarAdapter
 - [ ] No external dependencies without local fallback
-- [ ] All data access through `SideCarAdapter`
-- [ ] Navigation between pages functional
+- [ ] All data access through `SideCarAdapter.ts`
+- [ ] React Router navigation between all routes functional
 - [ ] Comm log writes are append-only
 
 ### Data Compliance
@@ -49,12 +51,13 @@ Beyond the four dimensions, every SideCar output must pass these checks:
 - [ ] DODIDs use `9999XXXXXX` pattern
 - [ ] Command names are fictional
 
-### NMCI Compatibility
-- [ ] No CSS features beyond Chrome 110 baseline
+### NMCI Compatibility (Build Output)
+- [ ] Vite build output targets ES2020 (Chrome 110+ compatible)
+- [ ] No CSS features beyond Chrome 110 baseline in output
 - [ ] Font fallbacks present and tested
 - [ ] No `data:` URIs without file-based alternative
-- [ ] No `top-level await`
-- [ ] No ES modules (`import`/`export`)
+- [ ] TypeScript strict mode enabled — no `any` without justification
+- [ ] All component props properly typed
 
 ## 3. QA Report Format
 
@@ -93,17 +96,17 @@ Beyond the four dimensions, every SideCar output must pass these checks:
 ### PRD Tier Distribution Test
 Load synthetic data. Verify all 5 tiers render correctly with proper colors, labels, and sort order.
 
-### File:// Protocol Test
-Open every page from `file:///path/to/sidecar-mvp/page1.html`. Verify no console errors, no broken resources, no CORS failures.
+### Dev Server Test
+Run `npm run dev` and navigate to every route. Verify no console errors, no broken resources, no React rendering failures.
 
 ### Font Fallback Test
 Block Google Fonts and remove local `.woff2` files. Verify the interface remains functional and readable with system fonts.
 
 ### Navigation Test
-Click every navigation link from every page. Verify correct page loads with no broken paths.
+Click every navigation link and React Router route. Verify correct component renders with no broken paths or 404s.
 
 ### Data Adapter Test
-Verify all displayed data originates from `SideCarAdapter` calls — no hardcoded values in HTML.
+Verify all displayed data originates from `SideCarAdapter` calls — no hardcoded values in component JSX.
 
 ### RBAC View Validation Test
 Verify role-based rendering serves the correct scope per persona:
@@ -172,4 +175,4 @@ Verify append-only constraint (C-10):
 
 ---
 
-*TESTING.md v2.0 — SideCar Directive Library*
+*TESTING.md v3.0 — SideCar Directive Library — Amended 2026-03-31 for React/TypeScript*

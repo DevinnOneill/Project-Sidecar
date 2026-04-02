@@ -1,0 +1,56 @@
+name: Branch Guard
+
+on:
+  create:
+
+jobs:
+  check-branch:
+    if: github.ref_type == 'branch'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Validate branch name
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const branch = context.ref.replace('refs/heads/', '');
+            const allowed = ['main', 'qa-staging', 'dev-1', 'dev-2'];
+
+            if (allowed.includes(branch)) {
+              console.log(`Branch '${branch}' is authorized.`);
+              return;
+            }
+
+            // Unauthorized branch — create an issue
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: `Governance Violation: Unauthorized branch '${branch}'`,
+              body: [
+                `## Branch Guard Alert`,
+                ``,
+                `**Branch:** \`${branch}\``,
+                `**Created by:** @${context.actor}`,
+                `**Time:** ${new Date().toISOString()}`,
+                ``,
+                `This branch is outside the approved fixed branch model.`,
+                ``,
+                `### Authorized branches`,
+                `| Branch | Purpose |`,
+                `|--------|---------|`,
+                `| \`dev-1\` | Development Team 1 |`,
+                `| \`dev-2\` | Development Team 2 |`,
+                `| \`qa-staging\` | QA gate (Tier 1) |`,
+                `| \`main\` | Production (Tier 1) |`,
+                ``,
+                `### Action required`,
+                `@DevinnOneill — please delete this unauthorized branch:`,
+                `\`\`\``,
+                `git push origin --delete ${branch}`,
+                `\`\`\``,
+                ``,
+                `See \`workflow/BRANCH-ASSIGNMENTS.md\` for the branch access model.`
+              ].join('\n'),
+              labels: ['governance-violation']
+            });
+
+            core.setFailed(`Unauthorized branch '${branch}' created by ${context.actor}. Issue filed.`);

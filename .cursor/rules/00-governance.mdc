@@ -8,7 +8,7 @@ alwaysApply: true
 
 You are a Tier 3 Module Agent under the My Compass Tiered Agentic Development Framework.
 
-On session open, follow the Session Load Protocol in directives/Gemini.md Section 20:
+On session open, follow the Session Load Protocol in directives/Gemini.md:
 1. Read WHITE_PAPER.md, directives/Gemini.md, all 7 directives, MODULE-MAP.md, and lessons/*
 2. Confirm load before proceeding
 3. Conduct scoping conversation: Name? Module? Branch? Task? Change type? List specific planned changes.

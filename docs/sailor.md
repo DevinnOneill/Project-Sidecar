@@ -1,22 +1,22 @@
 # SideCar Sailor Profile: Strategic Vision & Development Plan
 
 > **Domain:** Module-Specific Development Roadmap
-> **Module:** MOD-MEMBER (`app/member.html`)
+> **Module:** MOD-MEMBER (`sidecar-app/src/Personnel/Personnel.tsx`)
 > **Date:** March 2026
 
 ---
 
 ## 1. Core Purpose
 
-The `member.html` module is the deep-dive interface for an individual Sailor. While the `workspace.html` functions as an "Alert-to-Action" queue filtering thousands of constituents, the Sailor page is the ultimate destination for the **AI-Enabled Career Coach**. 
+The `Personnel/Personnel.tsx` component is the deep-dive interface for an individual Sailor. While the `Workspace/Workspace.tsx` component functions as an "Alert-to-Action" queue filtering thousands of constituents, the Sailor component is the ultimate destination for the **AI-Enabled Career Coach**. 
 
-It is accessed whenever a specific constituent is invoked (via the search bar, clicking a roster row, or opening a calendar Prep Card). Its strategic mandate is twofold:
+It is rendered whenever a specific constituent is invoked (via the search bar, clicking a roster row, or opening a calendar Prep Card). Its strategic mandate is twofold:
 1. Synthesize MyCompass behavioral telemetry, Pvol, and raw record data to facilitate high-value career coaching and retention intervention.
 2. Provide the comprehensive data density required to completely replace the need to query NSIPS, EAIS, OAIS, or ODIS for a constituent's personnel jacket.
 
 ## 2. Interface Philosophy (The Deep Dive)
 
-The Sailor UI must adhere strictly to the Covenant Design System (white surfaces, brass/khaki gold accents, DM Mono for data). It must not resemble a generic "social media profile." It is a **mission-operations record**. 
+The Sailor UI must adhere strictly to the Covenant Design System (white surfaces, brass/khaki gold accents, DM Mono for data) as defined in `sidecar-app/src/index.css`. It must not resemble a generic "social media profile." It is a **mission-operations record**. 
 
 Information hierarchy is critical. The most important data to a Career Coach is *qualitative and predictive*, not just chronological. As such, the top-level view must emphasize the Sailor's future trajectory and risks before diving into legacy boilerplate strings.
 
@@ -49,9 +49,9 @@ To kill EAIS/ODIS/NSIPS, the page must serve a highly dense, rigorously styled "
 
 ### Adherence to C-Constraints
 - **C-14 (PRD Semantic Lock):** If PRD urgency is displayed anywhere on the Sailor page, it must strictly use the standard 5-tier semantic colors. Do not repurpose these colors for retention risk.
-- **C-08 (Module Boundary):** The `member.html` page must remain self-contained. Any routing or state passing from the workspace or search bar must filter through `SideCarAdapter` within `app.js`.
+- **C-08 (Module Boundary):** The `Personnel.tsx` component must remain self-contained. Any routing or state passing from the workspace or search bar must filter through `SideCarAdapter` within `sidecar-app/src/services/SideCarAdapter.ts`.
 - **C-09 / C-03 (Data Security):** All PII is aggressively gated. In Phase 1A, the member profile must strictly utilize synthetic data matching the true structures of an ODIS/NSIPS pull but containing fabricated identities.
 
 ## 5. Conclusion
 
-Building the `member.html` page is not an exercise in data entry; it is an exercise in data synthesis. If a Detailer opens this page and sees a wall of raw dates and acronyms identical to an EAIS printout, the design has failed. The Sailor page succeeds only when the Coach's first impression is a clear path forward on *how to help the member succeed* based on predictive telemetry and calculated competitiveness graphs.
+Building the `Personnel.tsx` component is not an exercise in data entry; it is an exercise in data synthesis. If a Detailer opens this component and sees a wall of raw dates and acronyms identical to an EAIS printout, the design has failed. The Sailor component succeeds only when the Coach's first impression is a clear path forward on *how to help the member succeed* based on predictive telemetry and calculated competitiveness graphs.

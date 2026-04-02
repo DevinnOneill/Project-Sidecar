@@ -28,13 +28,15 @@ A Verifier that shares context with the executing agent is not a Verifier. If co
 - Were only authorized files modified?
 - Does the boundary confirmation match the actual file changes?
 - Did the agent write to any file not listed in the Execution Script?
-- Did shared files (`style.css`, `app.js`) get modified without explicit multi-module authorization?
+- Did shared files (`src/index.css`, `src/services/*`) get modified without explicit multi-module authorization?
+- Were TypeScript interfaces in `src/models/` changed without Tier 1 authorization?
 
 ### Criterion 3: Integration Contract Adherence
-- Does all data access route through `SideCarAdapter`?
-- Are there direct data references bypassing the adapter?
+- Does all data access route through `SideCarAdapter.ts`?
+- Are there direct data references or fetch() calls bypassing the adapter?
 - Do write operations maintain append-only immutability (C-10)?
 - Does the adapter interface contract remain unchanged?
+- Are all component props properly typed with TypeScript interfaces?
 
 ## 3. Verdict Format
 
@@ -72,4 +74,4 @@ A halt verdict is issued if ANY of the following are true:
 
 ---
 
-*AUDIT.md v1.0 — SideCar Directive Library*
+*AUDIT.md v2.0 — SideCar Directive Library — Amended 2026-03-31 for React/TypeScript*

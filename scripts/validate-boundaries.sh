@@ -19,14 +19,16 @@ MODULES_FOUND=""
 
 for FILE in $STAGED_FILES; do
   case "$FILE" in
-    app/landing.html)       MODULE="MOD-LAND" ;;
-    app/workspace.html)     MODULE="MOD-WORK" ;;
-    app/member.html)        MODULE="MOD-MEMBER" ;;
-    app/command.html)       MODULE="MOD-CMD" ;;
-    app/billet.html)        MODULE="MOD-BILLET" ;;
-    app/analytics.html)     MODULE="MOD-ANLYT" ;;
-    app/style.css)          MODULE="MOD-CSS" ;;
-    app/app.js)             MODULE="MOD-JS" ;;
+    sidecar-app/src/Landing/*)         MODULE="MOD-LAND" ;;
+    sidecar-app/src/Workspace/*)       MODULE="MOD-WORK" ;;
+    sidecar-app/src/Personnel/*)       MODULE="MOD-MEMBER" ;;
+    sidecar-app/src/Command/*)         MODULE="MOD-CMD" ;;
+    sidecar-app/src/Analytics/*)       MODULE="MOD-ANLYT" ;;
+    sidecar-app/src/AdvancedSearch/*)  MODULE="MOD-SEARCH" ;;
+    sidecar-app/src/index.css)         MODULE="MOD-CSS" ;;
+    sidecar-app/src/services/*)        MODULE="MOD-SVC" ;;
+    sidecar-app/src/components/*)      MODULE="MOD-SHARED" ;;
+    sidecar-app/src/models/*)          MODULE="MOD-SHARED" ;;
     # Governance files are exempt from module boundary checks
     sessions/*)         continue ;;
     lessons/*)          continue ;;
@@ -49,10 +51,18 @@ for FILE in $STAGED_FILES; do
       continue
       ;;
     # Config, docs, and workflow files are exempt
-    app/fonts/*|.cursorrules|.cursor/*|.githooks/*|scripts/*|workflow/*|.vscode/*|.gitignore|docs/*|task.md|walkthrough.md|implementation_plan.md|governance_compliance_audit.md)
+    sidecar-app/public/*|.cursorrules|.cursor/*|.githooks/*|scripts/*|workflow/*|.vscode/*|.gitignore|docs/*|task.md|walkthrough.md|implementation_plan.md|governance_compliance_audit.md)
       continue
       ;;
-    # index.html is plumbing, exempt
+    # Vite/React config files are plumbing, exempt
+    sidecar-app/package.json|sidecar-app/package-lock.json|sidecar-app/tsconfig*.json|sidecar-app/vite.config.ts|sidecar-app/index.html)
+      continue
+      ;;
+    # App-level plumbing files exempt
+    sidecar-app/src/App.tsx|sidecar-app/src/main.tsx|sidecar-app/src/vite-env.d.ts)
+      continue
+      ;;
+    # Root index.html is plumbing, exempt
     index.html)
       continue
       ;;

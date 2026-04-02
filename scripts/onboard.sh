@@ -87,17 +87,17 @@ if [ ! -d .git ]; then
   echo ""
   echo -e "  ${RED}ERROR:${RESET} This doesn't appear to be a git repository."
   echo "  Make sure you've cloned the repo first:"
-  echo -e "    ${DIM}git clone https://github.com/matthewcla/SideCar-Concept.git${RESET}"
+  echo -e "    ${DIM}git clone https://github.com/DevinnOneill/Project-Sidecar.git${RESET}"
   echo ""
   exit 1
 fi
 
 # ─── Verify project structure ────────────────────────────────
-if [ ! -f WHITE_PAPER.md ] || [ ! -d directives ] || [ ! -d app ]; then
+if [ ! -f WHITE_PAPER.md ] || [ ! -d directives ] || [ ! -d sidecar-app ]; then
   echo ""
   echo -e "  ${RED}ERROR:${RESET} Project structure doesn't look right."
-  echo "  Expected WHITE_PAPER.md, directives/, and app/ in the project root."
-  echo "  Make sure you're in the SideCar-Concept directory."
+  echo "  Expected WHITE_PAPER.md, directives/, and sidecar-app/ in the project root."
+  echo "  Make sure you're in the Project-Sidecar directory."
   echo ""
   exit 1
 fi
@@ -127,7 +127,7 @@ echo -e "    ${CYAN}1.${RESET} What SideCar is"
 echo -e "    ${CYAN}2.${RESET} How this project works"
 echo -e "    ${CYAN}3.${RESET} Setting up your workspace"
 echo -e "    ${CYAN}4.${RESET} Knowledge Check (Gate 2 Quiz)"
-echo -e "    ${CYAN}5.${RESET} Creating your personal branch"
+echo -e "    ${CYAN}5.${RESET} Checking out your team branch"
 echo -e "    ${CYAN}6.${RESET} Seeing SideCar in your browser"
 echo -e "    ${CYAN}7.${RESET} The 7 Rules"
 echo -e "    ${CYAN}8.${RESET} Saving/Committing work"
@@ -188,9 +188,9 @@ echo "    like using a wrong color code — it stops you and"
 echo "    tells you exactly how to fix it."
 echo ""
 echo -e "  ${GOLD}✦${RESET} ${BOLD}CODE REVIEW BEFORE PRODUCTION${RESET}"
-echo "    Your code goes to YOUR branch first, then to a"
-echo "    review branch, then to production. Nobody's code"
-echo "    goes straight to production."
+echo "    Your code goes to your TEAM branch first, then to"
+echo "    qa-staging for review, then to production. Nobody's"
+echo "    code goes straight to production."
 echo ""
 echo -e "  ${GOLD}✦${RESET} ${BOLD}HALTS ARE GOOD${RESET}"
 echo -e "    If the system stops you, that's a ${BOLD}guardrail${RESET},"
@@ -253,7 +253,7 @@ REQUIRED_FONTS=("Verdana" "DMMono")
 MISSING_FONTS=""
 
 for FONT in "${REQUIRED_FONTS[@]}"; do
-  if ! ls app/fonts/*${FONT}* 1>/dev/null 2>&1; then
+  if ! ls sidecar-app/public/fonts/*${FONT}* 1>/dev/null 2>&1; then
     FONTS_OK=false
     MISSING_FONTS="${MISSING_FONTS} ${FONT}"
   fi
@@ -266,7 +266,7 @@ else
 fi
 
 # ── Step 4: Verify core files ─────────────────────────────────
-CORE_FILES=("app/landing.html" "app/detailer.html" "app/placement.html" "app/analytics.html" "app/style.css" "app/app.js")
+CORE_FILES=("sidecar-app/package.json" "sidecar-app/src/App.tsx" "sidecar-app/src/index.css")
 CORE_OK=true
 MISSING_CORE=""
 
@@ -278,9 +278,9 @@ for FILE in "${CORE_FILES[@]}"; do
 done
 
 if [ "$CORE_OK" = true ]; then
-  print_check "Verified all application files present" "Landing, Detailer Dashboard, Placement, Analytics"
+  print_check "Verified all application files present" "package.json, App.tsx, index.css"
 else
-  print_fail "Some files missing:${MISSING_CORE}" "Check the app/ directory"
+  print_fail "Some files missing:${MISSING_CORE}" "Check the sidecar-app/ directory"
 fi
 
 echo ""
@@ -290,33 +290,67 @@ wait_for_enter
 
 
 # ═══════════════════════════════════════════════════════════════
-# SCREEN 5: YOUR PERSONAL BRANCH
+# SCREEN 5: YOUR TEAM BRANCH
 # ═══════════════════════════════════════════════════════════════
 
 clear_screen
-print_header "YOUR PERSONAL BRANCH"
+print_header "YOUR TEAM BRANCH"
 
-echo "  In this project, everyone works on their OWN copy of the"
-echo "  code called a \"branch.\" Think of it like your own workspace"
-echo "  that doesn't affect anyone else until your work is reviewed."
+echo "  This project uses FIXED branches. Each developer is assigned"
+echo "  to a team branch. You do NOT create your own branch."
+echo ""
+echo -e "  ${BOLD}BRANCH MODEL:${RESET}"
+echo -e "    ${GOLD}dev-1${RESET}        →  Development Team 1"
+echo -e "    ${GOLD}dev-2${RESET}        →  Development Team 2"
+echo -e "    ${GOLD}qa-staging${RESET}   →  QA / Tier 1 only"
+echo -e "    ${GOLD}main${RESET}         →  Production (protected)"
 echo ""
 
-BRANCH_NAME="dev/${DEV_NAME_CLEAN}/onboarding-setup"
+# Branch assignments (update when team changes)
+declare -A BRANCH_MAP
+BRANCH_MAP["CoolCatCoding"]="dev-1"
+BRANCH_MAP["DevvOneill"]="dev-1"
+BRANCH_MAP["Abbiera"]="dev-2"
+BRANCH_MAP["brown-water"]="dev-2"
+BRANCH_MAP["DevinnOneill"]="qa-staging"
 
-# Create or switch to branch
-if git show-ref --verify --quiet "refs/heads/${BRANCH_NAME}" 2>/dev/null; then
-  git checkout "$BRANCH_NAME" --quiet
-  print_check "Switched to existing branch: ${BRANCH_NAME}" ""
+echo "  What is your GitHub username?"
+echo ""
+read -r -p "  > " GH_USERNAME
+
+ASSIGNED_BRANCH="${BRANCH_MAP[$GH_USERNAME]:-}"
+
+if [ -z "$ASSIGNED_BRANCH" ]; then
+  echo ""
+  print_fail "You are not assigned to a dev branch." ""
+  echo ""
+  echo -e "  ${BOLD}Contact Tier 1 (DevinnOneill) to be added to a team.${RESET}"
+  echo "  Once assigned, re-run: bash scripts/onboard.sh"
+  echo ""
+  # Still allow onboarding to complete for orientation purposes
+  BRANCH_NAME="unassigned"
+  echo -e "  ${DIM}Continuing onboarding for orientation...${RESET}"
 else
-  git checkout -b "$BRANCH_NAME" --quiet
-  print_check "Branch created: ${BRANCH_NAME}" ""
+  # Checkout the assigned branch (do NOT create new branches)
+  if git checkout "$ASSIGNED_BRANCH" --quiet 2>/dev/null; then
+    print_check "Switched to your assigned branch: ${ASSIGNED_BRANCH}" ""
+  else
+    # Branch may not exist locally yet — try fetching it
+    if git fetch origin "$ASSIGNED_BRANCH" --quiet 2>/dev/null && \
+       git checkout "$ASSIGNED_BRANCH" --quiet 2>/dev/null; then
+      print_check "Checked out branch from remote: ${ASSIGNED_BRANCH}" ""
+    else
+      print_fail "Could not checkout ${ASSIGNED_BRANCH}" "Make sure the branch exists on the remote"
+    fi
+  fi
+  BRANCH_NAME="$ASSIGNED_BRANCH"
 fi
 
 echo ""
 echo -e "  ${BOLD}HOW CHANGES REACH PRODUCTION:${RESET}"
 echo ""
-echo -e "    ${GOLD}Your Branch${RESET}  →  ${CYAN}QA Review${RESET}  →  ${GREEN}Production${RESET}"
-echo -e "      ${DIM}(you)          (team)        (approved)${RESET}"
+echo -e "    ${GOLD}dev-1 / dev-2${RESET}  →  ${CYAN}qa-staging${RESET}  →  ${GREEN}main${RESET}"
+echo -e "      ${DIM}(your team)       (review)       (production)${RESET}"
 echo ""
 echo "  Nobody's code goes straight to production. Ever."
 
@@ -330,38 +364,31 @@ wait_for_enter
 clear_screen
 print_header "LAUNCHING SIDECAR"
 
-echo "  Opening SideCar in your browser now..."
+echo "  To launch SideCar locally, run the dev server:"
+echo ""
+echo -e "    ${DIM}cd sidecar-app && npm install && npm run dev${RESET}"
 echo ""
 
-LANDING_PATH="${PROJECT_ROOT}/app/landing.html"
+APP_DIR="${PROJECT_ROOT}/sidecar-app"
 BROWSER_OPENED=false
 
-if [ -f "$LANDING_PATH" ]; then
-  if command -v open &>/dev/null; then
-    open "$LANDING_PATH"
-    BROWSER_OPENED=true
-  elif command -v xdg-open &>/dev/null; then
-    xdg-open "$LANDING_PATH"
-    BROWSER_OPENED=true
-  elif command -v start &>/dev/null; then
-    start "$LANDING_PATH"
-    BROWSER_OPENED=true
-  fi
-fi
-
-if [ "$BROWSER_OPENED" = true ]; then
-  print_check "Opened: app/landing.html" ""
+if [ -f "$APP_DIR/package.json" ]; then
+  print_check "Vite + React app found: sidecar-app/" ""
   echo ""
-  read -r -p "  > Did the SideCar landing page open in your browser? (y/n): " BROWSER_VERIFY
+  echo "  After running 'npm run dev', the app will open at:"
+  echo -e "    ${CYAN}http://localhost:5173${RESET}"
+  echo ""
+  read -r -p "  > Have you launched the dev server? (y/n): " BROWSER_VERIFY
+  BROWSER_OPENED=true
   if [[ ! "$BROWSER_VERIFY" =~ ^[Yy]$ ]]; then
     echo ""
-    echo -e "  ${RED}Wait!${RESET} We need to make sure you can see the app before we continue."
-    echo "  Please open this file manually: ${DIM}file://${LANDING_PATH}${RESET}"
+    echo -e "  ${RED}Note:${RESET} You can launch the dev server later with:"
+    echo -e "    ${DIM}cd sidecar-app && npm run dev${RESET}"
     wait_for_enter
   fi
 else
-  print_fail "Could not open browser automatically" ""
-  echo -e "  Open this file manually: ${DIM}file://${LANDING_PATH}${RESET}"
+  print_fail "sidecar-app/package.json not found" ""
+  echo -e "  Make sure the sidecar-app/ directory exists and run: ${DIM}cd sidecar-app && npm install${RESET}"
   wait_for_enter
 fi
 
@@ -380,23 +407,23 @@ echo ""
 
 SCORE=0
 
-# Question 1: Framework
-read -r -p "  1. Are you allowed to install React, Vue, or Tailwind? (y/n): " ANS1
-if [[ "$ANS1" =~ ^[Nn]$ ]]; then
-  print_check "Correct" "Vanilla HTML, CSS, and JS only."
+# Question 1: Stack
+read -r -p "  1. What front-end stack does SideCar use? (react/vue/angular): " ANS1
+if [[ "$ANS1" =~ ^[Rr]eact$ ]]; then
+  print_check "Correct" "Vite + React + TypeScript."
   SCORE=$((SCORE+1))
 else
-  print_fail "Incorrect" "No frameworks allowed. SideCar must be dependency-free for NMCI."
+  print_fail "Incorrect" "SideCar uses Vite + React + TypeScript."
 fi
 echo ""
 
 # Question 2: fetch()
-read -r -p "  2. Can you use fetch() to get data from an API? (y/n): " ANS2
+read -r -p "  2. Can you use fetch() directly to get data from an API? (y/n): " ANS2
 if [[ "$ANS2" =~ ^[Nn]$ ]]; then
-  print_check "Correct" "Always use the SideCarAdapter in app/app.js."
+  print_check "Correct" "Always use the SideCarAdapter in src/services/."
   SCORE=$((SCORE+1))
 else
-  print_fail "Incorrect" "No fetch() calls. SideCar must work offline from file:// protocol."
+  print_fail "Incorrect" "No direct fetch() calls. All data must route through the SideCarAdapter."
 fi
 echo ""
 
@@ -461,13 +488,13 @@ echo "  There are 7 rules every developer must follow."
 echo "  The system enforces these automatically — but you should"
 echo "  know what they are. Let's walk through them."
 echo ""
-echo -e "  ${GOLD}RULE 1 of 7:${RESET} ${BOLD}No fetch() calls${RESET}"
+echo -e "  ${GOLD}RULE 1 of 7:${RESET} ${BOLD}No direct fetch() calls${RESET}"
 echo -e "  ${DIM}────────────────────────────${RESET}"
-echo "  All data comes through the SideCarAdapter in app/app.js."
-echo "  Never call fetch() directly in your code."
+echo "  All data comes through the SideCarAdapter in src/services/."
+echo "  Never call fetch() directly in your components."
 echo ""
-echo -e "  ${CYAN}WHY:${RESET} SideCar must work from local files on Navy (NMCI)"
-echo "  computers with no internet access. fetch() would break that."
+echo -e "  ${CYAN}WHY:${RESET} The adapter decouples the UI from data sources."
+echo "  Today it uses synthetic data; tomorrow it connects to real APIs."
 
 wait_for_enter
 
@@ -489,13 +516,13 @@ wait_for_enter
 clear_screen
 print_header "THE RULES OF THE ROAD"
 
-echo -e "  ${GOLD}RULE 3 of 7:${RESET} ${BOLD}No npm, no frameworks${RESET}"
+echo -e "  ${GOLD}RULE 3 of 7:${RESET} ${BOLD}No unauthorized dependencies${RESET}"
 echo -e "  ${DIM}────────────────────────────${RESET}"
-echo "  No React, no Vue, no Tailwind, no npm install."
-echo "  Vanilla HTML, CSS, and JavaScript only."
+echo "  SideCar uses Vite + React + TypeScript. Do NOT add"
+echo "  extra packages (Tailwind, MUI, etc.) without Tier 1 approval."
 echo ""
-echo -e "  ${CYAN}WHY:${RESET} Navy NMCI computers can't run Node.js or npm."
-echo "  The whole app is a folder you can put on a USB drive."
+echo -e "  ${CYAN}WHY:${RESET} Every dependency must be reviewed for NMCI compliance."
+echo "  Keep the bundle lean and approved."
 
 wait_for_enter
 
@@ -505,8 +532,8 @@ print_header "THE RULES OF THE ROAD"
 
 echo -e "  ${GOLD}RULE 4 of 7:${RESET} ${BOLD}One module per session${RESET}"
 echo -e "  ${DIM}────────────────────────────${RESET}"
-echo "  Working on detailer.html? Don't edit style.css too."
-echo "  Need to change another file? Start a new session."
+echo "  Working on src/Workspace/? Don't edit src/index.css too."
+echo "  Need to change another module? Start a new session."
 echo ""
 echo -e "  ${CYAN}WHY:${RESET} Prevents conflicts when multiple people work"
 echo "  at the same time."
@@ -547,8 +574,8 @@ print_header "THE RULES OF THE ROAD"
 
 echo -e "  ${GOLD}RULE 7 of 7:${RESET} ${BOLD}Adapter pattern only${RESET}"
 echo -e "  ${DIM}────────────────────────────${RESET}"
-echo "  All data goes through the SideCarAdapter. Never"
-echo "  access data arrays directly from page code."
+echo "  All data goes through the SideCarAdapter in src/services/."
+echo "  Never access data arrays directly from component code."
 echo ""
 echo -e "  ${CYAN}WHY:${RESET} The adapter swaps between synthetic, CSV, and"
 echo "  API data without changing any page code. Today it"
@@ -576,12 +603,14 @@ echo -e "    ${CYAN}MOD-DET${RESET}           →  Which module you worked on"
 echo -e "    ${CYAN}Description${RESET}       →  What you did (brief)"
 echo ""
 echo -e "  ${BOLD}MODULE IDS:${RESET}"
-echo -e "    ${DIM}MOD-LAND${RESET}   →  app/landing.html    ${DIM}(Landing page)${RESET}"
-echo -e "    ${DIM}MOD-DET${RESET}    →  app/detailer.html   ${DIM}(Detailer Dashboard)${RESET}"
-echo -e "    ${DIM}MOD-PLAC${RESET}   →  app/placement.html  ${DIM}(Placement Coordinator)${RESET}"
-echo -e "    ${DIM}MOD-ANLYT${RESET}  →  app/analytics.html  ${DIM}(Analytics Dashboard)${RESET}"
-echo -e "    ${DIM}MOD-CSS${RESET}    →  app/style.css       ${DIM}(Design system)${RESET}"
-echo -e "    ${DIM}MOD-JS${RESET}     →  app/app.js          ${DIM}(Shared logic + data)${RESET}"
+echo -e "    ${DIM}MOD-LAND${RESET}   →  src/Landing/        ${DIM}(Landing / Role Selection)${RESET}"
+echo -e "    ${DIM}MOD-WORK${RESET}   →  src/Workspace/      ${DIM}(Detailer Workspace)${RESET}"
+echo -e "    ${DIM}MOD-MEMBER${RESET} →  src/Personnel/      ${DIM}(Sailor Record View)${RESET}"
+echo -e "    ${DIM}MOD-CMD${RESET}    →  src/Command/        ${DIM}(Command Manning View)${RESET}"
+echo -e "    ${DIM}MOD-ANLYT${RESET}  →  src/Analytics/      ${DIM}(Analytics Dashboard)${RESET}"
+echo -e "    ${DIM}MOD-SEARCH${RESET} →  src/AdvancedSearch/ ${DIM}(Advanced Search)${RESET}"
+echo -e "    ${DIM}MOD-CSS${RESET}    →  src/index.css       ${DIM}(Design System)${RESET}"
+echo -e "    ${DIM}MOD-SVC${RESET}    →  src/services/       ${DIM}(Shared Logic + Data)${RESET}"
 echo ""
 echo "  Don't worry about memorizing this — the AI assistant"
 echo "  will help you, and the git hooks catch formatting errors."
@@ -603,18 +632,16 @@ echo -e "  ${BOLD}See what you changed:${RESET}"
 echo -e "    ${DIM}git status${RESET}"
 echo ""
 echo -e "  ${BOLD}Save a file for commit:${RESET}"
-echo -e "    ${DIM}git add app/detailer.html${RESET}"
+echo -e "    ${DIM}git add sidecar-app/src/Workspace/WorkspacePage.tsx${RESET}"
 echo ""
 echo -e "  ${BOLD}Commit your work:${RESET}"
 echo -e "    ${DIM}git commit -m \"[SC-2026-0327-001] MOD-DET: Your description\"${RESET}"
 echo ""
 echo -e "  ${BOLD}Push to GitHub:${RESET}"
-echo -e "    ${DIM}git push -u origin dev/${DEV_NAME_CLEAN}/your-branch-name${RESET}"
+echo -e "    ${DIM}git push origin ${BRANCH_NAME}${RESET}"
 echo ""
-echo -e "  ${BOLD}Start a new task (new branch):${RESET}"
-echo -e "    ${DIM}git checkout main${RESET}"
-echo -e "    ${DIM}git pull origin main${RESET}"
-echo -e "    ${DIM}git checkout -b dev/${DEV_NAME_CLEAN}/mod-det-new-task${RESET}"
+echo -e "  ${BOLD}Pull latest from your team branch:${RESET}"
+echo -e "    ${DIM}git pull origin ${BRANCH_NAME}${RESET}"
 echo ""
 echo -e "  ${BOLD}See what branch you're on:${RESET}"
 echo -e "    ${DIM}git branch${RESET}"
@@ -711,6 +738,7 @@ wait_for_enter
 cat > .onboarded << EOF
 DEVELOPER=${DEV_NAME}
 DEVELOPER_CLEAN=${DEV_NAME_CLEAN}
+GITHUB_USERNAME=${GH_USERNAME}
 BRANCH=${BRANCH_NAME}
 DATE=$(date +%Y-%m-%d)
 TIME=$(date -u +%Y-%m-%dT%H:%M:%SZ)
@@ -737,7 +765,7 @@ if [ "$HOOKS_CHECK" = ".githooks" ]; then
 else
   print_fail "Git hooks (manual setup needed)" ""
 fi
-print_check "Branch created: ${BRANCH_NAME}" ""
+print_check "Assigned branch: ${BRANCH_NAME}" ""
 if [ "$FONTS_OK" = true ]; then
   print_check "Fonts verified" ""
 else
@@ -747,7 +775,7 @@ if [ "$CORE_OK" = true ]; then
   print_check "Application files verified" ""
 fi
 if [ "$BROWSER_OPENED" = true ]; then
-  print_check "SideCar is open in your browser" ""
+  print_check "Dev server instructions provided" ""
 fi
 echo ""
 echo -e "  ${GOLD}── TO START YOUR FIRST TASK ────────────────────────────────${RESET}"
@@ -759,14 +787,14 @@ echo -e "       ${DIM}claude .${RESET}    (Claude Code)"
 echo ""
 echo "  2. The AI assistant will ask you what you're working on."
 echo ""
-echo "  3. Create your task branch:"
-echo -e "       ${DIM}git checkout main${RESET}"
-echo -e "       ${DIM}git pull origin main${RESET}"
-echo -e "       ${DIM}git checkout -b dev/${DEV_NAME_CLEAN}/mod-det-your-task-name${RESET}"
+echo "  3. Make sure you're on your assigned branch:"
+echo -e "       ${DIM}git checkout ${BRANCH_NAME}${RESET}"
+echo -e "       ${DIM}git pull origin ${BRANCH_NAME}${RESET}"
 echo ""
 echo -e "  ${GOLD}── REMEMBER ───────────────────────────────────────────────${RESET}"
 echo ""
 echo "  • One file per session"
+echo "  • Push to your assigned branch (${BRANCH_NAME}) — never create new branches"
 echo "  • Ask your AI assistant if you're unsure about anything"
 echo "  • A halt is a guardrail, not a punishment"
 echo "  • Read ONBOARDING.md when you have 10 minutes"

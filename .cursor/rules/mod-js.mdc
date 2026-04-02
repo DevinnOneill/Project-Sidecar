@@ -1,21 +1,21 @@
 ---
-description: MOD-JS — Shared Logic + Data + Adapter module rules
-globs: ["app/app.js"]
+description: MOD-JS — Shared Logic + Data + Adapter module rules (TypeScript services)
+globs: ["sidecar-app/src/services/**"]
 alwaysApply: false
 ---
 
-# MOD-JS: Shared Logic + Data + Adapter
+# MOD-JS: Shared Logic + Data + Adapter (TypeScript)
 
-- **Write:** app/app.js ONLY
-- **Read:** All app/*.html files
+- **Write:** `sidecar-app/src/services/` ONLY (e.g., `SideCarAdapter.ts`, utility modules)
+- **Read:** All `sidecar-app/src/**/*.tsx` component files
 - **Focus:** INTEGRATIONS.md, SECURITY.md, DEVELOPMENT.md
 - **Key Constraints:** C-01, C-02, C-03, C-09, C-10
 
-Contains SideCarAdapter interface, synthetic data, utility functions, PRD computation.
+Contains SideCarAdapter TypeScript interface, synthetic data, utility functions, PRD computation.
 - No fetch() (C-02)
-- No import/export (C-01)
+- TypeScript ES module imports/exports are used (Vite bundled)
 - All data synthetic with defined patterns (C-03)
 - Adapter interface contract must not change without Tier 1 authorization (C-09)
 - Comm log is append-only (C-10)
 - PRD computation is LOCKED — tier thresholds require Tier 1 to modify
-Do NOT modify any app/*.html files or app/style.css from this module.
+Do NOT modify any `.tsx` component files or `sidecar-app/src/index.css` from this module.

@@ -36,19 +36,20 @@ Synthetic data must be operationally realistic without being traceable to real p
 
 ## 4. Adapter-Only Integration
 
-**Constitutional Constraint C-09:** All data access routes through the `SideCarAdapter` interface defined in `app.js`. No page, no function, no component may access data except through this adapter.
+**Constitutional Constraint C-09:** All data access routes through the `SideCarAdapter` TypeScript service defined in `src/services/SideCarAdapter.ts`. No component, no function, no hook may access data except through this adapter.
 
-In Phase 1A, the adapter returns embedded synthetic data.
-In Phase 1B, the adapter will call Microsoft Graph API.
+In Phase 1A, the adapter returns synthetic data from `SyntheticData.ts`.
+In Phase 1B, the adapter will call Microsoft Graph API via SPFx.
 **The calling code never knows which mode it is in.**
 
 ## 5. What This Means for Developers
 
-- Never hardcode data values in HTML. Always call through the adapter.
+- Never hardcode data values in React components. Always call through the adapter.
+- Never use `fetch()` directly in components — route through `SideCarAdapter.ts`.
 - Never reference real Navy systems by their actual endpoint URLs.
 - Never embed real API keys, tokens, or credentials — even for testing.
 - Never copy real CSV exports into the codebase — even temporarily.
-- If you need more synthetic data, add it to `app.js` through the adapter pattern.
+- If you need more synthetic data, add it to `src/services/SyntheticData.ts` through the adapter pattern.
 
 ## 6. Phase 2 Gate Conditions
 
@@ -127,4 +128,4 @@ SideCar displays health-adjacent status flags (LIMDU, EFMP, OPSDEF) that may int
 
 ---
 
-*SECURITY.md v2.0 — SideCar Directive Library*
+*SECURITY.md v2.1 — SideCar Directive Library — Amended 2026-03-31 for React/TypeScript*

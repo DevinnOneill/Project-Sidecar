@@ -1,32 +1,32 @@
 # Module Map — Directive Routing
 
-> Canonical routing table for SideCar-Concept. Referenced by CLAUDE.md, .cursorrules, git hooks, and session scripts.
+> Canonical routing table for SideCar. Referenced by CLAUDE.md, .cursorrules, git hooks, and session scripts.
 > Source of truth for module boundaries. If this file and Gemini.md disagree, Gemini.md wins — update this file.
-> **Amended:** 2026-03-29 — Updated to reflect actual codebase structure (workspace.html consolidation)
+> **Amended:** 2026-03-31 — Updated for Vite + React + TypeScript architecture
 
 ---
 
 ## MOD-LAND: Landing / Intelligence Bar
 
-- **File:** `app/landing.html`
-- **Write:** `app/landing.html`
-- **Read:** `app/style.css`, `app/app.js`
+- **Files:** `sidecar-app/src/Landing/Landing.tsx`, `sidecar-app/src/Landing/Landing.css`
+- **Write:** `sidecar-app/src/Landing/*`
+- **Read:** `sidecar-app/src/index.css`, `sidecar-app/src/services/*`, `sidecar-app/src/models/*`
 - **Focus Directives:** UI-UX.md, ONBOARDING.md
 - **All Directives Loaded:** Yes (as background guardrails)
 - **Key Constraints:** C-01, C-02, C-04, C-05, C-08, C-11, C-12, C-13
-- **Context:** Entry point. Intelligence Bar search. 90-second flag officer test applies. Smart Pill operational summary.
+- **Context:** Entry point. Intelligence Bar search. 90-second flag officer test applies. Smart Pill operational summary. Role selector (Detailer/Placement modes).
 
 ---
 
 ## MOD-WORK: Detailer Workspace (Primary Work Surface)
 
-- **File:** `app/workspace.html`
-- **Write:** `app/workspace.html`
-- **Read:** `app/style.css`, `app/app.js`
+- **Files:** `sidecar-app/src/Workspace/Workspace.tsx`, `sidecar-app/src/Workspace/Workspace.css`
+- **Write:** `sidecar-app/src/Workspace/*`
+- **Read:** `sidecar-app/src/index.css`, `sidecar-app/src/services/*`, `sidecar-app/src/models/*`
 - **Focus Directives:** UI-UX.md, UX-PATTERNS.md, INTEGRATIONS.md, TESTING.md
 - **All Directives Loaded:** Yes (as background guardrails)
 - **Key Constraints:** C-01, C-02, C-03, C-04, C-08, C-09, C-11, C-12, C-13, C-14
-- **Context:** Consolidated detailer/placement work surface. Roster table, communication panel, workflow pipeline, escalation flags, contact staleness heatmap. Uses SideCarAdapter.getSailors, getCommLog, getBillets, getCommands.
+- **Context:** Consolidated detailer/placement work surface. Three-tab interface: Roster table, Calendar week view, Action notifications. Slide-out comm panel. Uses SideCarAdapter.getSailors, getCommLog, getBillets, getCommands.
 - **Operational Questions:**
   1. Who on my roster requires action right now? (PRD urgency + escalation flags)
   2. Which billets are at risk of going unfilled, and why?
@@ -37,75 +37,99 @@
 
 ---
 
-## MOD-MEMBER: Sailor Record View
+## MOD-MEMBER: Sailor Record View (Personnel)
 
-- **File:** `app/member.html`
-- **Write:** `app/member.html`
-- **Read:** `app/style.css`, `app/app.js`
+- **Files:** `sidecar-app/src/Personnel/Personnel.tsx`, `sidecar-app/src/Personnel/Personnel.css`
+- **Write:** `sidecar-app/src/Personnel/*`
+- **Read:** `sidecar-app/src/index.css`, `sidecar-app/src/services/*`, `sidecar-app/src/models/*`
 - **Focus Directives:** UI-UX.md, INTEGRATIONS.md, SECURITY.md
 - **All Directives Loaded:** Yes (as background guardrails)
 - **Key Constraints:** C-01, C-02, C-03, C-04, C-08, C-09, C-11, C-12, C-13
-- **Context:** Individual Sailor profile. Personnel data, comm log history, assignment history, flag status. Navigated to from workspace roster.
+- **Context:** Individual Sailor profile with radar competitiveness chart, preference form responses, communication timeline. Integrates former detailer, placement, and billet detail views. Navigated to from workspace roster via React Router (`/personnel/:id`).
 
 ---
 
 ## MOD-CMD: Command View
 
-- **File:** `app/command.html`
-- **Write:** `app/command.html`
-- **Read:** `app/style.css`, `app/app.js`
+- **Files:** `sidecar-app/src/Command/Command.tsx`, `sidecar-app/src/Command/Command.css`
+- **Write:** `sidecar-app/src/Command/*`
+- **Read:** `sidecar-app/src/index.css`, `sidecar-app/src/services/*`, `sidecar-app/src/models/*`
 - **Focus Directives:** UI-UX.md, INTEGRATIONS.md, TESTING.md
 - **All Directives Loaded:** Yes (as background guardrails)
 - **Key Constraints:** C-01, C-02, C-03, C-04, C-08, C-09, C-11, C-12, C-13, C-14
-- **Context:** Command-level manning view. Manning percentage, billet occupancy, projected gaps. Uses SideCarAdapter.getCommands, getBillets.
-
----
-
-## MOD-BILLET: Billet View
-
-- **File:** `app/billet.html`
-- **Write:** `app/billet.html`
-- **Read:** `app/style.css`, `app/app.js`
-- **Focus Directives:** UI-UX.md, INTEGRATIONS.md
-- **All Directives Loaded:** Yes (as background guardrails)
-- **Key Constraints:** C-01, C-02, C-03, C-04, C-08, C-09, C-11, C-12, C-13
-- **Context:** Individual billet detail. Billet requirements, incumbent, match scoring. Navigated to from command view.
+- **Context:** Command-level manning view. Command cards with manning percentages, expandable detail showing billets and assigned personnel. Uses SideCarAdapter.getCommands, getBillets.
 
 ---
 
 ## MOD-ANLYT: Analytics Dashboard
 
-- **File:** `app/analytics.html`
-- **Write:** `app/analytics.html`
-- **Read:** `app/style.css`, `app/app.js`
+- **Files:** `sidecar-app/src/Analytics/Analytics.tsx`, `sidecar-app/src/Analytics/Analytics.css`
+- **Write:** `sidecar-app/src/Analytics/*`
+- **Read:** `sidecar-app/src/index.css`, `sidecar-app/src/services/*`, `sidecar-app/src/models/*`
 - **Focus Directives:** UI-UX.md, INTEGRATIONS.md
 - **All Directives Loaded:** Yes (as background guardrails)
 - **Key Constraints:** C-01, C-02, C-03, C-04, C-08, C-09, C-11, C-12, C-13, C-14
-- **Context:** Distribution health metrics, trends, and community-level analytics. Uses SideCarAdapter.getSailors, getCommands, getBillets.
+- **Context:** Portfolio dashboard with PRD distribution, contact health, pipeline stages, and rate mix bar charts. Summary cards with key metrics. Uses SideCarAdapter.getSailors, getCommands, getBillets.
+
+---
+
+## MOD-SEARCH: Advanced Search
+
+- **Files:** `sidecar-app/src/AdvancedSearch/AdvancedSearch.tsx`, `sidecar-app/src/AdvancedSearch/AdvancedSearch.css`
+- **Write:** `sidecar-app/src/AdvancedSearch/*`
+- **Read:** `sidecar-app/src/index.css`, `sidecar-app/src/services/*`, `sidecar-app/src/models/*`
+- **Focus Directives:** UI-UX.md, INTEGRATIONS.md
+- **All Directives Loaded:** Yes (as background guardrails)
+- **Key Constraints:** C-01, C-02, C-03, C-04, C-08, C-09, C-11, C-12, C-13
+- **Context:** SQL-like query builder for sailors, billets, and commands. Dual-panel interface with live results table. Uses SideCarAdapter for all data queries.
+
+---
+
+## MOD-COMP: Shared Components
+
+- **Files:** `sidecar-app/src/components/Topbar.tsx`, `sidecar-app/src/components/Topbar.css`
+- **Write:** `sidecar-app/src/components/*`
+- **Read:** `sidecar-app/src/index.css`, `sidecar-app/src/services/*`
+- **Focus Directives:** UI-UX.md
+- **All Directives Loaded:** Yes (as background guardrails)
+- **Key Constraints:** C-04, C-05, C-11, C-12, C-13
+- **Context:** Shared React components used across all pages. Topbar with global search, data mode indicator, and navigation. Changes here affect all pages — confirm cross-module impact.
 
 ---
 
 ## MOD-CSS: Covenant Design System
 
-- **File:** `app/style.css`
-- **Write:** `app/style.css`
-- **Read:** All `app/*.html` files
+- **Files:** `sidecar-app/src/index.css`, component-specific CSS files
+- **Write:** `sidecar-app/src/index.css`, `sidecar-app/src/App.css`
+- **Read:** All component directories
 - **Focus Directives:** UI-UX.md, DEVELOPMENT.md
 - **All Directives Loaded:** Yes (as background guardrails)
 - **Key Constraints:** C-04, C-05, C-11, C-12, C-13, C-14
-- **Context:** Single CSS file with token system. Light mode only (white + gold). NMCI rendering constraints (no nesting, no @container, no @layer, no Tailwind CDN). All colors via CSS custom properties in :root.
+- **Context:** CSS custom properties in `:root` (index.css) plus component-scoped CSS. Light mode only (white + gold). NMCI rendering constraints still apply to build output. All colors via CSS custom properties.
 
 ---
 
-## MOD-JS: Shared Logic + Data + Adapter
+## MOD-SVC: Services + Data + Adapter
 
-- **File:** `app/app.js`
-- **Write:** `app/app.js`
-- **Read:** All `app/*.html` files
+- **Files:** `sidecar-app/src/services/SideCarAdapter.ts`, `sidecar-app/src/services/PrdEngine.ts`, `sidecar-app/src/services/SyntheticData.ts`
+- **Write:** `sidecar-app/src/services/*`
+- **Read:** `sidecar-app/src/models/*`, all component directories
 - **Focus Directives:** INTEGRATIONS.md, SECURITY.md, DEVELOPMENT.md
 - **All Directives Loaded:** Yes (as background guardrails)
 - **Key Constraints:** C-01, C-02, C-03, C-09, C-10
-- **Context:** Contains SideCarAdapter interface, synthetic data, utility functions, PRD computation (LOCKED). No fetch(), no modules, no npm. Adapter interface contract must not change without Tier 1 authorization.
+- **Context:** Contains SideCarAdapter TypeScript service, synthetic data generator, PRD computation engine (LOCKED), and TypeScript interfaces. Adapter interface contract must not change without Tier 1 authorization.
+
+---
+
+## MOD-MODEL: TypeScript Interfaces
+
+- **Files:** `sidecar-app/src/models/ISailor.ts`
+- **Write:** `sidecar-app/src/models/*`
+- **Read:** All service and component directories
+- **Focus Directives:** INTEGRATIONS.md, DEVELOPMENT.md
+- **All Directives Loaded:** Yes (as background guardrails)
+- **Key Constraints:** C-03, C-09
+- **Context:** TypeScript interface definitions for Sailor, Command, Billet, CommEntry, and all domain types. Changes here affect the entire application — confirm with Tier 1.
 
 ---
 
@@ -122,4 +146,4 @@
 
 ## Cross-Module Authorization
 
-When a task inherently requires changes across module boundaries (e.g., adding a new feature that touches both `workspace.html` and `style.css`), the developer declares the cross-module scope at session start. The agent confirms the expanded boundary and proceeds. No separate session is required for routine cross-cutting work. The boundary confirmation at session close documents which files were actually touched.
+When a task inherently requires changes across module boundaries (e.g., adding a new feature that touches both a component TSX and the shared services), the developer declares the cross-module scope at session start. The agent confirms the expanded boundary and proceeds. No separate session is required for routine cross-cutting work. The boundary confirmation at session close documents which files were actually touched.

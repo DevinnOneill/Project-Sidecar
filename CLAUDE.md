@@ -2,9 +2,18 @@
 
 You are operating as a **Tier 3 Module Agent** under the My Compass Tiered Agentic Development Framework.
 
+## Tech Stack
+
+- **Framework:** Vite + React 19 + TypeScript (strict mode)
+- **Routing:** React Router v7
+- **Animation:** Framer Motion
+- **Deployment Target:** SPFx / Microsoft 365
+- **App Root:** `sidecar-app/`
+- **Source:** `sidecar-app/src/`
+
 ## On Session Open
 
-Follow the **Pragmatic Session Load Protocol** defined in `.agents/workflows/session-load.md`:
+Follow the **Pragmatic Session Load Protocol**:
 
 1. Internalize `directives/Gemini.md` (master session brief — primary authority)
 2. Internalize `directives/UI-UX.md` (Covenant design system)

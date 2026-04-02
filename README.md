@@ -9,7 +9,7 @@ Navy Personnel Command · NPC Agentic Lab · March 2026
 ## 🚀 New Here? One Command and You're In.
 
 ```bash
-git clone https://github.com/matthewcla/SideCar-Concept.git && cd SideCar-Concept && bash scripts/onboard.sh
+git clone https://github.com/DevinnOneill/Project-Sidecar.git && cd Project-Sidecar/sidecar-app && npm install && npm run dev
 ```
 
 **That's it.** Copy-paste the command above, hit Enter, and the onboarding agent walks you through everything:
@@ -19,7 +19,7 @@ git clone https://github.com/matthewcla/SideCar-Concept.git && cd SideCar-Concep
 | Explains what SideCar is | 1 min |
 | How the project works | 1 min |
 | Sets up your workspace | automatic |
-| Creates your personal branch | automatic |
+| Switches to your assigned branch | automatic |
 | Opens SideCar in your browser | automatic |
 | Teaches you the 7 rules | 2 min |
 | Shows you how to save work | 1 min |
@@ -59,11 +59,11 @@ This project uses a **governed development framework**. Here's the short version
 ### Branch Workflow
 
 ```
-Your Branch  →  qa-staging  →  main
-   (you)         (review)      (production)
+dev-1 or dev-2  →  qa-staging  →  main
+  (your team)       (review)      (production)
 ```
 
-Nobody's code goes straight to production. Ever.
+The project uses exactly four fixed branches. Developers push to their assigned branch (dev-1 or dev-2). Nobody creates new branches. Nobody's code goes straight to production. Ever.
 
 ---
 
@@ -75,60 +75,63 @@ These are enforced automatically by git hooks and AI. You don't need to memorize
 |---|------|-----|
 | 1 | **No `fetch()` calls** | Must work on Navy NMCI computers with no internet |
 | 2 | **No hardcoded colors** | Use `var(--color-gold-primary)` not `#B39F75` |
-| 3 | **No npm / no frameworks** | No React, Vue, Tailwind. Vanilla HTML/CSS/JS only |
+| 3 | **Vite + React + TypeScript only** | No additional frameworks without Tier 1 authorization |
 | 4 | **One module per session** | Prevents conflicts between developers |
 | 5 | **Synthetic data only** | No real names, SSNs, DODIDs. Legal requirement. |
 | 6 | **Light mode only** | White + brass gold = Covenant design system |
-| 7 | **Adapter pattern only** | All data through `SideCarAdapter` in `app/app.js` |
+| 7 | **Adapter pattern only** | All data through `SideCarAdapter` in `src/services/SideCarAdapter.ts` |
 
 ---
 
 ## Tech Stack
 
-**Intentionally simple.** No server. No install step. No terminal needed to run it.
-
 | Layer | Technology | Why |
 |---|---|---|
-| **Structure** | HTML5 | Semantic markup. No framework. |
-| **Styling** | CSS3 | Single `app/style.css`. CSS custom properties. No Sass/Tailwind. |
-| **Logic** | Vanilla JS (ES6) | Single `app/app.js`. No React/Vue/npm. |
-| **Data** | Embedded in `app/app.js` | Synthetic. No database. No API calls. |
-| **Fonts** | Local `.woff2` files | System fallbacks if missing. |
-| **QA** | GitHub Actions | Automated constraint + merge checks on every PR. |
+| **Framework** | React 19 + TypeScript | Component-based architecture with full type safety. |
+| **Build Tool** | Vite | Fast HMR development, optimized production builds. |
+| **Routing** | React Router v7 | Client-side routing between modules. |
+| **Animation** | Framer Motion | Declarative animations for state transitions. |
+| **Styling** | CSS Custom Properties | Component-scoped CSS files with design tokens in `src/index.css`. |
+| **Data** | Synthetic in `SyntheticData.ts` | No database. Adapter pattern for future Graph API. |
+| **Fonts** | Inter + DM Mono | System fallbacks if missing. |
+| **Deployment** | SPFx / Microsoft 365 | Target: NMCI via SharePoint Framework web parts. |
 
-**Why so simple?** SideCar must run on NMCI machines — no terminal, no Node.js, no internet. The entire app is a folder you can put on a USB drive.
+**Why this stack?** SideCar targets SPFx deployment on Microsoft 365 for NMCI. Vite + React + TypeScript gives us component-based architecture, full type safety, and optimized builds that compile to Chrome 110+ compatible output.
 
 ---
 
 ## File Map
 
 ```
-SideCar-Concept/
-├── START_HERE.md ............. 👋 New? Start here
+Project-Sidecar/
+├── START_HERE.md ............. New? Start here
 ├── README.md ................. You are reading this
 ├── ONBOARDING.md ............. The rules + onboarding guide
-├── GIT.md .................... Git workflow guide (step-by-step)
-├── WHITE_PAPER.md ............ Governance framework (the "why")
+├── GIT.md .................... Git workflow guide
+├── WHITE_PAPER.md ............ Governance framework
 ├── CHANGELOG.md .............. Merge history
-├── index.html ................ Entry point (redirects to app/)
 │
-├── app/ ...................... All browser code
-│   ├── landing.html .......... Landing / Role Selection
-│   ├── detailer.html ......... Detailer Dashboard
-│   ├── placement.html ........ Placement Coordinator
-│   ├── analytics.html ........ Analytics Dashboard
-│   ├── style.css ............. Covenant Design System (CSS tokens)
-│   ├── app.js ................ Shared logic + data + adapter
-│   └── fonts/ ................ Local font files (woff2)
+├── sidecar-app/ .............. React application
+│   ├── src/
+│   │   ├── Landing/ .......... Landing page (role selector, search)
+│   │   ├── Workspace/ ........ Detailer workspace (roster, calendar, actions)
+│   │   ├── Personnel/ ........ Sailor record view (radar chart, comm log)
+│   │   ├── Command/ .......... Command manning view
+│   │   ├── Analytics/ ........ Portfolio analytics dashboard
+│   │   ├── AdvancedSearch/ ... SQL-like query builder
+│   │   ├── components/ ....... Shared components (Topbar)
+│   │   ├── models/ ........... TypeScript interfaces (ISailor.ts)
+│   │   ├── services/ ......... Business logic + data layer
+│   │   │   ├── SideCarAdapter.ts ... Data access interface
+│   │   │   ├── PrdEngine.ts ....... PRD computation (LOCKED)
+│   │   │   └── SyntheticData.ts ... Test data generator
+│   │   ├── App.tsx ........... Router + layout
+│   │   ├── index.css ......... Design tokens (:root)
+│   │   └── main.tsx .......... Entry point
+│   ├── package.json
+│   └── vite.config.ts
 │
-├── scripts/ .................. Automation
-│   ├── onboard.sh ............ Onboarding agent (run this first!)
-│   ├── session-init.sh ....... Start a development session
-│   ├── session-close.sh ...... Close and log a session
-│   ├── validate-boundaries.sh  Module boundary checker
-│   └── validate-constraints.sh Constitutional constraint checker
-│
-├── directives/ ............... Governance documents (the rules)
+├── directives/ ............... Governance documents
 │   ├── Gemini.md ............. Master Session Brief
 │   ├── DEVELOPMENT.md ........ Code standards, commit format
 │   ├── SECURITY.md ........... Data boundary law
@@ -137,16 +140,6 @@ SideCar-Concept/
 │   ├── AUDIT.md .............. Verification protocol
 │   ├── TESTING.md ............ Quality gate
 │   └── ONBOARDING.md ......... Developer onboarding checklist
-│
-├── .githooks/ ................ Git hooks (automatic guardrails)
-│   ├── pre-commit ............ Boundary + constraint checks
-│   ├── commit-msg ............ Commit format enforcement
-│   └── post-checkout ......... Auto-triggers onboarding on clone
-│
-├── .github/workflows/ ........ Automated QA on GitHub
-│   ├── qa-agent.yml .......... Runs on every PR
-│   ├── verifier-feedback.yml .. Independent verification
-│   └── eod-audit.yml ......... End-of-day audit
 │
 ├── workflow/ .................. Module routing
 │   └── MODULE-MAP.md ......... Which module owns which file
@@ -208,14 +201,16 @@ SideCar-Concept/
 
 **Module IDs:**
 
-| ID | File | What It Is |
+| ID | File(s) | What It Is |
 |---|---|---|
-| `MOD-LAND` | `app/landing.html` | Landing page |
-| `MOD-DET` | `app/detailer.html` | Detailer Dashboard |
-| `MOD-PLAC` | `app/placement.html` | Placement Coordinator |
-| `MOD-ANLYT` | `app/analytics.html` | Analytics Dashboard |
-| `MOD-CSS` | `app/style.css` | Design system |
-| `MOD-JS` | `app/app.js` | Shared logic + data |
+| `MOD-LAND` | `src/Landing/*` | Landing page |
+| `MOD-WORK` | `src/Workspace/*` | Detailer Workspace |
+| `MOD-MEMBER` | `src/Personnel/*` | Sailor Record View |
+| `MOD-CMD` | `src/Command/*` | Command Manning View |
+| `MOD-ANLYT` | `src/Analytics/*` | Analytics Dashboard |
+| `MOD-SEARCH` | `src/AdvancedSearch/*` | Advanced Search |
+| `MOD-CSS` | `src/index.css` + CSS files | Design system |
+| `MOD-SVC` | `src/services/*` | Shared logic + data |
 
 ---
 
@@ -246,7 +241,7 @@ Phase 2 (target): getSailors() → Dataverse API
 | **PRD** | Projected Rotation Date — drives urgency colors. |
 | **Billet** | A job slot at a command. |
 | **NMCI** | Navy Marine Corps Intranet — the target network. |
-| **Adapter** | `SideCarAdapter` in `app/app.js` — the only way to access data. |
+| **Adapter** | `SideCarAdapter` in `src/services/SideCarAdapter.ts` — the only way to access data. |
 | **Module** | A single page/file with defined boundaries. |
 | **Session** | One work period on one module. Starts with scope, ends with commit. |
 | **Halt** | System stopped you for a rule violation. Read the message, fix, retry. |
@@ -259,12 +254,12 @@ Phase 2 (target): getSailors() → Dataverse API
 | Question | Where to Look |
 |---|---|
 | How do I use git? | [GIT.md](GIT.md) |
-| What CSS class do I use? | `app/style.css` or [UI-UX.md](directives/UI-UX.md) |
-| How do I get data? | `app/app.js` → `SideCarAdapter.getSailors()` |
+| What CSS class do I use? | `src/index.css` or [UI-UX.md](directives/UI-UX.md) |
+| How do I get data? | `src/services/SideCarAdapter.ts` → `SideCarAdapter.getSailors()` |
 | What are the rules? | [Gemini.md](directives/Gemini.md) Section 5 |
 | My commit was rejected | Read the error — hooks tell you exactly what's wrong |
 | My PR failed QA | Fix the violations, push again — QA re-runs automatically |
 
 ---
 
-*Governed by: My Compass Tiered Agentic Development Framework v4.0*
+*Governed by: My Compass Tiered Agentic Development Framework v5.0*
