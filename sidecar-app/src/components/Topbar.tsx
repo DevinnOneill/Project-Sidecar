@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import { SideCarAdapter } from '../services/SideCarAdapter';
 import type { ISailor } from '../models/ISailor';
@@ -12,6 +12,7 @@ interface TopbarProps {
 
 export default function Topbar({ showDataMode = false }: TopbarProps) {
   const navigate = useNavigate();
+  const location = useLocation();
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<ISailor[]>([]);
   const [showResults, setShowResults] = useState(false);
@@ -25,14 +26,12 @@ export default function Topbar({ showDataMode = false }: TopbarProps) {
       return;
     }
     const sailors = await SideCarAdapter.getSailors();
-    const lower = q.toLowerCase();
-    const matched = sailors.filter(s =>
-      s.lastName.toLowerCase().includes(lower) ||
-      s.firstName.toLowerCase().includes(lower) ||
-      s.rate.toLowerCase().includes(lower) ||
-      s.command.toLowerCase().includes(lower) ||
-      s.id.includes(q)
-    );
+    // Multi-term AND search — matches sidecar-concept filterSailors logic
+    const terms = q.trim().toLowerCase().split(/\s+/);
+    const matched = sailors.filter(s => {
+      const text = [s.lastName, s.firstName, s.rate, s.payGrade, s.command, s.uic].join(' ').toLowerCase();
+      return terms.every(t => text.includes(t));
+    });
     setResults(matched);
     setShowResults(true);
   }, []);
@@ -67,6 +66,15 @@ export default function Topbar({ showDataMode = false }: TopbarProps) {
       <Link to="/" className="topbar__brand">
         SIDE<span className="topbar__bracket">[</span><span className="topbar__car">CAR</span><span className="topbar__bracket">]</span>
       </Link>
+
+      {location.pathname !== '/' && location.pathname !== '/landing' && (
+        <button className="topbar__back" onClick={() => navigate(-1)}>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M19 12H5M12 19l-7-7 7-7"/>
+          </svg>
+          Back
+        </button>
+      )}
 
       <div className="topbar__search" ref={searchRef}>
         <input

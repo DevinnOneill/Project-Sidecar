@@ -239,60 +239,58 @@ export const SideCarAdapter = {
 
     const todayDate = today();
 
-    return dataset.filter(item => {
-      let pass = true;
-      for (const cond of conditions) {
-        if (!cond.value && cond.value !== '0' && cond.operator !== 'past' && cond.operator !== 'within') continue;
+    // Match sidecar-concept: chain sequential .filter() per condition (AND logic)
+    let rows = [...dataset];
+    const MS_PER_MONTH = 30 * 86400000; // 30 days/month — matches sidecar-concept
 
+    for (const cond of conditions) {
+      rows = rows.filter(item => {
         let dataVal = item[cond.column];
-        
+
         // Special mappings
         if (source === 'sailors' && cond.column === 'prdTier') {
           dataVal = computePRDTier(item).tier;
         }
-        if (source === 'sailors' && cond.column === 'flags') {
-           // We don't have flags defined in the basic ISailor but let's mock empty for now
-           dataVal = '';
-        }
 
-        const dStr = String(dataVal || '').toLowerCase();
+        // Null/undefined → empty string (matches sidecar-concept)
+        if (dataVal === undefined || dataVal === null) dataVal = '';
+
+        const dStr = String(dataVal).toLowerCase();
         const cStr = String(cond.value || '').toLowerCase();
-        
+
         // Operators
-        let m = false;
         switch (cond.operator) {
-          case 'equals': m = (dStr === cStr); break;
-          case 'not': m = (dStr !== cStr); break;
-          case 'contains': m = dStr.includes(cStr); break;
-          case 'starts': m = dStr.startsWith(cStr); break;
-          case 'before': m = new Date(dataVal) < new Date(cond.value); break;
-          case 'after': m = new Date(dataVal) > new Date(cond.value); break;
-          case 'within': 
-            if (dataVal) {
-              const d = new Date(dataVal);
-              const diffMs = d.getTime() - todayDate.getTime();
-              const diffMo = diffMs / (1000*60*60*24*30.44);
-              m = (diffMo >= 0 && diffMo <= parseFloat(cond.value));
-            }
-            break;
-          case 'past':
-            if (dataVal) {
-              const d = new Date(dataVal);
-              const diffMs = todayDate.getTime() - d.getTime();
-              const diffMo = diffMs / (1000*60*60*24*30.44);
-              m = (diffMo >= 0 && diffMo <= parseFloat(cond.value));
-            }
-            break;
-          case 'gt': m = parseFloat(dataVal) > parseFloat(cond.value); break;
-          case 'lt': m = parseFloat(dataVal) < parseFloat(cond.value); break;
-          default: m = true;
+          case 'equals': return dStr === cStr;
+          case 'not': return dStr !== cStr;
+          case 'contains': return dStr.includes(cStr);
+          case 'starts': return dStr.startsWith(cStr);
+          case 'before': {
+            const rowDate = new Date(dataVal);
+            return rowDate < new Date(cond.value);
+          }
+          case 'after': {
+            const rowDate = new Date(dataVal);
+            return rowDate > new Date(cond.value);
+          }
+          case 'within': {
+            if (!dataVal) return false;
+            const rowDate = new Date(dataVal);
+            const futureMs = parseInt(cond.value, 10) * MS_PER_MONTH;
+            return rowDate >= todayDate && rowDate <= new Date(todayDate.getTime() + futureMs);
+          }
+          case 'past': {
+            if (!dataVal) return false;
+            const rowDate = new Date(dataVal);
+            const pastMs = parseInt(cond.value, 10) * MS_PER_MONTH;
+            return rowDate <= todayDate && rowDate >= new Date(todayDate.getTime() - pastMs);
+          }
+          case 'gt': return parseFloat(dataVal) > parseFloat(cond.value);
+          case 'lt': return parseFloat(dataVal) < parseFloat(cond.value);
+          default: return true;
         }
-        if (!m) {
-          pass = false;
-          break;
-        }
-      }
-      return pass;
-    });
+      });
+    }
+
+    return rows;
   }
 };

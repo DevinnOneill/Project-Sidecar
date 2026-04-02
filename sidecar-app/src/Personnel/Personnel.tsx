@@ -92,6 +92,26 @@ function Accordion({ title, children, defaultOpen = false }: AccordionProps) {
   );
 }
 
+/* ── RevealOnScroll — progressive disclosure wrapper ──────── */
+const revealVariants = {
+  hidden: { opacity: 0, y: 16 },
+  visible: { opacity: 1, y: 0 },
+};
+
+function RevealOnScroll({ children, delay = 0 }: { children: React.ReactNode; delay?: number }) {
+  return (
+    <motion.div
+      variants={revealVariants}
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true, margin: '0px 0px -80px 0px' }}
+      transition={{ duration: 0.4, delay, ease: [0.16, 1, 0.3, 1] }}
+    >
+      {children}
+    </motion.div>
+  );
+}
+
 /* ── DataModule wrapper ────────────────────────────────────── */
 interface DataModuleProps {
   id: string;
@@ -436,6 +456,7 @@ export default function Personnel() {
             </DataModule>
 
             {/* MOD: Billet History */}
+            <RevealOnScroll>
             <DataModule id="mod-billet" title="Billet History" column="left" expandedModule={expandedModule} onExpand={handleExpand}>
               <table className="mod-table">
                 <thead>
@@ -460,8 +481,10 @@ export default function Personnel() {
                 </tbody>
               </table>
             </DataModule>
+            </RevealOnScroll>
 
             {/* MOD: Qualifications & Education */}
+            <RevealOnScroll delay={0.05}>
             <DataModule id="mod-quals" title={`Qualifications & Education`} column="left" expandedModule={expandedModule} onExpand={handleExpand}>
               <h3 className="mod-subtitle">{qualLabel}</h3>
               <ol className="quals-list">
@@ -506,8 +529,10 @@ export default function Personnel() {
                 </tbody>
               </table>
             </DataModule>
+            </RevealOnScroll>
 
             {/* MOD: Personal Information */}
+            <RevealOnScroll delay={0.1}>
             <DataModule id="mod-personal" title="Personal Information" column="left" expandedModule={expandedModule} onExpand={handleExpand}>
               <Accordion title="Family / Dependents" defaultOpen>
                 <p className="mod-text">{personalInfo.family ?? 'No data on file.'}</p>
@@ -531,14 +556,11 @@ export default function Personnel() {
                 <p className="mod-text">{personalInfo.pfa ?? 'No PFA data on file.'}</p>
               </Accordion>
             </DataModule>
+            </RevealOnScroll>
 
             {/* MOD: Radar Chart (Competitiveness) */}
-            <motion.div
-              className="data-module"
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.15 }}
-            >
+            <RevealOnScroll delay={0.15}>
+            <div className="data-module">
               <div className="data-module-header">
                 <h2 className="data-module-title data-module-title--gold">Competitiveness Profile</h2>
               </div>
@@ -551,10 +573,12 @@ export default function Personnel() {
                   </div>
                 </div>
               </div>
-            </motion.div>
+            </div>
+            </RevealOnScroll>
 
             {/* MOD: Preferences */}
             {formResponse && (
+              <RevealOnScroll delay={0.2}>
               <DataModule id="mod-prefs" title="Preferences Submitted" column="left" expandedModule={expandedModule} onExpand={handleExpand}>
                 <div className="prefs">
                   {formResponse.billetChoices.map(c => (
@@ -581,6 +605,7 @@ export default function Personnel() {
                   </div>
                 </div>
               </DataModule>
+              </RevealOnScroll>
             )}
           </div>
 
@@ -626,6 +651,7 @@ export default function Personnel() {
             </DataModule>
 
             {/* MOD: Application History */}
+            <RevealOnScroll>
             <DataModule id="mod-apps" title="Application History" column="right" expandedModule={expandedModule} onExpand={handleExpand}>
               <h3 className="mod-subtitle">Saved / Favorited Billets</h3>
               {compassInsights.savedBillets && compassInsights.savedBillets.length > 0 ? (
@@ -660,8 +686,10 @@ export default function Personnel() {
                 <p className="mod-empty">No formal applications on record.</p>
               )}
             </DataModule>
+            </RevealOnScroll>
 
             {/* MOD: Communication Log */}
+            <RevealOnScroll delay={0.05}>
             <DataModule id="mod-comm" title="Communication Log" column="right" expandedModule={expandedModule} onExpand={handleExpand}>
               <div className="comm-header">
                 <span className="comm-count">{commLog.length} entries</span>
@@ -681,6 +709,7 @@ export default function Personnel() {
                 {commLog.length === 0 && <p className="mod-empty">No communication entries.</p>}
               </div>
             </DataModule>
+            </RevealOnScroll>
           </div>
         </div>
       </main>
