@@ -22,7 +22,7 @@ export default function Topbar({ showDataMode = false }: TopbarProps) {
     setQuery(q);
     if (q.length < 2) {
       setResults([]);
-      setShowResults(false);
+      // Do not hide results automatically on short queries so the Advanced Search button remains visible
       return;
     }
     const sailors = await SideCarAdapter.getSailors();
@@ -83,11 +83,11 @@ export default function Topbar({ showDataMode = false }: TopbarProps) {
           placeholder="Global search (DOD ID, name, command)..."
           value={query}
           onChange={e => handleSearch(e.target.value)}
-          onFocus={() => query.length >= 2 && setShowResults(true)}
+          onFocus={() => setShowResults(true)}
           onKeyDown={handleSearchKeyDown}
         />
         <AnimatePresence>
-          {showResults && results.length > 0 && (
+          {showResults && (
             <motion.div
               className="topbar__search-results"
               initial={{ opacity: 0, y: -8 }}
@@ -95,9 +95,11 @@ export default function Topbar({ showDataMode = false }: TopbarProps) {
               exit={{ opacity: 0, y: -8 }}
               transition={{ duration: 0.2 }}
             >
-              <div className="topbar__search-header">
-                {results.length} result{results.length !== 1 ? 's' : ''}
-              </div>
+              {results.length > 0 && (
+                <div className="topbar__search-header">
+                  {results.length} result{results.length !== 1 ? 's' : ''}
+                </div>
+              )}
               {results.slice(0, 10).map(s => {
                 const prd = computePRDTier(s);
                 return (
@@ -116,12 +118,30 @@ export default function Topbar({ showDataMode = false }: TopbarProps) {
                   </div>
                 );
               })}
+              
+              <div 
+                className="topbar__search-advanced" 
+                onClick={() => navigate('/advanced-search')}
+                style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '12px 16px', fontWeight: 600, color: 'var(--color-gold)', cursor: 'pointer', borderTop: '1px solid var(--color-border-subtle)', background: 'var(--color-bg-sunken)' }}
+              >
+                <span style={{ fontSize: '1.2rem' }}>🔍</span> Advanced Search...
+              </div>
             </motion.div>
           )}
         </AnimatePresence>
       </div>
 
       <div className="topbar__right">
+        <motion.div 
+          className="topbar__nav"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5, delay: 0.15 }}
+        >
+          <Link to="/workspace" className="topbar__nav-link" title="Detailer">📊</Link>
+          <Link to="/command" className="topbar__nav-link" title="Placement">⚓</Link>
+          <Link to="/analytics" className="topbar__nav-link" title="Executive View">📈</Link>
+        </motion.div>
         {showDataMode && (
           <div className="topbar__meta">
             <span className="topbar__data-mode">SYNTH</span>

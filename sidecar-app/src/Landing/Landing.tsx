@@ -6,18 +6,16 @@ import { computePRDTier, daysSinceContact } from '../services/PrdEngine';
 import type { ISailor } from '../models/ISailor';
 import './Landing.css';
 
-type RoleMode = 'Detailer' | 'Placement';
-
 export default function Landing() {
-  const [role, setRole] = useState<RoleMode>('Detailer');
-  const [roleOpen, setRoleOpen] = useState(false);
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<ISailor[]>([]);
   const [showResults, setShowResults] = useState(false);
   const [hoveredSailor, setHoveredSailor] = useState<ISailor | null>(null);
   const [hoverPos, setHoverPos] = useState({ x: 0, y: 0 });
-  const navigate = useNavigate();
+  const [role, setRole] = useState<'Detailer' | 'Placement'>('Detailer');
+  const [roleOpen, setRoleOpen] = useState(false);
   const [notificationCount, setNotificationCount] = useState(0);
+  const navigate = useNavigate();
 
   const searchRef = useRef<HTMLDivElement>(null);
   const hoverTimeout = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
@@ -91,7 +89,11 @@ export default function Landing() {
   };
 
   return (
-    <div className="landing">
+    <motion.div 
+      className="landing"
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.3 }}
+    >
       {/* Corner Brackets */}
       <div className="corner corner--tl" /><div className="corner corner--tr" />
       <div className="corner corner--bl" /><div className="corner corner--br" />
@@ -117,9 +119,10 @@ export default function Landing() {
         <motion.div
           className="intel-bar"
           ref={searchRef}
+          layoutId="global-search"
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
+          transition={{ duration: 0.8, ease: "easeInOut" }}
         >
           {/* Role Selector */}
           <div className="role-selector">
@@ -205,7 +208,7 @@ export default function Landing() {
 
           {/* Search Results Dropdown */}
           <AnimatePresence>
-            {showResults && results.length > 0 && (
+            {showResults && (
               <motion.div
                 className="search-results"
                 initial={{ opacity: 0, y: -8 }}
@@ -213,9 +216,11 @@ export default function Landing() {
                 exit={{ opacity: 0, y: -8 }}
                 transition={{ duration: 0.2 }}
               >
-                <div className="search-results__header">
-                  {results.length} result{results.length !== 1 ? 's' : ''}
-                </div>
+                {results.length > 0 && (
+                  <div className="search-results__header">
+                    {results.length} result{results.length !== 1 ? 's' : ''}
+                  </div>
+                )}
                 {results.map(s => {
                   const prd = computePRDTier(s);
                   return (
@@ -224,7 +229,7 @@ export default function Landing() {
                       className="search-results__item"
                       onMouseEnter={(e) => handleMouseEnter(s, e)}
                       onMouseLeave={handleMouseLeave}
-                      onClick={() => { /* navigate to personnel page */ }}
+                      onClick={() => { navigate(`/personnel/${s.id}`); }}
                     >
                       <span className={getPrdClass(prd.tier)}>{prd.tier}</span>
                       <span className="search-results__name">
@@ -237,12 +242,18 @@ export default function Landing() {
                     </div>
                   );
                 })}
+                
+                <div 
+                  className="search-results__advanced" 
+                  onClick={() => navigate('/advanced-search')}
+                  style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '12px 16px', fontWeight: 600, color: 'var(--color-gold)', cursor: 'pointer', borderTop: '1px solid var(--color-border-subtle)', background: 'var(--color-bg-sunken)' }}
+                >
+                  <span style={{ fontSize: '1.2rem' }}>🔍</span> Advanced Search...
+                </div>
               </motion.div>
             )}
           </AnimatePresence>
         </motion.div>
-
-
 
         {/* Smart Pill — Workspace Summary */}
         <motion.div
@@ -322,6 +333,6 @@ export default function Landing() {
         )}
       </AnimatePresence>
 
-    </div>
+    </motion.div>
   );
 }

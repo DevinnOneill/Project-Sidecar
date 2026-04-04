@@ -347,7 +347,15 @@
   border-color: var(--color-gold);
 }
 
-/* ── Smart Pill ────────────────────────────────── */
+/* ── Hero Nav (Shortcut Cards) ─────────────────── */
+.hero-nav {
+  display: flex;
+  justify-content: center;
+  gap: var(--space-lg);
+  margin-top: var(--space-sm);
+  width: 100%;
+}
+
 .smart-pill {
   display: flex;
   align-items: center;
@@ -355,16 +363,9 @@
   width: 100%;
   padding: var(--space-md) var(--space-lg);
   background: var(--color-bg-elevated);
-  border: 1px solid var(--color-border);
+  border: 1px solid var(--color-border-subtle);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-sm);
-  transition: border-color var(--duration-base) var(--ease-out),
-              box-shadow var(--duration-base) var(--ease-out);
-}
-
-.smart-pill:hover {
-  border-color: var(--color-border-gold);
-  box-shadow: var(--shadow-glow);
 }
 
 .smart-pill__content {
