@@ -5,7 +5,12 @@
       "name": "Launch Chrome (SideCar)",
       "type": "chrome",
       "request": "launch",
-      "file": "${workspaceFolder}/index.html"
+      "url": "http://localhost:5173",
+      "webRoot": "${workspaceFolder}/sidecar-app/src",
+      "sourceMapPathOverrides": {
+        "webpack:///src/*": "${webRoot}/*"
+      },
+      "preLaunchTask": "dev-server"
     }
   ]
 }

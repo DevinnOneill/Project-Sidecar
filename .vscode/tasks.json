@@ -2,28 +2,22 @@
   "version": "2.0.0",
   "tasks": [
     {
-      "label": "SideCar: Start Session",
-      "type": "shell",
-      "command": "bash scripts/session-init.sh",
-      "group": "none",
-      "presentation": {
-        "reveal": "always",
-        "panel": "dedicated",
-        "focus": true
-      },
-      "problemMatcher": []
-    },
-    {
-      "label": "SideCar: Close Session",
-      "type": "shell",
-      "command": "bash scripts/session-close.sh",
-      "group": "none",
-      "presentation": {
-        "reveal": "always",
-        "panel": "dedicated",
-        "focus": true
-      },
-      "problemMatcher": []
+      "label": "dev-server",
+      "type": "npm",
+      "script": "dev",
+      "path": "sidecar-app",
+      "isBackground": true,
+      "problemMatcher": {
+        "owner": "vite",
+        "pattern": {
+          "regexp": "^$"
+        },
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": "VITE",
+          "endsPattern": "ready in"
+        }
+      }
     }
   ]
 }
