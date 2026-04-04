@@ -1,0 +1,226 @@
+/* ============================================================
+   PREP CARD — Baseball Card Modal
+   Appointment prep overlay with sailor summary and quick actions.
+   ============================================================ */
+
+.prepcard-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 200;
+}
+
+.prepcard {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 420px;
+  max-width: 90vw;
+  max-height: 80vh;
+  overflow-y: auto;
+  background: var(--color-bg-elevated);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-xl);
+  z-index: 201;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── Header ─────────────────────────── */
+.prepcard__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 20px 24px 16px;
+  background: var(--color-navy);
+  color: var(--color-text-inverse);
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+}
+
+.prepcard__subtitle {
+  font-family: var(--font-data);
+  font-size: 0.6875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  opacity: 0.7;
+}
+
+.prepcard__name {
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin-top: 4px;
+  line-height: 1.2;
+}
+
+.prepcard__meta {
+  font-family: var(--font-data);
+  font-size: 0.8125rem;
+  opacity: 0.8;
+  margin-top: 2px;
+  display: block;
+}
+
+.prepcard__close {
+  background: none;
+  border: none;
+  color: var(--color-text-inverse);
+  font-size: 1rem;
+  cursor: pointer;
+  padding: 4px;
+  opacity: 0.6;
+  transition: opacity var(--duration-fast);
+}
+
+.prepcard__close:hover {
+  opacity: 1;
+}
+
+/* ── Body ───────────────────────────── */
+.prepcard__body {
+  padding: 20px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.prepcard__section-label {
+  display: block;
+  font-family: var(--font-data);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-text-muted);
+  margin-bottom: 8px;
+}
+
+.prepcard__prd-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.prepcard__prd-detail {
+  font-family: var(--font-data);
+  font-size: 0.8125rem;
+  color: var(--color-text-secondary);
+}
+
+/* ── Key Fields Grid ────────────────── */
+.prepcard__grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.prepcard__field-label {
+  display: block;
+  font-family: var(--font-data);
+  font-size: 0.625rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-text-muted);
+  margin-bottom: 2px;
+}
+
+.prepcard__field-value {
+  font-family: var(--font-data);
+  font-size: 0.8125rem;
+  color: var(--color-text-primary);
+}
+
+.prepcard__field-value--warn {
+  color: var(--color-prd-expired-text);
+}
+
+/* ── Recent Comms ───────────────────── */
+.prepcard__comms {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.prepcard__comm {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 8px 12px;
+  background: var(--color-bg-sunken);
+  border-radius: var(--radius-sm);
+}
+
+.prepcard__comm-icon {
+  font-size: 1rem;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.prepcard__comm-body {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.prepcard__comm-date {
+  font-family: var(--font-data);
+  font-size: 0.6875rem;
+  color: var(--color-text-muted);
+}
+
+.prepcard__comm-summary {
+  font-family: var(--font-body);
+  font-size: 0.8125rem;
+  color: var(--color-text-primary);
+  line-height: 1.4;
+}
+
+.prepcard__no-comms {
+  font-size: 0.8125rem;
+  color: var(--color-text-muted);
+  font-style: normal;
+}
+
+/* ── Actions ────────────────────────── */
+.prepcard__actions {
+  display: flex;
+  gap: 10px;
+  padding: 16px 24px 20px;
+  border-top: 1px solid var(--color-border-subtle);
+}
+
+.prepcard__btn {
+  flex: 1;
+  padding: 10px 16px;
+  border-radius: var(--radius-md);
+  font-family: var(--font-body);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--duration-fast);
+  border: 1px solid var(--color-border);
+  background: var(--color-bg-primary);
+  color: var(--color-text-secondary);
+  text-align: center;
+}
+
+.prepcard__btn:hover {
+  border-color: var(--color-gold);
+  color: var(--color-gold);
+}
+
+.prepcard__btn--primary {
+  background: var(--color-navy);
+  color: var(--color-text-inverse);
+  border-color: var(--color-navy);
+}
+
+.prepcard__btn--primary:hover {
+  background: var(--color-navy-light);
+  border-color: var(--color-navy-light);
+  color: var(--color-text-inverse);
+}

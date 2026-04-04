@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { SideCarAdapter } from '../services/SideCarAdapter';
 import { computePRDTier, daysSinceContact } from '../services/PrdEngine';
 import { PIPELINE_STAGES } from '../services/SyntheticData';
 import type { ISailor, INotification, IOrderStatus, ICommEntry, IAppointment, IPrdResult } from '../models/ISailor';
 import Topbar from '../components/Topbar';
+import PrepCard from '../components/PrepCard';
 import './Workspace.css';
 
 type Tab = 'roster' | 'calendar' | 'actions';
@@ -18,6 +19,7 @@ interface EnrichedSailor {
 }
 
 export default function Workspace() {
+  const navigate = useNavigate();
   const [tab, setTab] = useState<Tab>('roster');
   const [sailors, setSailors] = useState<EnrichedSailor[]>([]);
   const [notifications, setNotifications] = useState<INotification[]>([]);
@@ -25,6 +27,7 @@ export default function Workspace() {
   const [selectedSailor, setSelectedSailor] = useState<ISailor | null>(null);
   const [commLog, setCommLog] = useState<ICommEntry[]>([]);
   const [commPanelOpen, setCommPanelOpen] = useState(false);
+  const [prepCardSailorId, setPrepCardSailorId] = useState<string | null>(null);
   const [sortKey, setSortKey] = useState<'prd' | 'name' | 'contact'>('prd');
 
   // Load data
@@ -193,7 +196,7 @@ export default function Workspace() {
                   </div>
                   <div className="calendar__appointments">
                     {appointmentsByDay[date].map(apt => (
-                      <div key={apt.id} className="calendar__apt" onClick={() => apt.sailor && openCommPanel({ ...apt.sailor, id: apt.sailorId, uic: '', billet: '', lastContact: '', detailer: '' } as ISailor)}>
+                      <div key={apt.id} className="calendar__apt" onClick={() => apt.sailorId && setPrepCardSailorId(apt.sailorId)}>
                         <span className="calendar__apt-time">{apt.time}</span>
                         <span className="calendar__apt-type">
                           {apt.type === 'phone' ? '📞' : apt.type === 'video' ? '📹' : '🤝'}
@@ -251,6 +254,20 @@ export default function Workspace() {
           </motion.div>
         )}
       </main>
+
+      {/* Prep Card (Baseball Card) Modal */}
+      <AnimatePresence>
+        {prepCardSailorId && (
+          <PrepCard
+            sailorId={prepCardSailorId}
+            onClose={() => setPrepCardSailorId(null)}
+            onOpenRecord={(id) => {
+              setPrepCardSailorId(null);
+              navigate(`/personnel/${id}`);
+            }}
+          />
+        )}
+      </AnimatePresence>
 
       {/* Comm Panel Slide-out */}
       <AnimatePresence>

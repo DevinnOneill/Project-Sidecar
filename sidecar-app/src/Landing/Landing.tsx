@@ -4,41 +4,46 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { SideCarAdapter } from '../services/SideCarAdapter';
 import { computePRDTier, daysSinceContact } from '../services/PrdEngine';
 import type { ISailor } from '../models/ISailor';
-import { AdvancedSearchPanel } from '../AdvancedSearch/AdvancedSearch';
 import './Landing.css';
 
 export default function Landing() {
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<ISailor[]>([]);
   const [showResults, setShowResults] = useState(false);
-  const [showAdvanced, setShowAdvanced] = useState(false);
   const [hoveredSailor, setHoveredSailor] = useState<ISailor | null>(null);
   const [hoverPos, setHoverPos] = useState({ x: 0, y: 0 });
+  const [role, setRole] = useState<'Detailer' | 'Placement'>('Detailer');
+  const [roleOpen, setRoleOpen] = useState(false);
+  const [notificationCount, setNotificationCount] = useState(0);
   const navigate = useNavigate();
+
   const searchRef = useRef<HTMLDivElement>(null);
   const hoverTimeout = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
 
+  // Load notification count for Smart Pill
+  useEffect(() => {
+    async function loadSummary() {
+      const notifications = await SideCarAdapter.getNotifications();
+      setNotificationCount(notifications.length);
+    }
+    loadSummary();
+  }, []);
+
+  // Search handler
   const handleSearch = useCallback(async (q: string) => {
     setQuery(q);
-    if (q.length < 2) {
-      setResults([]);
-      // Do not hide results automatically on short queries so the Advanced Search button remains visible
-      return;
-    }
     if (q.length < 2) {
       setResults([]);
       setShowResults(false);
       return;
     }
     const sailors = await SideCarAdapter.getSailors();
-    const lower = q.toLowerCase();
-    const matched = sailors.filter(s =>
-      s.lastName.toLowerCase().includes(lower) ||
-      s.firstName.toLowerCase().includes(lower) ||
-      s.rate.toLowerCase().includes(lower) ||
-      s.command.toLowerCase().includes(lower) ||
-      s.id.includes(q)
-    );
+    // Multi-term AND search — matches sidecar-concept filterSailors logic
+    const terms = q.trim().toLowerCase().split(/\s+/);
+    const matched = sailors.filter(s => {
+      const text = [s.lastName, s.firstName, s.rate, s.payGrade, s.command, s.uic].join(' ').toLowerCase();
+      return terms.every(t => text.includes(t));
+    });
     setResults(matched);
     setShowResults(true);
   }, []);
@@ -119,16 +124,87 @@ export default function Landing() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: "easeInOut" }}
         >
-          {/* Search Input */}
-          <input
-            className="intel-bar__input"
-            type="text"
-            placeholder="Search sailors, billets, commands..."
-            value={query}
-            onChange={e => handleSearch(e.target.value)}
-            onFocus={() => setShowResults(true)}
-            onKeyDown={handleSearchKeyDown}
-          />
+          {/* Role Selector */}
+          <div className="role-selector">
+            <button
+              className="role-selector__button"
+              onClick={() => setRoleOpen(!roleOpen)}
+              aria-expanded={roleOpen}
+            >
+              {role}
+              <svg className="role-selector__chevron" width="10" height="6" viewBox="0 0 10 6">
+                <path d="M1 1l4 4 4-4" stroke="currentColor" strokeWidth="1.5" fill="none" strokeLinecap="round"/>
+              </svg>
+            </button>
+            <AnimatePresence>
+              {roleOpen && (
+                <motion.div
+                  className="role-selector__dropdown"
+                  initial={{ opacity: 0, y: -4, scale: 0.98 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: -4, scale: 0.98 }}
+                  transition={{ duration: 0.15 }}
+                >
+                  <button
+                    className={`role-selector__option ${role === 'Detailer' ? 'role-selector__option--active' : ''}`}
+                    onClick={() => { 
+                      setRole('Detailer'); 
+                      setRoleOpen(false); 
+                    }}
+                  >
+                    <div className="role-selector__option-text">
+                      <span>Detailer</span>
+                      <span className="role-selector__option-desc">Rank sailors by PRD urgency</span>
+                    </div>
+                  </button>
+                  <button
+                    className={`role-selector__option ${role === 'Placement' ? 'role-selector__option--active' : ''}`}
+                    onClick={() => { setRole('Placement'); setRoleOpen(false); }}
+                  >
+                    <div className="role-selector__option-text">
+                      <span>Placement</span>
+                      <span className="role-selector__option-desc">Rank commands by manning risk</span>
+                    </div>
+                  </button>
+                  <button
+                    className="role-selector__option"
+                    onClick={() => { setRoleOpen(false); navigate('/advanced-search'); }}
+                  >
+                    <div className="role-selector__option-text">
+                      <span>Advanced Search</span>
+                      <span className="role-selector__option-desc">Build custom SQL-like data queries</span>
+                    </div>
+                  </button>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+
+          {/* Search Input + Button */}
+          <div className="intel-bar__field">
+            <input
+              className="intel-bar__input"
+              type="text"
+              placeholder={role === 'Detailer'
+                ? 'Search sailors, billets, commands...'
+                : 'Search commands, billets, manning...'}
+              value={query}
+              onChange={e => handleSearch(e.target.value)}
+              onFocus={() => query.length >= 2 && setShowResults(true)}
+              onKeyDown={handleSearchKeyDown}
+            />
+            <button
+              className="intel-bar__search-btn"
+              type="button"
+              aria-label="Execute search"
+              onClick={() => { if (results.length > 0) navigate(`/personnel/${results[0].id}`); }}
+            >
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="11" cy="11" r="8"/>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+              </svg>
+            </button>
+          </div>
 
           {/* Search Results Dropdown */}
           <AnimatePresence>
@@ -169,7 +245,7 @@ export default function Landing() {
                 
                 <div 
                   className="search-results__advanced" 
-                  onClick={() => { setShowAdvanced(true); setShowResults(false); }}
+                  onClick={() => navigate('/advanced-search')}
                   style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '12px 16px', fontWeight: 600, color: 'var(--color-gold)', cursor: 'pointer', borderTop: '1px solid var(--color-border-subtle)', background: 'var(--color-bg-sunken)' }}
                 >
                   <span style={{ fontSize: '1.2rem' }}>🔍</span> Advanced Search...
@@ -177,48 +253,28 @@ export default function Landing() {
               </motion.div>
             )}
           </AnimatePresence>
-
-          {/* Advanced Search Embed */}
-          <AnimatePresence>
-            {showAdvanced && (
-              <motion.div
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
-                transition={{ duration: 0.2 }}
-                style={{ position: 'absolute', top: 'calc(100% + 8px)', left: 0, right: 0, zIndex: 60, boxShadow: 'var(--shadow-xl)', borderRadius: 'var(--radius-md)', overflow: 'hidden', background: 'var(--color-bg-elevated)', border: '1px solid var(--color-border)' }}
-              >
-                <AdvancedSearchPanel onClose={() => setShowAdvanced(false)} />
-              </motion.div>
-            )}
-          </AnimatePresence>
         </motion.div>
 
+        {/* Smart Pill — Workspace Summary */}
+        <motion.div
+          className="smart-pill"
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.25, ease: [0.16, 1, 0.3, 1] }}
+        >
+          <div className="smart-pill__content">
+            <span className="smart-pill__label">
+              {role === 'Detailer' ? 'Workspace Summary' : 'Command Summary'}
+            </span>
+            <span className="smart-pill__count">
+              {notificationCount} priority items
+            </span>
+          </div>
+          <Link className="smart-pill__link" to="/workspace">
+            Enter {role === 'Detailer' ? 'Workspace' : 'Command'} →
+          </Link>
+        </motion.div>
 
-
-        {/* Hero Cards Navigation */}
-        <AnimatePresence mode="wait">
-          <motion.div
-            className="hero-nav"
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.95 }}
-            transition={{ duration: 0.3 }}
-          >
-            <Link to="/workspace" className="hero-card">
-              <span className="hero-card__icon">📊</span>
-              <span className="hero-card__label">Detailer</span>
-            </Link>
-            <Link to="/command" className="hero-card">
-              <span className="hero-card__icon">⚓</span>
-              <span className="hero-card__label">Placement</span>
-            </Link>
-            <Link to="/analytics" className="hero-card">
-              <span className="hero-card__icon">📈</span>
-              <span className="hero-card__label">Executive View</span>
-            </Link>
-          </motion.div>
-        </AnimatePresence>
       </main>
 
       {/* Hover Card */}

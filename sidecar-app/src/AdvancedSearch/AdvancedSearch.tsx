@@ -35,6 +35,55 @@ const ADV_COLUMNS: Record<SourceType, Array<{ key: string; label: string; type: 
   ]
 };
 
+interface IAdvExample {
+  label: string;
+  desc: string;
+  source: SourceType;
+  conditions: Array<{ column: string; operator: string; value: string }>;
+}
+
+const ADV_EXAMPLES: IAdvExample[] = [
+  {
+    label: 'Find Critical Sailors',
+    desc: 'All sailors with PRDs in the next 3 months',
+    source: 'sailors',
+    conditions: [{ column: 'prd', operator: 'within', value: '3' }]
+  },
+  {
+    label: 'Sea Duty Sailors',
+    desc: 'All IT sailors at Sea commands',
+    source: 'sailors',
+    conditions: [
+      { column: 'rate', operator: 'equals', value: 'IT' },
+      { column: 'command', operator: 'contains', value: 'USS' }
+    ]
+  },
+  {
+    label: 'Unfilled Billets',
+    desc: 'All billets that are currently vacant',
+    source: 'billets',
+    conditions: [{ column: 'filled', operator: 'equals', value: 'No' }]
+  },
+  {
+    label: 'Expired PRD',
+    desc: 'All sailors whose PRD has expired',
+    source: 'sailors',
+    conditions: [{ column: 'prdTier', operator: 'equals', value: 'EXPIRED' }]
+  },
+  {
+    label: 'Shore Commands',
+    desc: 'All shore duty commands and their billet counts',
+    source: 'commands',
+    conditions: [{ column: 'type', operator: 'equals', value: 'Shore' }]
+  },
+  {
+    label: 'Stale Contact',
+    desc: 'Sailors with no contact in the last 2 months',
+    source: 'sailors',
+    conditions: [{ column: 'lastContact', operator: 'past', value: '2' }]
+  }
+];
+
 const ADV_OPERATORS = {
   text: [
     { key: 'equals',   label: 'is' },
@@ -237,14 +286,25 @@ export function AdvancedSearchPanel({ onClose }: { onClose?: () => void }) {
           <div className="adv-coaching">
             <div className="adv-coaching__title">Example Queries</div>
             <div className="adv-coaching__examples">
-              <div className="adv-coaching__example" onClick={() => {
-                setSource('sailors');
-                setConditions([{ id: nextId, column: 'payGrade', operator: 'equals', value: 'E6' }, { id: nextId+1, column: 'rate', operator: 'equals', value: 'IT' }]);
-                setNextId(nextId + 2);
-              }}>
-                <div className="adv-coaching__example-label">Expiring E6 ITs</div>
-                Show IT1s with expired or critical PRDs
-              </div>
+              {ADV_EXAMPLES.map((ex, i) => (
+                <div
+                  key={i}
+                  className="adv-coaching__example"
+                  onClick={() => {
+                    setSource(ex.source);
+                    const mapped = ex.conditions.map((c, idx) => ({
+                      id: nextId + idx,
+                      ...c,
+                    }));
+                    setConditions(mapped);
+                    setNextId(nextId + mapped.length);
+                    setResults(null);
+                  }}
+                >
+                  <div className="adv-coaching__example-label">{ex.label}</div>
+                  {ex.desc}
+                </div>
+              ))}
             </div>
           </div>
         </div>
